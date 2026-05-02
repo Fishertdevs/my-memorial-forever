@@ -3,20 +3,29 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Memorial API - Página de Recuerdos
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: personas
+    description: Personas fallecidas
+  - name: velas
+    description: Velas encendidas en memoria
+  - name: recuerdos
+    description: Recuerdos compartidos
+  - name: testimonios
+    description: Testimonios de familiares y amigos
+  - name: stats
+    description: Estadísticas del memorial
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +33,206 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /personas:
+    get:
+      operationId: listPersonas
+      tags: [personas]
+      summary: Listar personas del memorial
+      responses:
+        "200":
+          description: Lista de personas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Persona"
+    post:
+      operationId: createPersona
+      tags: [personas]
+      summary: Agregar una persona al memorial
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePersonaBody"
+      responses:
+        "201":
+          description: Persona creada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Persona"
+
+  /personas/{id}:
+    get:
+      operationId: getPersona
+      tags: [personas]
+      summary: Obtener una persona
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Persona encontrada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Persona"
+        "404":
+          description: Persona no encontrada
+
+  /velas:
+    get:
+      operationId: listVelas
+      tags: [velas]
+      summary: Listar velas encendidas
+      parameters:
+        - name: personaId
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: Lista de velas
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VelasResponse"
+    post:
+      operationId: createVela
+      tags: [velas]
+      summary: Encender una vela con mensaje
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateVelaBody"
+      responses:
+        "201":
+          description: Vela encendida
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Vela"
+
+  /recuerdos:
+    get:
+      operationId: listRecuerdos
+      tags: [recuerdos]
+      summary: Listar recuerdos
+      parameters:
+        - name: personaId
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: Lista de recuerdos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecuerdosResponse"
+    post:
+      operationId: createRecuerdo
+      tags: [recuerdos]
+      summary: Compartir un recuerdo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRecuerdoBody"
+      responses:
+        "201":
+          description: Recuerdo guardado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Recuerdo"
+
+  /testimonios:
+    get:
+      operationId: listTestimonios
+      tags: [testimonios]
+      summary: Listar testimonios
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        "200":
+          description: Lista de testimonios
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Testimonio"
+    post:
+      operationId: createTestimonio
+      tags: [testimonios]
+      summary: Compartir un testimonio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTestimonioBody"
+      responses:
+        "201":
+          description: Testimonio guardado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Testimonio"
+
+  /stats:
+    get:
+      operationId: getStats
+      tags: [stats]
+      summary: Estadísticas del memorial
+      responses:
+        "200":
+          description: Estadísticas generales
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Stats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +243,236 @@ components:
       required:
         - status
 
+    Persona:
+      type: object
+      properties:
+        id:
+          type: integer
+        nombre:
+          type: string
+        fechaNacimiento:
+          type: string
+          nullable: true
+        fechaFallecimiento:
+          type: string
+          nullable: true
+        biografia:
+          type: string
+          nullable: true
+        fotoPrincipal:
+          type: string
+          nullable: true
+        totalVelas:
+          type: integer
+        totalRecuerdos:
+          type: integer
+        createdAt:
+          type: string
+      required:
+        - id
+        - nombre
+        - totalVelas
+        - totalRecuerdos
+        - createdAt
+
+    CreatePersonaBody:
+      type: object
+      properties:
+        nombre:
+          type: string
+        fechaNacimiento:
+          type: string
+          nullable: true
+        fechaFallecimiento:
+          type: string
+          nullable: true
+        biografia:
+          type: string
+          nullable: true
+        fotoPrincipal:
+          type: string
+          nullable: true
+      required:
+        - nombre
+
+    Vela:
+      type: object
+      properties:
+        id:
+          type: integer
+        personaId:
+          type: integer
+          nullable: true
+        nombreRecordado:
+          type: string
+        nombreAutor:
+          type: string
+        mensaje:
+          type: string
+        createdAt:
+          type: string
+        tiempoTranscurrido:
+          type: string
+      required:
+        - id
+        - nombreRecordado
+        - nombreAutor
+        - mensaje
+        - createdAt
+        - tiempoTranscurrido
+
+    CreateVelaBody:
+      type: object
+      properties:
+        personaId:
+          type: integer
+          nullable: true
+        nombreRecordado:
+          type: string
+        nombreAutor:
+          type: string
+        mensaje:
+          type: string
+      required:
+        - nombreRecordado
+        - nombreAutor
+        - mensaje
+
+    VelasResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Vela"
+        total:
+          type: integer
+      required:
+        - data
+        - total
+
+    Recuerdo:
+      type: object
+      properties:
+        id:
+          type: integer
+        personaId:
+          type: integer
+          nullable: true
+        nombreAutor:
+          type: string
+        persona:
+          type: string
+          nullable: true
+        mensaje:
+          type: string
+        fotoUrl:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+        tiempoTranscurrido:
+          type: string
+      required:
+        - id
+        - nombreAutor
+        - mensaje
+        - createdAt
+        - tiempoTranscurrido
+
+    CreateRecuerdoBody:
+      type: object
+      properties:
+        personaId:
+          type: integer
+          nullable: true
+        nombreAutor:
+          type: string
+        persona:
+          type: string
+          nullable: true
+        mensaje:
+          type: string
+        fotoUrl:
+          type: string
+          nullable: true
+      required:
+        - nombreAutor
+        - mensaje
+
+    RecuerdosResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Recuerdo"
+        total:
+          type: integer
+      required:
+        - data
+        - total
+
+    Testimonio:
+      type: object
+      properties:
+        id:
+          type: integer
+        nombreAutor:
+          type: string
+        texto:
+          type: string
+        inicial:
+          type: string
+        createdAt:
+          type: string
+        tiempoTranscurrido:
+          type: string
+      required:
+        - id
+        - nombreAutor
+        - texto
+        - inicial
+        - createdAt
+        - tiempoTranscurrido
+
+    CreateTestimonioBody:
+      type: object
+      properties:
+        nombreAutor:
+          type: string
+        texto:
+          type: string
+      required:
+        - nombreAutor
+        - texto
+
+    Stats:
+      type: object
+      properties:
+        totalPersonas:
+          type: integer
+        totalVelas:
+          type: integer
+        totalRecuerdos:
+          type: integer
+        totalTestimonios:
+          type: integer
+        velasHoy:
+          type: integer
+        recuerdosRecientes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Recuerdo"
+        velasRecientes:
+          type: array
+          items:
+            $ref: "#/components/schemas/Vela"
+      required:
+        - totalPersonas
+        - totalVelas
+        - totalRecuerdos
+        - totalTestimonios
+        - velasHoy
+        - recuerdosRecientes
+        - velasRecientes
