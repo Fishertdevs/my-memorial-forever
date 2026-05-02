@@ -13,16 +13,15 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-black/95 backdrop-blur-md">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-        <Link href="/" className="flex items-center gap-3 group">
+        <Link href="/" className="flex items-center gap-2.5 group">
           <img
             src="/candle-logo.png"
             alt="En Tu Memoria"
             className="h-9 w-auto"
-            style={{ filter: "drop-shadow(0 0 8px rgba(249,115,22,0.6))" }}
           />
-          <span className="font-serif text-lg font-semibold text-white group-hover:text-orange-400 transition-colors">
+          <span className="font-serif text-lg font-bold text-black group-hover:text-orange-500 transition-colors">
             En Tu Memoria
           </span>
         </Link>
@@ -34,10 +33,10 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
                   isActive
-                    ? "text-orange-400 bg-orange-500/10 ring-1 ring-orange-500/20"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
+                    ? "text-orange-500 bg-orange-50"
+                    : "text-black/70 hover:text-orange-500 hover:bg-orange-50/60"
                 }`}
               >
                 {link.label}
@@ -47,7 +46,7 @@ export default function Navbar() {
         </div>
 
         <button
-          className="md:hidden text-white/60 hover:text-orange-400 p-2 transition-colors"
+          className="md:hidden text-black/60 hover:text-orange-500 p-2 transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Menú"
         >
@@ -62,16 +61,16 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="md:hidden border-t border-white/5 bg-black px-4 pb-4 pt-2 space-y-1">
+        <div className="md:hidden border-t border-gray-100 bg-white px-4 pb-4 pt-2 space-y-1">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className={`block px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+              className={`block px-4 py-2.5 text-sm font-semibold rounded-lg transition-colors ${
                 location === link.href
-                  ? "text-orange-400 bg-orange-500/10"
-                  : "text-white/60 hover:text-white hover:bg-white/5"
+                  ? "text-orange-500 bg-orange-50"
+                  : "text-black/70 hover:text-orange-500 hover:bg-orange-50/60"
               }`}
             >
               {link.label}
