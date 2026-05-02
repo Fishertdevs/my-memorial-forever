@@ -3,10 +3,8 @@ import { useState } from "react";
 
 const navLinks = [
   { href: "/", label: "Home" },
-  { href: "/personas", label: "En Memoria" },
-  { href: "/velas", label: "Encender Vela" },
-  { href: "/recuerdos", label: "Recuerdos" },
-  { href: "/testimonios", label: "Testimonios" },
+  { href: "/personas", label: "Memorial" },
+  { href: "/velas", label: "Encender Velita" },
 ];
 
 export default function Navbar() {
@@ -21,7 +19,7 @@ export default function Navbar() {
             &#x1F56F;
           </span>
           <span className="font-serif text-lg font-semibold text-amber-200 group-hover:text-amber-100 transition-colors">
-            En Su Memoria
+            En Tu Memoria
           </span>
         </Link>
 
@@ -50,7 +48,6 @@ export default function Navbar() {
         <button
           className="md:hidden text-amber-200/80 hover:text-amber-100 p-2"
           onClick={() => setOpen(!open)}
-          data-testid="button-mobile-menu"
           aria-label="Menú"
         >
           <div className="w-5 h-0.5 bg-current mb-1 transition-transform" style={{ transform: open ? "rotate(45deg) translate(2px, 6px)" : "none" }} />

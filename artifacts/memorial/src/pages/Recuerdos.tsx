@@ -1,198 +1,306 @@
-import { useState } from "react";
-import { useListRecuerdos, useCreateRecuerdo, getListRecuerdosQueryKey, useListPersonas } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect, useCallback } from "react";
+import { Link } from "wouter";
+import { useListPersonas, useListRecuerdos } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
-import { useForm } from "react-hook-form";
-import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 
-type RecuerdoForm = { nombreAutor: string; persona: string; mensaje: string; personaId?: number };
+const PLACEHOLDER_IMAGES = [
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
+  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=600&q=80",
+  "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80",
+  "https://images.unsplash.com/photo-1552058544-f2b08422138a?w=600&q=80",
+  "https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=600&q=80",
+  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=600&q=80",
+  "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&q=80",
+  "https://images.unsplash.com/photo-1463453091185-61582044d556?w=600&q=80",
+  "https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?w=600&q=80",
+  "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=600&q=80",
+  "https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?w=600&q=80",
+  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&q=80",
+];
 
+function getPlaceholder(seed: number) {
+  return PLACEHOLDER_IMAGES[seed % PLACEHOLDER_IMAGES.length];
+}
+
+/* ── Carousel Modal ── */
+interface CarouselModalProps {
+  persona: { id: number; nombre: string; fotoPrincipal?: string | null; fechaNacimiento?: string | null; fechaFallecimiento?: string | null; biografia?: string | null };
+  images: string[];
+  onClose: () => void;
+}
+
+function CarouselModal({ persona, images, onClose }: CarouselModalProps) {
+  const [current, setCurrent] = useState(0);
+  const { data: recuerdosData } = useListRecuerdos({ personaId: persona.id, limit: 10 });
+
+  const prev = useCallback(() => setCurrent((c) => (c - 1 + images.length) % images.length), [images.length]);
+  const next = useCallback(() => setCurrent((c) => (c + 1) % images.length), [images.length]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose, prev, next]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: "rgba(10,6,2,0.92)", backdropFilter: "blur(8px)" }}
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-2xl border border-amber-900/30 bg-card shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-amber-900/50 flex items-center justify-center text-amber-200 hover:bg-amber-800/60 transition-colors"
+          aria-label="Cerrar"
+        >
+          ✕
+        </button>
+
+        {/* Carousel */}
+        <div className="relative overflow-hidden rounded-t-2xl bg-stone-950" style={{ height: 320 }}>
+          {images.map((src, i) => (
+            <div
+              key={i}
+              className="absolute inset-0 transition-opacity duration-500"
+              style={{ opacity: i === current ? 1 : 0, zIndex: i === current ? 1 : 0 }}
+            >
+              <img src={src} alt={persona.nombre} className="w-full h-full object-cover" />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,6,2,0.85) 0%, transparent 60%)" }} />
+            </div>
+          ))}
+
+          {/* Carousel controls */}
+          {images.length > 1 && (
+            <>
+              <button
+                onClick={prev}
+                className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-black/50 flex items-center justify-center text-amber-200 hover:bg-black/70 transition-colors"
+              >
+                ‹
+              </button>
+              <button
+                onClick={next}
+                className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-black/50 flex items-center justify-center text-amber-200 hover:bg-black/70 transition-colors"
+              >
+                ›
+              </button>
+            </>
+          )}
+
+          {/* Dots */}
+          {images.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+              {images.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrent(i)}
+                  className="w-2 h-2 rounded-full transition-all duration-300"
+                  style={{ background: i === current ? "#f59e0b" : "rgba(255,255,255,0.35)", transform: i === current ? "scale(1.3)" : "scale(1)" }}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Name overlay */}
+          <div className="absolute bottom-0 left-0 right-0 z-10 px-6 pb-5 pt-16">
+            <h2 className="font-serif text-2xl text-amber-100">{persona.nombre}</h2>
+            {persona.fechaNacimiento && persona.fechaFallecimiento && (
+              <p className="text-amber-400/70 text-xs tracking-wider">{persona.fechaNacimiento} — {persona.fechaFallecimiento}</p>
+            )}
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-6 space-y-6">
+          {persona.biografia && (
+            <p className="text-amber-200/75 text-sm leading-relaxed">{persona.biografia}</p>
+          )}
+
+          {/* Memories */}
+          {recuerdosData && recuerdosData.data.length > 0 && (
+            <div>
+              <h3 className="font-serif text-lg text-amber-300 mb-4">Recuerdos</h3>
+              <div className="space-y-4">
+                {recuerdosData.data.map((r) => (
+                  <div key={r.id} className="border-l-2 border-amber-700/40 pl-4">
+                    <p className="text-amber-200/80 text-sm leading-relaxed mb-1">{r.mensaje}</p>
+                    <span className="text-xs text-amber-400/50">— {r.nombreAutor}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* CTA */}
+          <div className="flex gap-3 pt-2">
+            <Link
+              href={`/personas/${persona.id}`}
+              onClick={onClose}
+              className="flex-1 py-2.5 text-center text-sm bg-amber-800/40 hover:bg-amber-700/50 border border-amber-700/30 text-amber-200 rounded-lg transition-colors"
+            >
+              Ver perfil completo
+            </Link>
+            <Link
+              href="/velas"
+              onClick={onClose}
+              className="flex-1 py-2.5 text-center text-sm bg-amber-500 hover:bg-amber-400 text-stone-900 font-semibold rounded-lg transition-colors"
+            >
+              Encender una velita
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Pinterest Card ── */
+interface PinCardProps {
+  persona: { id: number; nombre: string; fotoPrincipal?: string | null; fechaNacimiento?: string | null; fechaFallecimiento?: string | null; biografia?: string | null; totalVelas: number; totalRecuerdos: number };
+  images: string[];
+  onClick: () => void;
+  delay: number;
+}
+
+function PinCard({ persona, images, onClick, delay }: PinCardProps) {
+  const [hovered, setHovered] = useState(false);
+  const [imgIndex, setImgIndex] = useState(0);
+
+  useEffect(() => {
+    if (!hovered) return;
+    const t = setInterval(() => setImgIndex((i) => (i + 1) % images.length), 1000);
+    return () => clearInterval(t);
+  }, [hovered, images.length]);
+
+  return (
+    <div
+      className="break-inside-avoid mb-5 cursor-pointer group rounded-2xl overflow-hidden border border-amber-900/25 hover:border-amber-600/40 transition-all duration-300 hover:shadow-xl hover:shadow-amber-900/20 fade-in-up"
+      style={{ animationDelay: `${delay}s` }}
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => { setHovered(false); setImgIndex(0); }}
+    >
+      {/* Image */}
+      <div className="relative overflow-hidden" style={{ aspectRatio: images.length > 0 ? "3/4" : undefined }}>
+        <img
+          src={images[imgIndex]}
+          alt={persona.nombre}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          style={{ minHeight: 180 }}
+        />
+        {/* Gradient overlay */}
+        <div
+          className="absolute inset-0 transition-opacity duration-300"
+          style={{
+            background: "linear-gradient(to top, rgba(10,6,2,0.9) 0%, rgba(10,6,2,0.3) 50%, transparent 100%)",
+            opacity: hovered ? 1 : 0.7,
+          }}
+        />
+
+        {/* Candle on hover */}
+        <div
+          className="absolute top-3 right-3 transition-all duration-300"
+          style={{ opacity: hovered ? 1 : 0, transform: hovered ? "translateY(0)" : "translateY(-8px)" }}
+        >
+          <CandleFlame size="sm" />
+        </div>
+
+        {/* Name overlay */}
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <h3 className="font-serif text-lg text-amber-100 leading-tight">{persona.nombre}</h3>
+          {persona.fechaNacimiento && persona.fechaFallecimiento && (
+            <p className="text-amber-400/70 text-xs mt-0.5">{persona.fechaNacimiento} — {persona.fechaFallecimiento}</p>
+          )}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="bg-card px-4 py-3 flex items-center justify-between">
+        <div className="flex gap-4 text-xs text-amber-200/50">
+          <span>🕯 {persona.totalVelas}</span>
+          <span>💬 {persona.totalRecuerdos}</span>
+        </div>
+        <span className="text-xs text-amber-400/60 group-hover:text-amber-400 transition-colors">Ver recuerdos →</span>
+      </div>
+    </div>
+  );
+}
+
+/* ── Main Page ── */
 export default function Recuerdos() {
-  const [showForm, setShowForm] = useState(false);
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
+  const { data: personas, isLoading } = useListPersonas();
+  const [selected, setSelected] = useState<typeof personas extends (infer T)[] | undefined ? T : never | null>(null);
 
-  const { data: recuerdosData, isLoading } = useListRecuerdos({ limit: 30 });
-  const { data: personas } = useListPersonas();
-  const createRecuerdo = useCreateRecuerdo();
-
-  const form = useForm<RecuerdoForm>({
-    defaultValues: { nombreAutor: "", persona: "", mensaje: "", personaId: undefined },
-  });
-
-  const onSubmit = async (data: RecuerdoForm) => {
-    await createRecuerdo.mutateAsync(
-      {
-        data: {
-          personaId: data.personaId || null,
-          nombreAutor: data.nombreAutor,
-          persona: data.persona || null,
-          mensaje: data.mensaje,
-        },
-      },
-      {
-        onSuccess: () => {
-          form.reset();
-          setShowForm(false);
-          queryClient.invalidateQueries({ queryKey: getListRecuerdosQueryKey({ limit: 30 }) });
-          toast({ title: "Recuerdo guardado", description: "Gracias por compartir este recuerdo." });
-        },
-        onError: () => {
-          toast({ title: "Error", description: "No se pudo guardar el recuerdo.", variant: "destructive" });
-        },
-      }
-    );
+  const personaImages = (persona: { id: number; fotoPrincipal?: string | null }) => {
+    const imgs: string[] = [];
+    if (persona.fotoPrincipal) imgs.push(persona.fotoPrincipal);
+    imgs.push(getPlaceholder(persona.id));
+    imgs.push(getPlaceholder(persona.id + 3));
+    imgs.push(getPlaceholder(persona.id + 6));
+    return imgs;
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navbar />
 
+      {selected && (
+        <CarouselModal
+          persona={selected}
+          images={personaImages(selected)}
+          onClose={() => setSelected(null)}
+        />
+      )}
+
       <div className="pt-24 pb-16 px-4">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="text-center mb-12">
-            <p className="text-amber-400/70 text-xs font-medium tracking-widest uppercase mb-3">Historias que perduran</p>
-            <h1 className="font-serif text-5xl text-amber-100 mb-4">Recuerdos</h1>
-            <p className="text-amber-200/60 max-w-md mx-auto leading-relaxed mb-8">
-              Cada historia, cada momento compartido, es un tesoro que los mantiene vivos en nuestros corazones.
+          <div className="text-center mb-14">
+            <p className="text-amber-400/70 text-xs font-medium tracking-widest uppercase mb-3">Galería de recuerdos</p>
+            <h1 className="font-serif text-5xl text-amber-100 mb-4">Sus historias, su legado</h1>
+            <p className="text-amber-200/60 max-w-lg mx-auto leading-relaxed">
+              Cada imagen guarda un mundo. Haz clic en el perfil de tu ser querido para revivir sus momentos más especiales.
             </p>
-            <button
-              onClick={() => setShowForm(!showForm)}
-              className="inline-flex items-center gap-2 px-8 py-3 bg-amber-500 hover:bg-amber-400 text-stone-900 font-semibold rounded-md transition-colors shadow-lg shadow-amber-900/30"
-              data-testid="button-compartir-recuerdo"
-            >
-              {showForm ? "Cancelar" : "Compartir un recuerdo"}
-            </button>
           </div>
 
-          {/* Form */}
-          {showForm && (
-            <div className="bg-card border border-amber-900/30 rounded-xl p-6 mb-10 fade-in-up">
-              <h2 className="font-serif text-xl text-amber-200 mb-6">Tu recuerdo</h2>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs text-amber-200/60 mb-1 uppercase tracking-wide" htmlFor="autor-recuerdo">
-                      Tu nombre
-                    </label>
-                    <input
-                      id="autor-recuerdo"
-                      {...form.register("nombreAutor", { required: true })}
-                      className="w-full bg-background border border-amber-900/30 rounded-md px-3 py-2 text-amber-100 text-sm focus:outline-none focus:border-amber-600/50 placeholder:text-amber-200/25"
-                      placeholder="Tu nombre"
-                      data-testid="input-autor-recuerdo"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-amber-200/60 mb-1 uppercase tracking-wide" htmlFor="persona-recuerdo">
-                      Sobre quien es este recuerdo
-                    </label>
-                    {personas && personas.length > 0 ? (
-                      <select
-                        id="persona-recuerdo"
-                        {...form.register("personaId", { valueAsNumber: true })}
-                        className="w-full bg-background border border-amber-900/30 rounded-md px-3 py-2 text-amber-100 text-sm focus:outline-none focus:border-amber-600/50"
-                        data-testid="select-persona-recuerdo"
-                        onChange={(e) => {
-                          const selected = personas.find((p) => p.id === Number(e.target.value));
-                          if (selected) form.setValue("persona", selected.nombre);
-                          form.setValue("personaId", Number(e.target.value) || undefined);
-                        }}
-                      >
-                        <option value="">Seleccionar persona</option>
-                        {personas.map((p) => (
-                          <option key={p.id} value={p.id}>{p.nombre}</option>
-                        ))}
-                      </select>
-                    ) : (
-                      <input
-                        id="persona-recuerdo"
-                        {...form.register("persona")}
-                        className="w-full bg-background border border-amber-900/30 rounded-md px-3 py-2 text-amber-100 text-sm focus:outline-none focus:border-amber-600/50 placeholder:text-amber-200/25"
-                        placeholder="Nombre de la persona"
-                        data-testid="input-persona-recuerdo"
-                      />
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs text-amber-200/60 mb-1 uppercase tracking-wide" htmlFor="mensaje-recuerdo">
-                    Tu recuerdo
-                  </label>
-                  <textarea
-                    id="mensaje-recuerdo"
-                    {...form.register("mensaje", { required: true })}
-                    rows={6}
-                    className="w-full bg-background border border-amber-900/30 rounded-md px-3 py-2 text-amber-100 text-sm focus:outline-none focus:border-amber-600/50 placeholder:text-amber-200/25 resize-none"
-                    placeholder="Comparte ese momento especial, esa historia que quieres que todos recuerden..."
-                    data-testid="input-mensaje-recuerdo"
+          {isLoading ? (
+            <div className="columns-2 sm:columns-3 lg:columns-4 gap-5">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="break-inside-avoid mb-5">
+                  <Skeleton
+                    className="w-full rounded-2xl bg-amber-900/20"
+                    style={{ height: [220, 280, 240, 300, 200, 260][i - 1] }}
                   />
                 </div>
-                <div className="flex gap-3">
-                  <button
-                    type="submit"
-                    disabled={createRecuerdo.isPending}
-                    className="flex-1 py-3 bg-amber-800/50 hover:bg-amber-700/60 border border-amber-700/40 text-amber-200 font-medium rounded-md transition-colors disabled:opacity-60"
-                    data-testid="button-submit-recuerdo"
-                  >
-                    {createRecuerdo.isPending ? "Guardando..." : "Guardar recuerdo"}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowForm(false)}
-                    className="px-6 py-3 border border-amber-900/30 text-amber-200/60 rounded-md transition-colors hover:text-amber-200"
-                  >
-                    Cancelar
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
-
-          {/* Memories list */}
-          {isLoading ? (
-            <div className="space-y-5">
-              {[1, 2, 3].map((i) => (
-                <Skeleton key={i} className="h-36 rounded-xl bg-amber-900/20" />
               ))}
             </div>
-          ) : recuerdosData && recuerdosData.data.length > 0 ? (
-            <div className="space-y-5">
-              {recuerdosData.data.map((recuerdo, i) => (
-                <div
-                  key={recuerdo.id}
-                  className="bg-card border border-amber-900/25 rounded-xl p-6 hover:border-amber-700/35 transition-colors fade-in-up"
-                  style={{ animationDelay: `${i * 0.07}s` }}
-                  data-testid={`card-recuerdo-${recuerdo.id}`}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="w-11 h-11 rounded-full bg-amber-800/40 border border-amber-700/20 flex items-center justify-center font-serif font-bold text-amber-300 text-lg flex-shrink-0">
-                      {recuerdo.nombreAutor.charAt(0).toUpperCase()}
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-3">
-                        <span className="text-sm font-semibold text-amber-200">{recuerdo.nombreAutor}</span>
-                        {recuerdo.persona && (
-                          <>
-                            <span className="text-amber-200/30 text-xs">sobre</span>
-                            <span className="text-amber-400 text-xs font-medium">{recuerdo.persona}</span>
-                          </>
-                        )}
-                        <span className="ml-auto text-xs text-amber-200/35">{recuerdo.tiempoTranscurrido}</span>
-                      </div>
-                      <p className="text-amber-200/80 text-sm leading-relaxed">{recuerdo.mensaje}</p>
-                    </div>
-                  </div>
-                </div>
+          ) : personas && personas.length > 0 ? (
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-5">
+              {personas.map((persona, i) => (
+                <PinCard
+                  key={persona.id}
+                  persona={persona}
+                  images={personaImages(persona)}
+                  onClick={() => setSelected(persona)}
+                  delay={i * 0.1}
+                />
               ))}
             </div>
           ) : (
             <div className="text-center py-24">
-              <CandleFlame size="md" className="mx-auto mb-6 opacity-40" />
-              <p className="text-amber-200/50">Aun no hay recuerdos compartidos. Se el primero.</p>
+              <CandleFlame size="lg" className="mx-auto mb-6 opacity-50" />
+              <p className="text-amber-200/50 text-lg">Aún no hay recuerdos en la galería.</p>
             </div>
           )}
         </div>
