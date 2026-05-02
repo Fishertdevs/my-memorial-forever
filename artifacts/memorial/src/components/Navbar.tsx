@@ -13,32 +13,36 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[#2a3a4a]/60 bg-[#0f1923]/95 backdrop-blur-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[#272b31]/80 bg-[#0f1012]/95 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
+
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <img
-            src="/candle-logo.webp"
+            src="/candle-logo.png"
             alt="En Tu Memoria"
-            className="h-9 w-auto drop-shadow-lg"
-            style={{ filter: "drop-shadow(0 0 8px rgba(255,140,0,0.55))" }}
+            className="h-9 w-auto"
+            style={{ filter: "drop-shadow(0 0 6px rgba(249,115,22,0.5))" }}
           />
-          <span className="font-serif text-lg font-semibold text-[#e8c97e] group-hover:text-[#f5d98a] transition-colors">
+          <span className="font-serif text-lg font-semibold text-[#f5e0c0] group-hover:text-orange-300 transition-colors">
             En Tu Memoria
           </span>
         </Link>
 
-        {/* Desktop nav */}
+        {/* Desktop */}
         <div className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => {
-            const isActive = location === link.href || (link.href !== "/" && location.startsWith(link.href));
+            const isActive =
+              location === link.href ||
+              (link.href !== "/" && location.startsWith(link.href));
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                   isActive
-                    ? "text-[#e8a84c] bg-[#1e2d3d]"
-                    : "text-[#a8b8c4] hover:text-[#e8c97e] hover:bg-[#1a2836]"
+                    ? "text-orange-400 bg-orange-950/40 ring-1 ring-orange-800/30"
+                    : "text-slate-400 hover:text-orange-300 hover:bg-orange-950/20"
                 }`}
               >
                 {link.label}
@@ -47,38 +51,39 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Mobile menu button */}
+        {/* Mobile hamburger */}
         <button
-          className="md:hidden text-[#a8b8c4] hover:text-[#e8c97e] p-2"
+          className="md:hidden text-slate-400 hover:text-orange-300 p-2 transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Menú"
         >
-          <div className="w-5 h-0.5 bg-current mb-1 transition-transform" style={{ transform: open ? "rotate(45deg) translate(2px, 6px)" : "none" }} />
-          <div className="w-5 h-0.5 bg-current mb-1 transition-opacity" style={{ opacity: open ? 0 : 1 }} />
-          <div className="w-5 h-0.5 bg-current transition-transform" style={{ transform: open ? "rotate(-45deg) translate(2px, -6px)" : "none" }} />
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            {open ? (
+              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+            ) : (
+              <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+            )}
+          </svg>
         </button>
       </div>
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-[#2a3a4a]/60 bg-[#0f1923] px-4 py-3 space-y-1">
-          {navLinks.map((link) => {
-            const isActive = location === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className={`block px-4 py-2 text-sm font-medium rounded-md transition-colors ${
-                  isActive
-                    ? "text-[#e8a84c] bg-[#1e2d3d]"
-                    : "text-[#a8b8c4] hover:text-[#e8c97e]"
-                }`}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
+        <div className="md:hidden border-t border-[#272b31]/60 bg-[#0f1012] px-4 pb-4 pt-2 space-y-1">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setOpen(false)}
+              className={`block px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                location === link.href
+                  ? "text-orange-400 bg-orange-950/40"
+                  : "text-slate-400 hover:text-orange-300 hover:bg-orange-950/20"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
       )}
     </nav>

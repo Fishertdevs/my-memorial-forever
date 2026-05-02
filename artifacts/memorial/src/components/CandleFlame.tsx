@@ -1,89 +1,50 @@
 interface CandleFlameProps {
   size?: "sm" | "md" | "lg";
   className?: string;
+  outerColor?: string;
+  innerColor?: string;
+  glowColor?: string;
 }
 
-export default function CandleFlame({ size = "md", className = "" }: CandleFlameProps) {
+export default function CandleFlame({
+  size = "md",
+  className = "",
+  outerColor = "#f97316",
+  innerColor = "#fbbf24",
+  glowColor = "rgba(249,115,22,0.35)",
+}: CandleFlameProps) {
   const sizes = {
-    sm: { flame: { width: 20, height: 28 }, wax: { width: 16, height: 40 } },
-    md: { flame: { width: 28, height: 40 }, wax: { width: 22, height: 56 } },
-    lg: { flame: { width: 36, height: 52 }, wax: { width: 28, height: 72 } },
+    sm: { fw: 18, fh: 26, ww: 14, wh: 38 },
+    md: { fw: 26, fh: 38, ww: 20, wh: 54 },
+    lg: { fw: 34, fh: 50, ww: 26, wh: 70 },
   };
-
-  const s = sizes[size];
+  const { fw, fh, ww, wh } = sizes[size];
 
   return (
     <div className={`flex flex-col items-center ${className}`}>
       {/* Flame */}
-      <div
-        className="candle-flame relative"
-        style={{
-          width: s.flame.width,
-          height: s.flame.height,
-        }}
-      >
-        {/* Outer flame */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 0,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: s.flame.width,
-            height: s.flame.height,
-            background: "radial-gradient(ellipse at 50% 80%, #ff8c00 0%, #ff4500 40%, transparent 80%)",
-            borderRadius: "50% 50% 30% 30%",
-            filter: "blur(1px)",
-          }}
-        />
-        {/* Inner flame */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 2,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: s.flame.width * 0.55,
-            height: s.flame.height * 0.65,
-            background: "radial-gradient(ellipse at 50% 70%, #ffe066 0%, #ffb300 60%, transparent 100%)",
-            borderRadius: "50% 50% 30% 30%",
-          }}
-        />
+      <div className="candle-flame relative" style={{ width: fw, height: fh }}>
+        {/* Outer */}
+        <div style={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", width: fw, height: fh, background: `radial-gradient(ellipse at 50% 80%, ${outerColor} 0%, ${outerColor}88 45%, transparent 80%)`, borderRadius: "50% 50% 30% 30%", filter: "blur(1.5px)" }} />
+        {/* Inner */}
+        <div style={{ position: "absolute", bottom: 2, left: "50%", transform: "translateX(-50%)", width: fw * 0.52, height: fh * 0.62, background: `radial-gradient(ellipse at 50% 70%, ${innerColor} 0%, ${outerColor}cc 65%, transparent 100%)`, borderRadius: "50% 50% 30% 30%" }} />
         {/* Core */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 3,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: s.flame.width * 0.2,
-            height: s.flame.height * 0.3,
-            background: "rgba(255, 255, 220, 0.95)",
-            borderRadius: "50%",
-            filter: "blur(0.5px)",
-          }}
-        />
+        <div style={{ position: "absolute", bottom: 4, left: "50%", transform: "translateX(-50%)", width: fw * 0.17, height: fh * 0.27, background: "rgba(255,255,230,0.96)", borderRadius: "50%", filter: "blur(0.4px)" }} />
       </div>
 
       {/* Wick */}
-      <div
-        style={{
-          width: 2,
-          height: 6,
-          background: "#3a2010",
-          borderRadius: 1,
-        }}
-      />
+      <div style={{ width: 2, height: 5, background: "#3a2010", borderRadius: 1 }} />
 
-      {/* Wax body */}
+      {/* Candle body — matches the official gray body from the logo */}
       <div
         className="candle-glow"
         style={{
-          width: s.wax.width,
-          height: s.wax.height,
-          background: "linear-gradient(135deg, hsl(35,60%,82%) 0%, hsl(35,50%,72%) 50%, hsl(30,45%,60%) 100%)",
-          borderRadius: "3px 3px 2px 2px",
-          border: "1px solid rgba(180,140,80,0.4)",
+          width: ww,
+          height: wh,
+          background: "linear-gradient(160deg, #d1d5db 0%, #9ca3af 55%, #6b7280 100%)",
+          borderRadius: `${3}px ${3}px ${2}px ${2}px`,
+          border: "1px solid rgba(107,114,128,0.5)",
+          boxShadow: `0 0 14px 5px ${glowColor}`,
         }}
       />
     </div>
