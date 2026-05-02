@@ -74,55 +74,55 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  /* Warm memorial palette: deep burgundy, amber, warm ivory */
-  --background: 32 30% 10%;        /* deep warm dark */
-  --foreground: 38 45% 90%;        /* warm ivory/cream */
-  --border: 30 20% 22%;
-  --card: 32 28% 13%;
-  --card-foreground: 38 45% 90%;
-  --card-border: 30 20% 24%;
-  --sidebar: 32 28% 11%;
-  --sidebar-foreground: 38 45% 88%;
-  --sidebar-border: 30 18% 20%;
-  --sidebar-primary: 35 75% 55%;
-  --sidebar-primary-foreground: 32 30% 8%;
-  --sidebar-accent: 32 28% 18%;
-  --sidebar-accent-foreground: 38 45% 90%;
-  --sidebar-ring: 35 75% 55%;
-  --popover: 32 28% 13%;
-  --popover-foreground: 38 45% 90%;
-  --popover-border: 30 20% 24%;
-  --primary: 35 75% 55%;           /* warm amber */
-  --primary-foreground: 32 30% 8%;
-  --secondary: 340 35% 35%;        /* deep burgundy */
-  --secondary-foreground: 38 45% 92%;
-  --muted: 32 20% 18%;
-  --muted-foreground: 38 25% 60%;
-  --accent: 35 65% 45%;
-  --accent-foreground: 38 45% 95%;
+  /* Brand colors from favicon: dark slate-navy body + warm amber flame */
+  --background: 210 35% 8%;        /* deep slate-navy #0f1923 */
+  --foreground: 42 60% 88%;        /* warm golden cream */
+  --border: 210 25% 18%;
+  --card: 210 30% 11%;             /* slightly lighter slate */
+  --card-foreground: 42 60% 88%;
+  --card-border: 210 25% 20%;
+  --sidebar: 210 32% 9%;
+  --sidebar-foreground: 42 55% 85%;
+  --sidebar-border: 210 22% 17%;
+  --sidebar-primary: 36 90% 55%;   /* amber flame */
+  --sidebar-primary-foreground: 210 35% 8%;
+  --sidebar-accent: 210 28% 16%;
+  --sidebar-accent-foreground: 42 60% 88%;
+  --sidebar-ring: 36 90% 55%;
+  --popover: 210 30% 11%;
+  --popover-foreground: 42 60% 88%;
+  --popover-border: 210 25% 20%;
+  --primary: 36 90% 55%;           /* warm amber */
+  --primary-foreground: 210 35% 8%;
+  --secondary: 210 28% 20%;        /* deep slate */
+  --secondary-foreground: 42 60% 88%;
+  --muted: 210 25% 15%;
+  --muted-foreground: 210 15% 55%;
+  --accent: 36 80% 48%;
+  --accent-foreground: 210 35% 8%;
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 98%;
-  --input: 30 20% 22%;
-  --ring: 35 75% 55%;
-  --chart-1: 35 75% 55%;
-  --chart-2: 340 35% 45%;
-  --chart-3: 38 55% 65%;
-  --chart-4: 25 60% 40%;
-  --chart-5: 350 30% 55%;
+  --input: 210 25% 16%;
+  --ring: 36 90% 55%;
+  --chart-1: 36 90% 55%;
+  --chart-2: 210 28% 30%;
+  --chart-3: 42 70% 65%;
+  --chart-4: 25 60% 45%;
+  --chart-5: 200 30% 40%;
 
   --app-font-sans: 'Lato', sans-serif;
   --app-font-serif: 'Playfair Display', Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: .375rem;
 
-  --shadow-2xs: 0px 1px 2px 0px rgba(0,0,0,0.4);
-  --shadow-xs: 0px 2px 4px 0px rgba(0,0,0,0.4);
-  --shadow-sm: 0px 2px 8px 0px rgba(0,0,0,0.5);
-  --shadow: 0px 4px 16px 0px rgba(0,0,0,0.5);
-  --shadow-md: 0px 6px 20px 0px rgba(0,0,0,0.55);
-  --shadow-lg: 0px 10px 32px 0px rgba(0,0,0,0.6);
-  --shadow-xl: 0px 16px 48px 0px rgba(0,0,0,0.65);
-  --shadow-2xl: 0px 24px 64px 0px rgba(0,0,0,0.7);
+  --shadow-2xs: 0px 1px 2px 0px rgba(0,0,0,0.5);
+  --shadow-xs: 0px 2px 4px 0px rgba(0,0,0,0.5);
+  --shadow-sm: 0px 2px 8px 0px rgba(0,0,0,0.6);
+  --shadow: 0px 4px 16px 0px rgba(0,0,0,0.6);
+  --shadow-md: 0px 6px 20px 0px rgba(0,0,0,0.65);
+  --shadow-lg: 0px 10px 32px 0px rgba(0,0,0,0.7);
+  --shadow-xl: 0px 16px 48px 0px rgba(0,0,0,0.75);
+  --shadow-2xl: 0px 24px 64px 0px rgba(0,0,0,0.8);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
@@ -137,41 +137,36 @@
 
 @keyframes candle-flicker {
   0%, 100% { transform: scaleX(1) scaleY(1) translateY(0px); opacity: 1; }
-  25% { transform: scaleX(0.9) scaleY(1.05) translateY(-1px) rotate(-2deg); opacity: 0.9; }
-  50% { transform: scaleX(1.05) scaleY(0.98) translateY(1px) rotate(1deg); opacity: 0.95; }
-  75% { transform: scaleX(0.95) scaleY(1.03) translateY(-0.5px) rotate(-1deg); opacity: 0.92; }
+  25% { transform: scaleX(0.88) scaleY(1.06) translateY(-1.5px) rotate(-2.5deg); opacity: 0.88; }
+  50% { transform: scaleX(1.06) scaleY(0.97) translateY(1px) rotate(1.5deg); opacity: 0.94; }
+  75% { transform: scaleX(0.94) scaleY(1.04) translateY(-0.5px) rotate(-1deg); opacity: 0.91; }
 }
 
 @keyframes candle-glow {
-  0%, 100% { box-shadow: 0 0 12px 4px rgba(255, 165, 50, 0.3), 0 0 24px 8px rgba(255, 120, 20, 0.15); }
-  50% { box-shadow: 0 0 18px 6px rgba(255, 180, 60, 0.4), 0 0 36px 12px rgba(255, 130, 25, 0.2); }
+  0%, 100% { box-shadow: 0 0 14px 5px rgba(255,160,40,0.25), 0 0 28px 10px rgba(255,100,10,0.12); }
+  50% { box-shadow: 0 0 20px 7px rgba(255,180,50,0.35), 0 0 40px 14px rgba(255,120,15,0.18); }
 }
 
 @keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(22px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes soft-pulse {
-  0%, 100% { opacity: 0.7; }
+  0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
 
-.candle-flame {
-  animation: candle-flicker 2.5s ease-in-out infinite;
+@keyframes step-appear {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
-.candle-glow {
-  animation: candle-glow 2.5s ease-in-out infinite;
-}
-
-.fade-in-up {
-  animation: fade-in-up 0.6s ease-out forwards;
-}
-
-.soft-pulse {
-  animation: soft-pulse 3s ease-in-out infinite;
-}
+.candle-flame { animation: candle-flicker 2.5s ease-in-out infinite; }
+.candle-glow { animation: candle-glow 2.5s ease-in-out infinite; }
+.fade-in-up { animation: fade-in-up 0.6s ease-out forwards; }
+.soft-pulse { animation: soft-pulse 3s ease-in-out infinite; }
+.step-appear { animation: step-appear 0.35s ease-out forwards; }
 
 @layer base {
   * { @apply border-border; }
@@ -181,11 +176,6 @@
 
 @layer utilities {
   input[type="search"]::-webkit-search-cancel-button { @apply hidden; }
-  [contenteditable][data-placeholder]:empty::before {
-    content: attr(data-placeholder);
-    color: hsl(var(--muted-foreground));
-    pointer-events: none;
-  }
   .no-default-hover-elevate {}
   .no-default-active-elevate {}
   .toggle-elevate::before, .toggle-elevate-2::before {
@@ -209,6 +199,4 @@
   .active-elevate:active:not(.no-default-active-elevate)::after { background-color: var(--elevate-1); }
   .hover-elevate-2:hover:not(.no-default-hover-elevate)::after,
   .active-elevate-2:active:not(.no-default-active-elevate)::after { background-color: var(--elevate-2); }
-  .border.hover-elevate:not(.no-hover-interaction-elevate)::after,
-  .border.active-elevate:not(.no-active-interaction-elevate)::after { inset: -1px; }
 }

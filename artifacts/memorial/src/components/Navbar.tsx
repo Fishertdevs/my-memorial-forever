@@ -2,9 +2,10 @@ import { Link, useLocation } from "wouter";
 import { useState } from "react";
 
 const navLinks = [
-  { href: "/", label: "Home" },
+  { href: "/", label: "Inicio" },
   { href: "/personas", label: "Memorial" },
   { href: "/velas", label: "Encender Velita" },
+  { href: "/recuerdos", label: "Recuerdos" },
 ];
 
 export default function Navbar() {
@@ -12,13 +13,16 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-amber-900/30 bg-[hsl(32,30%,8%)/95] backdrop-blur-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[#2a3a4a]/60 bg-[#0f1923]/95 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         <Link href="/" className="flex items-center gap-3 group">
-          <span className="text-2xl" style={{ filter: "drop-shadow(0 0 6px rgba(255,165,50,0.7))" }}>
-            &#x1F56F;
-          </span>
-          <span className="font-serif text-lg font-semibold text-amber-200 group-hover:text-amber-100 transition-colors">
+          <img
+            src="/candle-logo.webp"
+            alt="En Tu Memoria"
+            className="h-9 w-auto drop-shadow-lg"
+            style={{ filter: "drop-shadow(0 0 8px rgba(255,140,0,0.55))" }}
+          />
+          <span className="font-serif text-lg font-semibold text-[#e8c97e] group-hover:text-[#f5d98a] transition-colors">
             En Tu Memoria
           </span>
         </Link>
@@ -33,10 +37,9 @@ export default function Navbar() {
                 href={link.href}
                 className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
                   isActive
-                    ? "text-amber-300 bg-amber-900/30"
-                    : "text-amber-200/70 hover:text-amber-200 hover:bg-amber-900/20"
+                    ? "text-[#e8a84c] bg-[#1e2d3d]"
+                    : "text-[#a8b8c4] hover:text-[#e8c97e] hover:bg-[#1a2836]"
                 }`}
-                data-testid={`nav-${link.label.toLowerCase().replace(/\s/g, "-")}`}
               >
                 {link.label}
               </Link>
@@ -46,7 +49,7 @@ export default function Navbar() {
 
         {/* Mobile menu button */}
         <button
-          className="md:hidden text-amber-200/80 hover:text-amber-100 p-2"
+          className="md:hidden text-[#a8b8c4] hover:text-[#e8c97e] p-2"
           onClick={() => setOpen(!open)}
           aria-label="Menú"
         >
@@ -58,7 +61,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-amber-900/30 bg-[hsl(32,30%,8%)] px-4 py-3 space-y-1">
+        <div className="md:hidden border-t border-[#2a3a4a]/60 bg-[#0f1923] px-4 py-3 space-y-1">
           {navLinks.map((link) => {
             const isActive = location === link.href;
             return (
@@ -68,8 +71,8 @@ export default function Navbar() {
                 onClick={() => setOpen(false)}
                 className={`block px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                   isActive
-                    ? "text-amber-300 bg-amber-900/30"
-                    : "text-amber-200/70 hover:text-amber-200"
+                    ? "text-[#e8a84c] bg-[#1e2d3d]"
+                    : "text-[#a8b8c4] hover:text-[#e8c97e]"
                 }`}
               >
                 {link.label}
