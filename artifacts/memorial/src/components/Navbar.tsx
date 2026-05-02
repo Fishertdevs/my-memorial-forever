@@ -13,36 +13,31 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[#272b31]/80 bg-[#0f1012]/95 backdrop-blur-md">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-black/95 backdrop-blur-md">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
           <img
             src="/candle-logo.png"
             alt="En Tu Memoria"
             className="h-9 w-auto"
-            style={{ filter: "drop-shadow(0 0 6px rgba(249,115,22,0.5))" }}
+            style={{ filter: "drop-shadow(0 0 8px rgba(249,115,22,0.6))" }}
           />
-          <span className="font-serif text-lg font-semibold text-[#f5e0c0] group-hover:text-orange-300 transition-colors">
+          <span className="font-serif text-lg font-semibold text-white group-hover:text-orange-400 transition-colors">
             En Tu Memoria
           </span>
         </Link>
 
-        {/* Desktop */}
         <div className="hidden md:flex items-center gap-1">
           {navLinks.map((link) => {
-            const isActive =
-              location === link.href ||
-              (link.href !== "/" && location.startsWith(link.href));
+            const isActive = location === link.href || (link.href !== "/" && location.startsWith(link.href));
             return (
               <Link
                 key={link.href}
                 href={link.href}
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
                   isActive
-                    ? "text-orange-400 bg-orange-950/40 ring-1 ring-orange-800/30"
-                    : "text-slate-400 hover:text-orange-300 hover:bg-orange-950/20"
+                    ? "text-orange-400 bg-orange-500/10 ring-1 ring-orange-500/20"
+                    : "text-white/60 hover:text-white hover:bg-white/5"
                 }`}
               >
                 {link.label}
@@ -51,9 +46,8 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Mobile hamburger */}
         <button
-          className="md:hidden text-slate-400 hover:text-orange-300 p-2 transition-colors"
+          className="md:hidden text-white/60 hover:text-orange-400 p-2 transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Menú"
         >
@@ -67,9 +61,8 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-[#272b31]/60 bg-[#0f1012] px-4 pb-4 pt-2 space-y-1">
+        <div className="md:hidden border-t border-white/5 bg-black px-4 pb-4 pt-2 space-y-1">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -77,8 +70,8 @@ export default function Navbar() {
               onClick={() => setOpen(false)}
               className={`block px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
                 location === link.href
-                  ? "text-orange-400 bg-orange-950/40"
-                  : "text-slate-400 hover:text-orange-300 hover:bg-orange-950/20"
+                  ? "text-orange-400 bg-orange-500/10"
+                  : "text-white/60 hover:text-white hover:bg-white/5"
               }`}
             >
               {link.label}

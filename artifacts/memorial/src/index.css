@@ -57,71 +57,51 @@
 }
 
 :root {
-  --button-outline: rgba(0,0,0,.10);
-  --badge-outline: rgba(0,0,0,.05);
   --elevate-1: rgba(255,255,255,.03);
   --elevate-2: rgba(255,255,255,.06);
 
-  /*
-   * OFFICIAL BRAND PALETTE — from candle logo:
-   *   Flame:       Warm orange  #F97316  (hsl 25 95% 53%)
-   *   Flame inner: Golden       #FBBF24  (hsl 43 96% 56%)
-   *   Candle body: Light gray   #E5E7EB  (used as subtle tones)
-   *   Outline:     Slate gray   #6B7280  (hsl 220 9% 46%)
-   *   Dark base:   Charcoal     #1C1D20  (hsl 225 5% 11%)
-   */
-  --background: 225 8% 9%;          /* near-black charcoal  #141517 */
-  --foreground: 220 14% 93%;        /* soft off-white       #eceef2 */
-  --border: 220 10% 18%;            /* slate border         #272b31 */
-  --card: 225 8% 12%;               /* card charcoal        #1a1c20 */
-  --card-foreground: 220 14% 93%;
-  --card-border: 220 10% 20%;
-  --popover: 225 8% 12%;
-  --popover-foreground: 220 14% 93%;
-  --popover-border: 220 10% 20%;
-  --primary: 25 95% 53%;            /* orange flame #F97316 */
-  --primary-foreground: 225 8% 9%;
-  --secondary: 220 9% 28%;          /* slate gray           #3f434a */
-  --secondary-foreground: 220 14% 90%;
-  --muted: 220 8% 16%;              /* subtle dark           #232629 */
-  --muted-foreground: 220 9% 52%;   /* slate text           #767d87 */
-  --accent: 43 96% 56%;             /* golden inner flame  #FBBF24 */
-  --accent-foreground: 225 8% 9%;
+  /* === OFFICIAL BRAND: Orange · Black · White === */
+  --background: 0 0% 5%;            /* near-black  #0d0d0d */
+  --foreground: 0 0% 97%;           /* white        #f7f7f7 */
+  --border: 0 0% 13%;               /* dark border  #212121 */
+  --card: 0 0% 8%;                  /* card black   #141414 */
+  --card-foreground: 0 0% 97%;
+  --card-border: 0 0% 15%;          /* #262626 */
+  --popover: 0 0% 8%;
+  --popover-foreground: 0 0% 97%;
+  --popover-border: 0 0% 15%;
+  --primary: 25 95% 53%;            /* orange flame  #F97316 */
+  --primary-foreground: 0 0% 5%;
+  --secondary: 0 0% 15%;            /* dark gray     #262626 */
+  --secondary-foreground: 0 0% 90%;
+  --muted: 0 0% 11%;                /* #1c1c1c */
+  --muted-foreground: 0 0% 45%;     /* mid gray      #737373 */
+  --accent: 43 96% 56%;             /* golden amber  #FBBF24 */
+  --accent-foreground: 0 0% 5%;
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 98%;
-  --input: 220 10% 17%;
+  --input: 0 0% 12%;
   --ring: 25 95% 53%;
 
-  /* Chart */
   --chart-1: 25 95% 53%;
   --chart-2: 43 96% 56%;
-  --chart-3: 220 9% 46%;
-  --chart-4: 15 80% 45%;
-  --chart-5: 220 9% 30%;
+  --chart-3: 0 0% 40%;
+  --chart-4: 15 80% 48%;
+  --chart-5: 0 0% 25%;
 
-  /* Sidebar */
-  --sidebar: 225 8% 8%;
-  --sidebar-foreground: 220 14% 90%;
-  --sidebar-border: 220 10% 16%;
+  --sidebar: 0 0% 4%;
+  --sidebar-foreground: 0 0% 90%;
+  --sidebar-border: 0 0% 12%;
   --sidebar-primary: 25 95% 53%;
-  --sidebar-primary-foreground: 225 8% 9%;
-  --sidebar-accent: 220 8% 16%;
-  --sidebar-accent-foreground: 220 14% 90%;
+  --sidebar-primary-foreground: 0 0% 5%;
+  --sidebar-accent: 0 0% 11%;
+  --sidebar-accent-foreground: 0 0% 90%;
   --sidebar-ring: 25 95% 53%;
 
   --app-font-sans: 'Lato', sans-serif;
   --app-font-serif: 'Playfair Display', Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: .5rem;
-
-  --shadow-2xs: 0px 1px 2px 0px rgba(0,0,0,0.55);
-  --shadow-xs:  0px 2px 4px 0px rgba(0,0,0,0.55);
-  --shadow-sm:  0px 2px 8px 0px rgba(0,0,0,0.65);
-  --shadow:     0px 4px 16px 0px rgba(0,0,0,0.65);
-  --shadow-md:  0px 6px 20px 0px rgba(0,0,0,0.70);
-  --shadow-lg:  0px 10px 32px 0px rgba(0,0,0,0.72);
-  --shadow-xl:  0px 16px 48px 0px rgba(0,0,0,0.78);
-  --shadow-2xl: 0px 24px 64px 0px rgba(0,0,0,0.82);
 
   --primary-border: hsl(var(--primary));
   --secondary-border: hsl(var(--secondary));
@@ -135,28 +115,28 @@
 /* ── Animations ── */
 @keyframes candle-flicker {
   0%,100% { transform: scaleX(1) scaleY(1) translateY(0); opacity: 1; }
-  20%  { transform: scaleX(0.90) scaleY(1.07) translateY(-2px) rotate(-2.5deg); opacity: 0.88; }
-  45%  { transform: scaleX(1.06) scaleY(0.96) translateY(1px) rotate(1.5deg); opacity: 0.94; }
-  70%  { transform: scaleX(0.93) scaleY(1.05) translateY(-1px) rotate(-1deg); opacity: 0.91; }
+  20%  { transform: scaleX(0.88) scaleY(1.07) translateY(-2px) rotate(-2.5deg); opacity: 0.86; }
+  45%  { transform: scaleX(1.07) scaleY(0.95) translateY(1px)  rotate(1.5deg);  opacity: 0.93; }
+  70%  { transform: scaleX(0.92) scaleY(1.06) translateY(-1px) rotate(-1deg);   opacity: 0.90; }
 }
-
 @keyframes candle-glow {
-  0%,100% { box-shadow: 0 0 16px 6px rgba(249,115,22,0.22), 0 0 32px 12px rgba(251,191,36,0.10); }
-  50%      { box-shadow: 0 0 24px 9px rgba(249,115,22,0.35), 0 0 48px 18px rgba(251,191,36,0.16); }
+  0%,100% { box-shadow: 0 0 18px 7px rgba(249,115,22,0.20), 0 0 36px 14px rgba(251,191,36,0.08); }
+  50%      { box-shadow: 0 0 26px 10px rgba(249,115,22,0.34), 0 0 52px 20px rgba(251,191,36,0.14); }
 }
-
 @keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(22px); }
+  from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes soft-pulse {
-  0%,100% { opacity: 0.55; }
+  0%,100% { opacity: 0.5; }
   50%     { opacity: 1; }
 }
-
 @keyframes step-appear {
-  from { opacity: 0; transform: translateX(14px); }
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes slide-left {
+  from { opacity: 0; transform: translateX(40px); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
@@ -165,6 +145,11 @@
 .fade-in-up    { animation: fade-in-up 0.55s ease-out forwards; }
 .soft-pulse    { animation: soft-pulse 3.2s ease-in-out infinite; }
 .step-appear   { animation: step-appear 0.32s ease-out forwards; }
+.slide-left    { animation: slide-left 0.4s ease-out forwards; }
+
+/* Hide scrollbar for carousels */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
 
 @layer base {
   * { @apply border-border; }
@@ -174,10 +159,4 @@
 
 @layer utilities {
   input[type="search"]::-webkit-search-cancel-button { @apply hidden; }
-  .hover-elevate, .active-elevate, .hover-elevate-2, .active-elevate-2 { position: relative; z-index: 0; }
-  .hover-elevate::after, .active-elevate::after, .hover-elevate-2::after, .active-elevate-2::after {
-    content: ""; pointer-events: none; position: absolute; inset: 0px; border-radius: inherit; z-index: 999;
-  }
-  .hover-elevate:hover::after, .active-elevate:active::after { background-color: var(--elevate-1); }
-  .hover-elevate-2:hover::after, .active-elevate-2:active::after { background-color: var(--elevate-2); }
 }
