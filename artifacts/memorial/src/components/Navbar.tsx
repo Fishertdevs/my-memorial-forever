@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useState } from "react";
 
 const navLinks = [
-  { href: "/", label: "Inicio" },
+  { href: "/", label: "Home" },
   { href: "/personas", label: "En Memoria" },
   { href: "/velas", label: "Encender Vela" },
   { href: "/recuerdos", label: "Recuerdos" },
