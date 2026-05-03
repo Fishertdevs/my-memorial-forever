@@ -190,13 +190,13 @@ function HeroSection({
 
       {/* ── Content grid ── */}
       <div
-        className="relative max-w-7xl mx-auto px-8 lg:px-14 grid lg:grid-cols-2 gap-0"
+        className="relative max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 grid lg:grid-cols-[1.05fr_0.95fr] gap-0"
         style={{ minHeight: "92vh" }}
       >
         {/* LEFT PANEL */}
-        <div className="flex flex-col justify-center py-20 pr-10 lg:pr-16">
+        <div className="flex flex-col justify-center py-16 sm:py-20 lg:py-24 pr-0 lg:pr-16">
           {/* Tabs / pills */}
-          <div className="flex gap-3 mb-10">
+          <div className="flex flex-wrap gap-3 mb-8 sm:mb-10">
             <button
               onClick={() => handleTabClick("memorial")}
               className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300"
@@ -231,6 +231,7 @@ function HeroSection({
 
           {/* Animated content */}
           <div
+            className="max-w-xl"
             style={{
               opacity: visible ? 1 : 0,
               transform: visible ? "translateY(0)" : "translateY(18px)",
@@ -240,26 +241,26 @@ function HeroSection({
             {isMemorial ? (
               /* ── Memorial slide ── */
               <div>
-                <p
-                  className="text-xs tracking-[0.28em] uppercase mb-5 font-bold"
+                  <p
+                    className="text-xs tracking-[0.28em] uppercase mb-4 sm:mb-5 font-bold"
                   style={{ color: "#f97316" }}
                 >
                   En tu memoria
                 </p>
                 <h1
-                  className="font-serif leading-[0.92] mb-5"
+                  className="font-serif leading-[0.92] mb-4 sm:mb-5"
                   style={{ fontSize: "clamp(2.8rem, 5vw, 5rem)", color: "#0d0d0d" }}
                 >
                   {persona.nombre}
                 </h1>
                 {persona.fechaNacimiento && persona.fechaFallecimiento && (
-                  <p className="text-sm tracking-wide mb-5" style={{ color: "rgba(0,0,0,0.40)" }}>
+                  <p className="text-sm tracking-wide mb-4 sm:mb-5" style={{ color: "rgba(0,0,0,0.40)" }}>
                     {persona.fechaNacimiento} — {persona.fechaFallecimiento}
                   </p>
                 )}
                 {persona.biografia && (
                   <p
-                    className="text-base leading-relaxed mb-8 max-w-lg line-clamp-4"
+                    className="text-base leading-relaxed mb-7 sm:mb-8 max-w-lg line-clamp-4"
                     style={{ color: "rgba(0,0,0,0.55)" }}
                   >
                     {persona.biografia}
@@ -276,9 +277,9 @@ function HeroSection({
             ) : (
               /* ── Velitas slide ── */
               vela ? (
-                <div>
+              <div className="max-w-xl">
                   <p
-                    className="text-xs tracking-[0.28em] uppercase mb-5 font-bold"
+                    className="text-xs tracking-[0.28em] uppercase mb-4 sm:mb-5 font-bold"
                     style={{ color: "#f97316" }}
                   >
                     Velitas encendidas
@@ -293,7 +294,7 @@ function HeroSection({
                       </p>
                       <p
                         className="font-serif leading-snug mb-4"
-                        style={{ fontSize: "clamp(1.4rem, 3vw, 2.2rem)", color: "#f7f7f7" }}
+                        style={{ fontSize: "clamp(1.5rem, 3vw, 2.5rem)", color: "#f7f7f7" }}
                       >
                         "{vela.mensaje}"
                       </p>
@@ -345,45 +346,36 @@ function HeroSection({
             className="relative overflow-hidden shadow-2xl"
             style={{
               width: "100%",
-              maxWidth: 440,
+              maxWidth: 470,
               aspectRatio: "4/5",
-              borderRadius: "2rem",
+              borderRadius: "2.25rem",
               boxShadow: "0 40px 80px rgba(0,0,0,0.55)",
             }}
           >
-            {persona.fotoPrincipal ? (
-              <img
-                src={persona.fotoPrincipal}
-                alt={persona.nombre}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              /* Placeholder elegante cuando no hay foto */
-              <div
-                className="w-full h-full flex flex-col items-center justify-center"
-                style={{
-                  background: "linear-gradient(160deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%)",
-                }}
-              >
-                <div className="mb-6">
-                  <CandleFlame size="lg" />
-                </div>
-                <p className="font-serif text-white/30 text-sm tracking-[0.3em] uppercase">
-                  En tu memoria
-                </p>
-                <p className="font-serif text-white text-xl mt-2 text-center px-6">
-                  {persona.nombre}
+            <img
+              src={persona.fotoPrincipal || heroImage}
+              alt={persona.nombre}
+              className="w-full h-full object-cover"
+              style={{ objectPosition: persona.fotoPrincipal ? "center center" : "center center" }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(180deg,rgba(0,0,0,0.02) 0%,rgba(0,0,0,0.08) 45%,rgba(0,0,0,0.35) 100%)",
+              }}
+            />
+            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+              <div className="rounded-full bg-white/88 px-4 py-2 shadow-sm">
+                <p className="text-[10px] tracking-[0.3em] uppercase text-black/45">
+                  En su memoria
                 </p>
               </div>
-            )}
-            {/* Overlay inferior */}
-            <div
-              className="absolute bottom-0 left-0 right-0 px-6 py-5"
-              style={{ background: "linear-gradient(to top, rgba(0,0,0,0.70) 0%, transparent 100%)" }}
-            >
-              <p className="text-white/80 text-xs tracking-[0.22em] uppercase font-semibold">
-                Siempre en nuestros corazones
-              </p>
+              <div className="rounded-full bg-black/30 px-4 py-2 backdrop-blur-sm">
+                <p className="text-[10px] tracking-[0.3em] uppercase text-white/85">
+                  Velitas encendidas
+                </p>
+              </div>
             </div>
           </div>
         </div>
