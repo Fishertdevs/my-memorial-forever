@@ -107,65 +107,105 @@ function HeroCarousel() {
 
 interface Vela { id: number; nombreRecordado: string; nombreAutor: string; mensaje: string; tiempoTranscurrido: string; }
 
+const FLAME_COLORS = [
+  { outer: "#f97316", inner: "#fbbf24", glow: "rgba(249,115,22,0.25)" },
+  { outer: "#ef4444", inner: "#fca5a5", glow: "rgba(239,68,68,0.22)" },
+  { outer: "#f59e0b", inner: "#fde68a", glow: "rgba(245,158,11,0.25)" },
+  { outer: "#f97316", inner: "#fed7aa", glow: "rgba(249,115,22,0.20)" },
+];
+
+function VelaCard({ vela, index }: { vela: Vela; index: number }) {
+  const fc = FLAME_COLORS[index % FLAME_COLORS.length];
+  return (
+    <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 h-full">
+      <div className="flex items-start gap-3">
+        <div className="flex-shrink-0 pt-0.5">
+          <CandleFlame size="sm" outerColor={fc.outer} innerColor={fc.inner} glowColor={fc.glow} />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-bold text-orange-500 mb-1.5 truncate">Por {vela.nombreRecordado}</p>
+          <p className="text-black/65 text-sm leading-relaxed line-clamp-4 mb-3">{vela.mensaje}</p>
+          <div className="flex items-center justify-between text-xs text-black/35">
+            <span className="truncate mr-2">{vela.nombreAutor}</span>
+            <span className="flex-shrink-0">{vela.tiempoTranscurrido}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CandlesCarousel({ velas }: { velas: Vela[] }) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [canPrev, setCanPrev] = useState(false);
-  const [canNext, setCanNext] = useState(true);
+  const [page, setPage] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const scroll = (dir: "left" | "right") => trackRef.current?.scrollBy({ left: dir === "right" ? 320 : -320, behavior: "smooth" });
+  /* Responsive: 3 per page on md+, 1 on mobile */
+  const [perPage, setPerPage] = useState(typeof window !== "undefined" && window.innerWidth >= 768 ? 3 : 1);
+  useEffect(() => {
+    const update = () => setPerPage(window.innerWidth >= 768 ? 3 : 1);
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
-  const onScroll = () => {
-    if (!trackRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = trackRef.current;
-    setCanPrev(scrollLeft > 8);
-    setCanNext(scrollLeft < scrollWidth - clientWidth - 8);
-  };
+  const totalPages = Math.ceil(velas.length / perPage);
 
-  useEffect(() => { setTimeout(onScroll, 100); }, [velas]);
+  const next = useCallback(() => setPage((p) => (p + 1) % totalPages), [totalPages]);
+  const prev = useCallback(() => setPage((p) => (p - 1 + totalPages) % totalPages), [totalPages]);
 
-  const FLAME_COLORS = [
-    { outer: "#f97316", inner: "#fbbf24", glow: "rgba(249,115,22,0.25)" },
-    { outer: "#ef4444", inner: "#fca5a5", glow: "rgba(239,68,68,0.22)" },
-    { outer: "#f59e0b", inner: "#fde68a", glow: "rgba(245,158,11,0.25)" },
-    { outer: "#f97316", inner: "#fed7aa", glow: "rgba(249,115,22,0.20)" },
-  ];
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = setInterval(next, 6000);
+  }, [next]);
+
+  useEffect(() => { resetTimer(); return () => { if (timerRef.current) clearInterval(timerRef.current); }; }, [resetTimer]);
+
+  const visibleVelas = velas.slice(page * perPage, page * perPage + perPage);
 
   return (
-    <div className="relative">
-      {canPrev && (
-        <button onClick={() => scroll("left")} className="absolute left-0 top-1/2 -translate-y-1/2 z-10 -translate-x-5 w-10 h-10 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all">
+    <div>
+      {/* Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" style={{ minHeight: 160 }}>
+        {visibleVelas.map((vela, i) => (
+          <div key={`${page}-${vela.id}`} className="fade-in-up" style={{ animationDelay: `${i * 0.07}s` }}>
+            <VelaCard vela={vela} index={page * perPage + i} />
+          </div>
+        ))}
+      </div>
+
+      {/* Centered nav arrows + dots */}
+      <div className="flex items-center justify-center gap-4 mt-2">
+        <button
+          onClick={() => { prev(); resetTimer(); }}
+          className="w-10 h-10 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all"
+          aria-label="Anterior"
+        >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 3l-5 5 5 5"/></svg>
         </button>
-      )}
-      <div ref={trackRef} onScroll={onScroll} className="flex gap-4 overflow-x-auto no-scrollbar pb-2" style={{ scrollSnapType: "x mandatory" }}>
-        {velas.map((vela, i) => {
-          const fc = FLAME_COLORS[i % FLAME_COLORS.length];
-          return (
-            <div key={vela.id} className="flex-shrink-0 w-72 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300" style={{ scrollSnapAlign: "start" }}>
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 pt-0.5">
-                  <CandleFlame size="sm" outerColor={fc.outer} innerColor={fc.inner} glowColor={fc.glow} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-orange-500 mb-1 truncate">Por {vela.nombreRecordado}</p>
-                  <p className="text-black/65 text-sm leading-relaxed line-clamp-3 mb-3">{vela.mensaje}</p>
-                  <div className="flex items-center justify-between text-xs text-black/35">
-                    <span className="truncate mr-2">{vela.nombreAutor}</span>
-                    <span className="flex-shrink-0">{vela.tiempoTranscurrido}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      {canNext && (
-        <button onClick={() => scroll("right")} className="absolute right-0 top-1/2 -translate-y-1/2 z-10 translate-x-5 w-10 h-10 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all">
+
+        <div className="flex items-center gap-2">
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => { setPage(i); resetTimer(); }}
+              className="rounded-full transition-all duration-300"
+              style={{
+                width: i === page ? 22 : 8,
+                height: 8,
+                background: i === page ? "#f97316" : "#e5e7eb",
+              }}
+              aria-label={`Página ${i + 1}`}
+            />
+          ))}
+        </div>
+
+        <button
+          onClick={() => { next(); resetTimer(); }}
+          className="w-10 h-10 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all"
+          aria-label="Siguiente"
+        >
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 3l5 5-5 5"/></svg>
         </button>
-      )}
-      <div className="pointer-events-none absolute left-0 top-0 bottom-2 w-6 bg-gradient-to-r from-white to-transparent" />
-      <div className="pointer-events-none absolute right-0 top-0 bottom-2 w-6 bg-gradient-to-l from-white to-transparent" />
+      </div>
     </div>
   );
 }
@@ -231,16 +271,13 @@ export default function Home() {
       {velasData && velasData.data.length > 0 && (
         <section className="py-16 px-8 border-b border-gray-100">
           <div className="max-w-5xl mx-auto">
-            <div className="flex items-end justify-between mb-8">
-              <div>
-                <p className="text-xs text-orange-500 tracking-widest uppercase mb-1.5 font-bold">Llamas de amor</p>
-                <h2 className="font-serif text-3xl text-black">Velitas encendidas</h2>
-              </div>
+            <h2 className="font-serif text-3xl text-black text-center mb-8">Velitas encendidas</h2>
+            <CandlesCarousel velas={velasData.data} />
+            <div className="text-center mt-7">
               <Link href="/velas" className="text-sm font-semibold text-black/40 hover:text-orange-500 transition-colors">
                 Ver todas →
               </Link>
             </div>
-            <CandlesCarousel velas={velasData.data} />
           </div>
         </section>
       )}
