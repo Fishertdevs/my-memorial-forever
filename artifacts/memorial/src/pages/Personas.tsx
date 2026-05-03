@@ -1,7 +1,13 @@
-import { useListPersonas, useListVelas, getListVelasQueryKey } from "@workspace/api-client-react";
+import { useState } from "react";
+import {
+  useListPersonas, useListVelas, useCreateVela,
+  getListVelasQueryKey,
+} from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
 
 function formatDateEs(raw?: string | null): string {
   if (!raw) return "";
@@ -32,6 +38,101 @@ function MiniCandle({ colorIdx }: { colorIdx: number }) {
       </div>
       <div style={{ width: 1.5, height: 3, background: "#666", borderRadius: 1 }} />
       <div style={{ width: ww, height: wh, background: "linear-gradient(160deg,#f0f0f0 0%,#d1d5db 55%,#9ca3af 100%)", borderRadius: "2px 2px 1px 1px", border: "1px solid #d1d5db", filter: `drop-shadow(0 0 7px ${c.glow})` }} />
+    </div>
+  );
+}
+
+const inputClass =
+  "w-full bg-white border-2 border-gray-100 focus:border-orange-400 rounded-xl px-4 py-3 text-black text-sm focus:outline-none transition-colors placeholder:text-black/25";
+
+function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: number; personaNombre: string; onLit: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [done, setDone] = useState(false);
+  const [nombreAutor, setNombreAutor] = useState("");
+  const [mensaje, setMensaje] = useState("");
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const createVela = useCreateVela();
+
+  const canSubmit = nombreAutor.trim().length > 0 && mensaje.trim().length > 0;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!canSubmit) return;
+    try {
+      await createVela.mutateAsync({
+        data: { personaId, nombreRecordado: personaNombre, nombreAutor: nombreAutor.trim(), mensaje: mensaje.trim() },
+      });
+      queryClient.invalidateQueries({ queryKey: getListVelasQueryKey({ personaId, limit: 50 }) });
+      setDone(true);
+      onLit();
+    } catch {
+      toast({ title: "No se pudo encender la velita", variant: "destructive" });
+    }
+  };
+
+  const reset = () => { setDone(false); setNombreAutor(""); setMensaje(""); setOpen(false); };
+
+  return (
+    <div className="mt-6">
+      {!open ? (
+        <button
+          onClick={() => setOpen(true)}
+          className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl border-2 border-dashed border-orange-200 text-orange-500 font-semibold text-sm hover:bg-orange-50 hover:border-orange-400 transition-all"
+        >
+          <CandleFlame size="sm" />
+          Encender una velita
+        </button>
+      ) : done ? (
+        <div className="border-2 border-orange-200 bg-orange-50 rounded-2xl p-6 text-center">
+          <CandleFlame size="md" className="mx-auto mb-3" />
+          <p className="font-serif text-lg text-black mb-1">Tu velita está encendida</p>
+          <p className="text-black/45 text-sm mb-4">Gracias por honrar su memoria.</p>
+          <button onClick={reset} className="text-orange-500 text-sm font-semibold hover:underline">
+            Encender otra velita
+          </button>
+        </div>
+      ) : (
+        <div className="border-2 border-orange-200 rounded-2xl p-5 bg-orange-50/30">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-xs font-bold tracking-widest uppercase" style={{ color: "#f97316" }}>
+              Encender una velita
+            </p>
+            <button onClick={() => setOpen(false)} className="text-black/30 hover:text-black/60 transition-colors">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 1l12 12M13 1L1 13" /></svg>
+            </button>
+          </div>
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <input
+              autoFocus
+              value={nombreAutor}
+              onChange={(e) => setNombreAutor(e.target.value)}
+              className={inputClass}
+              placeholder="Tu nombre"
+              maxLength={80}
+            />
+            <textarea
+              value={mensaje}
+              onChange={(e) => setMensaje(e.target.value)}
+              rows={3}
+              className={inputClass + " resize-none"}
+              placeholder={`Escribe un mensaje para ${personaNombre}…`}
+              maxLength={400}
+            />
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-xs text-black/25">{mensaje.length}/400</span>
+              <button
+                type="submit"
+                disabled={!canSubmit || createVela.isPending}
+                className="px-7 py-2.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-30 text-white"
+                style={{ background: canSubmit ? "#f97316" : "#f3f4f6", color: canSubmit ? "white" : "#9ca3af" }}
+              >
+                {createVela.isPending ? "Encendiendo…" : "🕯 Encender"}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 }
@@ -98,6 +199,7 @@ function VelasSection({ personaId }: { personaId: number }) {
 
 export default function Personas() {
   const { data: personas, isLoading } = useListPersonas();
+  const [, forceUpdate] = useState(0);
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -186,6 +288,13 @@ export default function Personas() {
                     )}
                   </div>
                 </div>
+
+                {/* Light candle form */}
+                <LightCandleForm
+                  personaId={personas[0].id}
+                  personaNombre={personas[0].nombre}
+                  onLit={() => forceUpdate((n) => n + 1)}
+                />
 
                 {/* Velas section */}
                 <VelasSection personaId={personas[0].id} />

@@ -5,7 +5,6 @@ const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/personas", label: "Memorial" },
   { href: "/recuerdos", label: "Recuerdos" },
-  { href: "/velas", label: "Enciende tu velita" },
 ];
 
 export default function Navbar() {

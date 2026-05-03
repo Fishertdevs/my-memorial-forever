@@ -93,22 +93,8 @@ export default function PersonaDetail() {
     );
   }
 
-  if (!persona) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Navbar />
-        <div className="pt-24 text-center px-4">
-          <p className="text-black/50 text-xl mt-20">Persona no encontrada.</p>
-          <Link href="/personas" className="mt-6 inline-block text-orange-500 hover:underline">
-            Volver al memorial
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const velaCount = velasData?.total ?? persona.totalVelas ?? 0;
-  const recuerdoCount = recuerdosData?.total ?? persona.totalRecuerdos ?? 0;
+  const velaCount = velasData?.total ?? persona?.totalVelas ?? 0;
+  const recuerdoCount = recuerdosData?.total ?? persona?.totalRecuerdos ?? 0;
   const recuerdos = recuerdosData?.data ?? [];
 
   useEffect(() => {
@@ -122,6 +108,20 @@ export default function PersonaDetail() {
   useEffect(() => {
     if (recuerdoIndex >= recuerdos.length) setRecuerdoIndex(0);
   }, [recuerdos.length, recuerdoIndex]);
+
+  if (!persona) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Navbar />
+        <div className="pt-24 text-center px-4">
+          <p className="text-black/50 text-xl mt-20">Persona no encontrada.</p>
+          <Link href="/personas" className="mt-6 inline-block text-orange-500 hover:underline">
+            Volver al memorial
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white text-black">
