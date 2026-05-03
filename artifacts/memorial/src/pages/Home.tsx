@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { Link } from "wouter";
 import { useListPersonas } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
-import heroImage from "@assets/image_1777782921821.png";
 
 /* ─────── Helpers ─────── */
 function formatDateEs(raw?: string): string {
@@ -22,64 +20,36 @@ function HeroSection({
     nombre: string;
     fechaNacimiento?: string;
     fechaFallecimiento?: string;
-    biografia?: string;
-    fotoPrincipal?: string;
-    totalVelas?: number;
-    totalRecuerdos?: number;
   };
 }) {
   return (
-    <section className="relative overflow-hidden" style={{ minHeight: "calc(100vh - 64px)" }}>
-      {/* Split background */}
-      <div className="absolute inset-0 pointer-events-none bg-white" aria-hidden />
+    <section className="bg-white border-b border-black/5">
+      <div className="max-w-5xl mx-auto px-8 sm:px-12 lg:px-16 py-20 sm:py-28">
+        <h1
+          className="font-serif leading-tight mb-4"
+          style={{ fontSize: "clamp(2.6rem, 5vw, 4rem)", color: "#0d0d0d", maxWidth: 560 }}
+        >
+          {persona.nombre}
+        </h1>
 
-      <div className="relative max-w-7xl mx-auto flex" style={{ minHeight: "calc(100vh - 64px)" }}>
+        {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
+          <p className="text-sm mb-8" style={{ color: "rgba(0,0,0,0.38)", letterSpacing: "0.01em" }}>
+            {formatDateEs(persona.fechaNacimiento)}
+            {persona.fechaNacimiento && persona.fechaFallecimiento && " — "}
+            {formatDateEs(persona.fechaFallecimiento)}
+          </p>
+        )}
 
-        {/* LEFT */}
-        <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-20" style={{ width: "55%", minHeight: "calc(100vh - 64px)", background: "#fff" }}>
-          <div style={{ maxWidth: 540 }}>
-            <h1
-              className="hero-enter-2 font-serif leading-[0.9] mb-5"
-              style={{ fontSize: "clamp(2.4rem, 4.2vw, 4.4rem)", color: "#0d0d0d" }}
-            >
-              {persona.nombre}
-            </h1>
-            <p className="hero-enter-3 text-sm tracking-wide mb-6" style={{ color: "rgba(0,0,0,0.38)" }}>
-              {formatDateEs(persona.fechaNacimiento)}
-              {persona.fechaNacimiento && persona.fechaFallecimiento && " — "}
-              {formatDateEs(persona.fechaFallecimiento)}
-            </p>
-            <div className="hero-enter-5 mb-8 flex items-center gap-4">
-              <div className="w-10 h-0.5 rounded-full" style={{ background: "#f97316" }} />
-              <Link
-                href={`/personas/${persona.id}`}
-                className="hero-enter-6 inline-flex items-center text-sm font-semibold transition-colors hover:opacity-75"
-                style={{ color: "#f97316" }}
-              >
-                Recuérdalo aquí
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT */}
-        <div className="hidden lg:flex items-center justify-center py-14 pr-12" style={{ width: "45%", background: "#fff" }}>
-          <div className="relative" style={{ width: "100%", maxWidth: 400 }}>
-            <div
-              className="relative overflow-hidden"
-              style={{
-                width: "100%",
-                aspectRatio: "3/4",
-                borderRadius: "2.4rem 1.3rem 2.2rem 1.5rem",
-                border: "1px solid rgba(0,0,0,0.08)",
-                boxShadow: "0 24px 50px rgba(0,0,0,0.10)",
-                backgroundImage: `url(${heroImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            />
-          </div>
+        <div className="flex items-center gap-3">
+          <div className="h-px w-8" style={{ background: "#f97316" }} />
+          <div className="h-px w-3" style={{ background: "#f97316" }} />
+          <Link
+            href={`/personas/${persona.id}`}
+            className="text-sm font-medium transition-opacity hover:opacity-70"
+            style={{ color: "#f97316" }}
+          >
+            Recuérdalo aquí
+          </Link>
         </div>
       </div>
     </section>
