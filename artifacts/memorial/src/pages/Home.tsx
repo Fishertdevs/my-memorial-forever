@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { useListVelas, useListPersonas } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
-import heroImage from "@assets/image_1777782317576.png";
+import heroImage from "@assets/image_1777782442837.png";
 
 /* ─────── Helpers ─────── */
 function formatDateEs(raw?: string): string {
@@ -161,11 +161,6 @@ function HeroSection({
                 {formatDateEs(persona.fechaFallecimiento)}
               </p>
             )}
-            {persona.biografia && (
-              <p className="hero-enter-4 text-[1.0625rem] leading-[1.7] mb-9 line-clamp-4" style={{ color: "rgba(0,0,0,0.52)" }}>
-                {persona.biografia}
-              </p>
-            )}
             <div className="hero-enter-5 mb-8 flex items-center gap-4">
               <div className="w-10 h-0.5 rounded-full" style={{ background: "#f97316" }} />
               <Link
@@ -209,8 +204,8 @@ function HeroSection({
             style={{
               width: "100%",
               aspectRatio: "3/4",
-              borderRadius: "2.25rem 1.2rem 2.1rem 1.4rem",
-              boxShadow: "0 32px 72px rgba(0,0,0,0.18), 0 0 0 1px rgba(255,255,255,0.08)",
+              borderRadius: "2.4rem 1.3rem 2.2rem 1.5rem",
+              boxShadow: "0 30px 70px rgba(0,0,0,0.16), 0 0 0 1px rgba(255,255,255,0.08)",
             }}
           >
             <img src={heroImage} alt={persona.nombre} className="w-full h-full object-cover" />
