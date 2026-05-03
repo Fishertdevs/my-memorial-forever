@@ -50,7 +50,7 @@ function HeroSection({
         </div>
 
         {/* Text — centered vertically, centered horizontally */}
-        <div className="flex flex-col justify-center items-center text-center px-8 sm:px-12 lg:px-16 flex-1 sm:order-1 order-2" style={{ paddingTop: "1.25rem", paddingBottom: "3rem" }}>
+        <div className="flex flex-col justify-center items-center text-center px-8 sm:px-12 lg:px-16 flex-1 sm:order-1 order-2" style={{ paddingTop: "0.5rem", paddingBottom: "2rem" }}>
           <span
             className="block mb-6 text-xs uppercase tracking-[0.28em]"
             style={{ color: "#f97316" }}
@@ -80,7 +80,7 @@ function HeroSection({
 
           <p
             className="text-xs italic"
-            style={{ color: "rgba(0,0,0,0.28)", maxWidth: 300, lineHeight: 1.8, marginTop: "-1.2rem" }}
+            style={{ color: "rgba(0,0,0,0.28)", maxWidth: 300, lineHeight: 1.8, marginTop: "-0.35rem" }}
           >
             "Que su alma descanse en la paz del Señor y su luz brille eternamente."
           </p>
