@@ -79,4 +79,21 @@ router.post("/recuerdos", async (req, res) => {
   });
 });
 
+router.patch("/recuerdos/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  if (isNaN(id)) { res.status(400).json({ error: "ID inválido" }); return; }
+  const { mensaje } = req.body ?? {};
+  if (!mensaje?.trim()) { res.status(400).json({ error: "Mensaje requerido" }); return; }
+  const [updated] = await db.update(recuerdosTable).set({ mensaje: mensaje.trim() }).where(eq(recuerdosTable.id, id)).returning();
+  if (!updated) { res.status(404).json({ error: "Recuerdo no encontrado" }); return; }
+  res.json({ id: updated.id, mensaje: updated.mensaje, tiempoTranscurrido: timeAgo(updated.createdAt) });
+});
+
+router.delete("/recuerdos/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  if (isNaN(id)) { res.status(400).json({ error: "ID inválido" }); return; }
+  await db.delete(recuerdosTable).where(eq(recuerdosTable.id, id));
+  res.status(204).end();
+});
+
 export default router;

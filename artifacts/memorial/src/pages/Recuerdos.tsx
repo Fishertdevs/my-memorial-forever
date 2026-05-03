@@ -11,6 +11,13 @@ import CandleFlame from "@/components/CandleFlame";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 
+const NOMBRES_HOMENAJE = [
+  "Ana Soledad Lizarazo Calderón",
+  "Pablo Esteban Aguirre Camargo",
+  "Carlos Alberto Camargo Munevar",
+];
+const NOMBRES_CORTOS = "Ana Soledad, Pablo Esteban y Carlos Alberto";
+
 const inputClass =
   "w-full bg-white border-2 border-gray-100 focus:border-orange-400 rounded-xl px-4 py-3 text-black text-sm focus:outline-none transition-colors placeholder:text-black/25";
 
@@ -58,6 +65,7 @@ function compressImage(file: File, maxSize = 900): Promise<string> {
 
 function PostCard({
   recuerdo,
+  personaId,
 }: {
   recuerdo: {
     id: number;
@@ -66,14 +74,69 @@ function PostCard({
     fotoUrl?: string | null;
     tiempoTranscurrido: string;
   };
+  personaId?: number;
 }) {
+  const likeKey = `like_recuerdo_${recuerdo.id}`;
   const [expanded, setExpanded] = useState(false);
-  const isLong = recuerdo.mensaje.length > 180;
-  const displayText =
-    isLong && !expanded ? recuerdo.mensaje.slice(0, 180) + "…" : recuerdo.mensaje;
+  const [liked, setLiked] = useState(() => localStorage.getItem(likeKey) === "1");
+  const [editing, setEditing] = useState(false);
+  const [editMsg, setEditMsg] = useState(recuerdo.mensaje);
+  const [currentMsg, setCurrentMsg] = useState(recuerdo.mensaje);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const isLong = currentMsg.length > 180;
+  const displayText = isLong && !expanded ? currentMsg.slice(0, 180) + "…" : currentMsg;
+
+  const toggleLike = () => {
+    const next = !liked;
+    setLiked(next);
+    if (next) localStorage.setItem(likeKey, "1");
+    else localStorage.removeItem(likeKey);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editMsg.trim() || editMsg.trim() === currentMsg) { setEditing(false); return; }
+    setSaving(true);
+    try {
+      await fetch(`/api/recuerdos/${recuerdo.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mensaje: editMsg.trim() }),
+      });
+      setCurrentMsg(editMsg.trim());
+      setEditing(false);
+      if (personaId !== undefined) {
+        queryClient.invalidateQueries({ queryKey: getListRecuerdosQueryKey({ personaId, limit: 50 }) });
+      }
+    } catch {
+      toast({ title: "No se pudo editar el recuerdo", variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm("¿Eliminar este recuerdo?")) return;
+    setDeleting(true);
+    try {
+      await fetch(`/api/recuerdos/${recuerdo.id}`, { method: "DELETE" });
+      if (personaId !== undefined) {
+        queryClient.invalidateQueries({ queryKey: getListRecuerdosQueryKey({ personaId, limit: 50 }) });
+      }
+    } catch {
+      toast({ title: "No se pudo eliminar el recuerdo", variant: "destructive" });
+      setDeleting(false);
+    }
+  };
 
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:border-orange-200 hover:shadow-md hover:shadow-orange-50 transition-all duration-300 fade-in-up">
+    <div
+      className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:border-orange-200 hover:shadow-md hover:shadow-orange-50 transition-all duration-300 fade-in-up"
+      style={{ opacity: deleting ? 0.4 : 1 }}
+    >
       {/* Header */}
       <div className="flex items-center gap-3 px-5 pt-5 pb-3">
         <Avatar name={recuerdo.nombreAutor} />
@@ -102,17 +165,85 @@ function PostCard({
 
       {/* Caption */}
       <div className="px-5 py-4">
-        <p className="text-black/70 text-sm leading-relaxed">
-          {displayText}
-          {isLong && (
+        {editing ? (
+          <textarea
+            autoFocus
+            value={editMsg}
+            onChange={(e) => setEditMsg(e.target.value)}
+            rows={4}
+            maxLength={600}
+            className="w-full border-2 border-orange-300 rounded-xl px-3 py-2 text-sm text-black resize-none focus:outline-none focus:border-orange-500"
+          />
+        ) : (
+          <p className="text-black/70 text-sm leading-relaxed">
+            {displayText}
+            {isLong && (
+              <button
+                onClick={() => setExpanded(!expanded)}
+                className="ml-1 text-orange-500 font-semibold hover:underline text-xs"
+              >
+                {expanded ? "ver menos" : "ver más"}
+              </button>
+            )}
+          </p>
+        )}
+      </div>
+
+      {/* Actions */}
+      <div className="px-5 pb-4 flex items-center gap-4 border-t border-gray-50 pt-3">
+        {editing ? (
+          <>
             <button
-              onClick={() => setExpanded(!expanded)}
-              className="ml-1 text-orange-500 font-semibold hover:underline text-xs"
+              onClick={handleSaveEdit}
+              disabled={saving}
+              className="text-xs font-semibold text-orange-500 hover:text-orange-600 disabled:opacity-40 transition-colors"
             >
-              {expanded ? "ver menos" : "ver más"}
+              {saving ? "Guardando…" : "Guardar"}
             </button>
-          )}
-        </p>
+            <button
+              onClick={() => { setEditing(false); setEditMsg(currentMsg); }}
+              className="text-xs text-black/35 hover:text-black/60 transition-colors"
+            >
+              Cancelar
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={toggleLike}
+              className="flex items-center gap-1.5 text-xs font-medium transition-colors"
+              style={{ color: liked ? "#e91e63" : "#9ca3af" }}
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              Me gusta
+            </button>
+            <button
+              onClick={() => setEditing(true)}
+              className="flex items-center gap-1.5 text-xs text-black/35 hover:text-orange-500 transition-colors"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
+              Editar
+            </button>
+            <button
+              onClick={handleDelete}
+              disabled={deleting}
+              className="flex items-center gap-1.5 text-xs text-black/35 hover:text-red-500 transition-colors ml-auto disabled:opacity-40"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <polyline points="3 6 5 6 21 6" />
+                <path d="M19 6l-1 14H6L5 6" />
+                <path d="M10 11v6M14 11v6" />
+                <path d="M9 6V4h6v2" />
+              </svg>
+              Eliminar
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
@@ -227,7 +358,6 @@ function NewPostForm({
               maxLength={80}
             />
 
-            {/* Photo drop zone */}
             <div
               className="relative rounded-xl border-2 border-gray-200 hover:border-orange-300 transition-colors cursor-pointer overflow-hidden"
               style={{ minHeight: fotoPreview ? undefined : 72 }}
@@ -286,6 +416,7 @@ function NewPostForm({
 export default function Recuerdos() {
   const { data: personas, isLoading: loadingPersonas } = useListPersonas();
   const persona = personas?.[0];
+  const personaNombre = persona?.nombre ?? NOMBRES_CORTOS;
 
   const { data: recuerdosData, isLoading: loadingRecuerdos } = useListRecuerdos(
     { personaId: persona?.id, limit: 50 },
@@ -305,11 +436,11 @@ export default function Recuerdos() {
           {/* Header */}
           <div className="text-center mb-10">
             <p className="text-xs font-bold tracking-widest uppercase mb-3" style={{ color: "#f97316" }}>
-              {persona ? `En memoria de ${persona.nombre}` : "Recuerdos"}
+              {persona ? `En memoria de ${persona.nombre}` : `En memoria de ${NOMBRES_CORTOS}`}
             </p>
             <h1 className="font-serif text-4xl text-black mb-3">Sus recuerdos</h1>
             <p className="text-black/45 max-w-sm mx-auto text-sm leading-relaxed">
-              Comparte una foto, una historia o un momento que atesoras con él.
+              Comparte una foto, una historia o un momento que atesoras con ellos.
               Cada recuerdo mantiene su luz viva.
             </p>
           </div>
@@ -323,7 +454,7 @@ export default function Recuerdos() {
           ) : persona ? (
             <NewPostForm
               personaId={persona.id}
-              personaNombre={persona.nombre}
+              personaNombre={personaNombre}
               onPosted={() => forceUpdate((n) => n + 1)}
             />
           ) : null}
@@ -348,7 +479,7 @@ export default function Recuerdos() {
           ) : recuerdos.length > 0 ? (
             <div className="space-y-5">
               {recuerdos.map((r) => (
-                <PostCard key={r.id} recuerdo={r} />
+                <PostCard key={r.id} recuerdo={r} personaId={persona?.id} />
               ))}
             </div>
           ) : (

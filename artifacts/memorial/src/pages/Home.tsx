@@ -205,7 +205,7 @@ export default function Home() {
         </p>
         <div className="flex flex-col sm:flex-row items-center gap-6 justify-center">
           <Link
-            href="/velas"
+            href="/personas"
             className="text-xs uppercase tracking-[0.28em] transition-opacity duration-200 hover:opacity-70"
             style={{ color: "#f97316" }}
           >
