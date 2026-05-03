@@ -99,7 +99,7 @@ export default function Velas() {
               <div className="step-appear" key={step}>
                 {step === 0 && (
                   <div className="space-y-2">
-                    {personas && personas.length > 0 && (
+                    {Array.isArray(personas) && personas.length > 0 && (
                       <div className="space-y-2 mb-4">
                         {personas.map((p) => (
                           <button key={p.id} type="button"
