@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { useListVelas, useListPersonas } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
+import heroImage from "@assets/image_1777781942049.png";
 
 /* ─────── Helpers ─────── */
 function formatDateEs(raw?: string): string {
@@ -168,19 +169,21 @@ function HeroSection({
                 {persona.biografia}
               </p>
             )}
-            <div className="hero-enter-5 w-10 h-0.5 rounded-full mb-8" style={{ background: "#f97316" }} />
-            <Link
-              href={`/personas/${persona.id}`}
-              className="hero-enter-6 inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:opacity-75"
-              style={{ color: "#f97316" }}
-            >
-              Recuérdalo aquí
-            </Link>
+            <div className="hero-enter-5 mb-8 flex items-center gap-4">
+              <div className="w-10 h-0.5 rounded-full" style={{ background: "#f97316" }} />
+              <Link
+                href={`/personas/${persona.id}`}
+                className="hero-enter-6 inline-flex items-center text-sm font-semibold transition-colors hover:opacity-75"
+                style={{ color: "#f97316" }}
+              >
+                Recuérdalo aquí
+              </Link>
+            </div>
           </div>
         </div>
 
         {/* RIGHT */}
-        <div className="hidden lg:flex items-center justify-center py-14 pr-12" style={{ width: "45%" }}>
+        <div className="hidden lg:flex items-center justify-center py-14 pr-12" style={{ width: "45%", background: "transparent" }}>
           {/* Decorative corner accents */}
           <div className="relative" style={{ width: "100%", maxWidth: 400 }}>
             {/* Top-left corner */}
@@ -213,39 +216,7 @@ function HeroSection({
               boxShadow: "0 32px 72px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06)",
             }}
           >
-            {persona.fotoPrincipal ? (
-              <img src={persona.fotoPrincipal} alt={persona.nombre} className="w-full h-full object-cover" />
-            ) : (
-              <div
-                className="w-full h-full flex flex-col items-center justify-center relative"
-                style={{ background: "linear-gradient(155deg, #1c1c2e 0%, #16213e 55%, #0f3460 100%)" }}
-              >
-                <div
-                  className="absolute pointer-events-none"
-                  style={{
-                    width: 200, height: 200, borderRadius: "50%",
-                    background: "radial-gradient(circle, rgba(249,115,22,0.22) 0%, transparent 70%)",
-                    top: "50%", left: "50%", transform: "translate(-50%, -60%)",
-                  }}
-                />
-                <div className="mb-6 relative z-10">
-                  <CandleFlame size="lg" />
-                </div>
-                <p className="font-serif text-white/25 text-xs tracking-[0.35em] uppercase mb-3 relative z-10">
-                  En tu memoria
-                </p>
-                <p className="font-serif text-white text-2xl text-center px-8 leading-snug relative z-10">
-                  {persona.nombre}
-                </p>
-                {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
-                  <p className="text-white/30 text-xs mt-3 tracking-widest relative z-10">
-                    {formatDateEs(persona.fechaNacimiento)}
-                    {persona.fechaNacimiento && persona.fechaFallecimiento && " – "}
-                    {formatDateEs(persona.fechaFallecimiento)}
-                  </p>
-                )}
-              </div>
-            )}
+            <img src={heroImage} alt={persona.nombre} className="w-full h-full object-cover" />
 
             {/* Bottom label */}
             <div className="absolute bottom-5 left-5 right-5">
