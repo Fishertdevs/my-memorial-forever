@@ -37,7 +37,7 @@ function VelaCard({ vela, index }: { vela: Vela; index: number }) {
               <button
                 className="transition-all duration-200 active:scale-90 flex-shrink-0"
                 style={{ background: "none", border: "none", padding: 0, cursor: "pointer", lineHeight: 1 }}
-                onClick={() => setLiked((l) => !l)}
+                onClick={() => setLiked(true)}
                 aria-label="Me gusta"
               >
                 {liked ? (
