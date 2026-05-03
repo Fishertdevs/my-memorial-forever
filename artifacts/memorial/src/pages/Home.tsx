@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { useListPersonas } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
+import personaImg from "@assets/image_1777785665151.png";
 
 /* ─────── Helpers ─────── */
 function formatDateEs(raw?: string): string {
@@ -23,33 +24,49 @@ function HeroSection({
   };
 }) {
   return (
-    <section className="bg-white border-b border-black/5">
-      <div className="max-w-5xl mx-auto px-8 sm:px-12 lg:px-16 py-20 sm:py-28">
-        <h1
-          className="font-serif leading-tight mb-4"
-          style={{ fontSize: "clamp(2.6rem, 5vw, 4rem)", color: "#0d0d0d", maxWidth: 560 }}
-        >
-          {persona.nombre}
-        </h1>
+    <section className="bg-white" style={{ borderBottom: "1px solid #0d0d0d" }}>
+      <div className="max-w-5xl mx-auto flex items-stretch">
+        {/* Image — left */}
+        <div className="hidden sm:block flex-shrink-0" style={{ width: 220 }}>
+          <img
+            src={personaImg}
+            alt={persona.nombre}
+            className="w-full h-full object-cover"
+            style={{ display: "block" }}
+          />
+        </div>
 
-        {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
-          <p className="text-sm mb-8" style={{ color: "rgba(0,0,0,0.38)", letterSpacing: "0.01em" }}>
-            {formatDateEs(persona.fechaNacimiento)}
-            {persona.fechaNacimiento && persona.fechaFallecimiento && " — "}
-            {formatDateEs(persona.fechaFallecimiento)}
-          </p>
-        )}
+        {/* Vertical divider */}
+        <div className="hidden sm:block w-px self-stretch" style={{ background: "#0d0d0d" }} />
 
-        <div className="flex items-center gap-3">
-          <div className="h-px w-8" style={{ background: "#f97316" }} />
-          <div className="h-px w-3" style={{ background: "#f97316" }} />
-          <Link
-            href={`/personas/${persona.id}`}
-            className="text-sm font-medium transition-opacity hover:opacity-70"
-            style={{ color: "#f97316" }}
+        {/* Text — right */}
+        <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-20 sm:py-24">
+          <h1
+            className="font-serif leading-tight mb-4"
+            style={{ fontSize: "clamp(2.4rem, 4.5vw, 3.8rem)", color: "#0d0d0d", maxWidth: 520 }}
           >
-            Recuérdalo aquí
-          </Link>
+            {persona.nombre}
+          </h1>
+
+          {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
+            <p className="text-sm mb-8" style={{ color: "rgba(0,0,0,0.38)", letterSpacing: "0.01em" }}>
+              {formatDateEs(persona.fechaNacimiento)}
+              {persona.fechaNacimiento && persona.fechaFallecimiento && " — "}
+              {formatDateEs(persona.fechaFallecimiento)}
+            </p>
+          )}
+
+          <div className="flex items-center gap-3">
+            <div className="h-px w-8" style={{ background: "#f97316" }} />
+            <div className="h-px w-3" style={{ background: "#f97316" }} />
+            <Link
+              href={`/personas/${persona.id}`}
+              className="text-sm font-medium transition-opacity hover:opacity-70"
+              style={{ color: "#f97316" }}
+            >
+              Recuérdalo aquí
+            </Link>
+          </div>
         </div>
       </div>
     </section>
