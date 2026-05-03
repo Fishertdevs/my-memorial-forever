@@ -127,6 +127,8 @@ function NewPostForm({
   personaNombre: string;
   onPosted: () => void;
 }) {
+  const [open, setOpen] = useState(false);
+  const [done, setDone] = useState(false);
   const [nombreAutor, setNombreAutor] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [fotoPreview, setFotoPreview] = useState<string | null>(null);
@@ -175,7 +177,7 @@ function NewPostForm({
       setMensaje("");
       setFotoPreview(null);
       setFotoData(null);
-      toast({ title: "Recuerdo publicado ✓" });
+      setDone(true);
       onPosted();
     } catch {
       toast({ title: "No se pudo publicar el recuerdo", variant: "destructive" });
@@ -184,79 +186,99 @@ function NewPostForm({
     }
   };
 
-  return (
-    <div className="bg-white border-2 border-gray-100 rounded-2xl p-5 mb-8 hover:border-orange-200 transition-colors">
-      <p className="text-xs font-bold tracking-widest uppercase mb-4" style={{ color: "#f97316" }}>
-        Compartir un recuerdo
-      </p>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          value={nombreAutor}
-          onChange={(e) => setNombreAutor(e.target.value)}
-          className={inputClass}
-          placeholder="Tu nombre"
-          maxLength={80}
-        />
+  const reset = () => { setDone(false); setNombreAutor(""); setMensaje(""); setFotoPreview(null); setFotoData(null); setOpen(false); };
 
-        {/* Photo drop zone */}
-        <div
-          className="relative rounded-xl border-2 border-dashed border-gray-200 hover:border-orange-300 transition-colors cursor-pointer overflow-hidden"
-          style={{ minHeight: fotoPreview ? undefined : 80 }}
-          onDrop={onDrop}
-          onDragOver={(e) => e.preventDefault()}
-          onClick={() => fileRef.current?.click()}
+  return (
+    <div className="mb-8">
+      {!open ? (
+        <button
+          onClick={() => setOpen(true)}
+          className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl border-2 border-orange-200 text-orange-500 font-semibold text-sm hover:bg-orange-50 hover:border-orange-400 transition-all"
         >
-          {fotoPreview ? (
-            <div className="relative">
-              <img src={fotoPreview} alt="preview" className="w-full object-cover rounded-xl" style={{ maxHeight: 280 }} />
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          Compartir recuerdo
+        </button>
+      ) : done ? (
+        <div className="border-2 border-orange-200 bg-orange-50 rounded-2xl p-6 text-center">
+          <svg className="mx-auto mb-3 text-orange-400" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 6L9 17l-5-5"/></svg>
+          <p className="font-serif text-lg text-black mb-1">Recuerdo publicado</p>
+          <p className="text-black/45 text-sm mb-4">Gracias por compartir este momento.</p>
+          <button onClick={reset} className="text-orange-500 text-sm font-semibold hover:underline">
+            Compartir otro recuerdo
+          </button>
+        </div>
+      ) : (
+        <div className="border-2 border-orange-200 rounded-2xl p-5 bg-orange-50/30">
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-xs font-bold tracking-widest uppercase" style={{ color: "#f97316" }}>
+              Compartir un recuerdo
+            </p>
+            <button onClick={() => setOpen(false)} className="text-black/30 hover:text-black/60 transition-colors">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 1l12 12M13 1L1 13"/></svg>
+            </button>
+          </div>
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <input
+              autoFocus
+              value={nombreAutor}
+              onChange={(e) => setNombreAutor(e.target.value)}
+              className={inputClass}
+              placeholder="Tu nombre"
+              maxLength={80}
+            />
+
+            {/* Photo drop zone */}
+            <div
+              className="relative rounded-xl border-2 border-dashed border-gray-200 hover:border-orange-300 transition-colors cursor-pointer overflow-hidden"
+              style={{ minHeight: fotoPreview ? undefined : 72 }}
+              onDrop={onDrop}
+              onDragOver={(e) => e.preventDefault()}
+              onClick={() => fileRef.current?.click()}
+            >
+              {fotoPreview ? (
+                <div className="relative">
+                  <img src={fotoPreview} alt="preview" className="w-full object-cover rounded-xl" style={{ maxHeight: 260 }} />
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); setFotoPreview(null); setFotoData(null); }}
+                    className="absolute top-2 right-2 w-7 h-7 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" strokeWidth="2"><path d="M1 1l8 8M9 1L1 9"/></svg>
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center gap-1.5 py-4 text-black/30">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                  <span className="text-xs">Añadir una foto <span className="text-black/20">(opcional)</span></span>
+                </div>
+              )}
+              <input ref={fileRef} type="file" accept="image/*" className="hidden"
+                onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ""; }} />
+            </div>
+
+            <textarea
+              value={mensaje}
+              onChange={(e) => setMensaje(e.target.value)}
+              rows={3}
+              className={inputClass + " resize-none"}
+              placeholder={`Comparte un recuerdo especial de ${personaNombre}…`}
+              maxLength={600}
+            />
+
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-xs text-black/25">{mensaje.length}/600</span>
               <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); setFotoPreview(null); setFotoData(null); }}
-                className="absolute top-2 right-2 w-7 h-7 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors"
+                type="submit"
+                disabled={!canSubmit || loading}
+                className="px-7 py-2.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-30 text-white"
+                style={{ background: canSubmit ? "#f97316" : "#f3f4f6", color: canSubmit ? "white" : "#9ca3af" }}
               >
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" strokeWidth="2"><path d="M1 1l8 8M9 1L1 9" /></svg>
+                {loading ? "Publicando…" : "Publicar"}
               </button>
             </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center gap-1.5 py-5 text-black/30">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-              <span className="text-xs">Añadir una foto <span className="text-black/20">(opcional)</span></span>
-            </div>
-          )}
-          <input
-            ref={fileRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ""; }}
-          />
+          </form>
         </div>
-
-        <textarea
-          value={mensaje}
-          onChange={(e) => setMensaje(e.target.value)}
-          rows={3}
-          className={inputClass + " resize-none"}
-          placeholder={`Comparte un recuerdo especial de ${personaNombre}…`}
-          maxLength={600}
-        />
-
-        <div className="flex justify-end">
-          <span className="text-xs text-black/25">{mensaje.length}/600</span>
-        </div>
-        <button
-          type="submit"
-          disabled={!canSubmit || loading}
-          className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl border-2 border-dashed font-semibold text-sm transition-all disabled:opacity-30"
-          style={{
-            borderColor: canSubmit ? "#fdba74" : "#e5e7eb",
-            color: canSubmit ? "#f97316" : "#9ca3af",
-            background: "transparent",
-          }}
-        >
-          {loading ? "Publicando…" : "Compartir recuerdo"}
-        </button>
-      </form>
+      )}
     </div>
   );
 }

@@ -78,7 +78,7 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
       {!open ? (
         <button
           onClick={() => setOpen(true)}
-          className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl border-2 border-dashed border-orange-200 text-orange-500 font-semibold text-sm hover:bg-orange-50 hover:border-orange-400 transition-all"
+          className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl border-2 border-orange-200 text-orange-500 font-semibold text-sm hover:bg-orange-50 hover:border-orange-400 transition-all"
         >
           <CandleFlame size="sm" />
           Enciende tu velita
