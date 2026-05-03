@@ -143,7 +143,7 @@ function VelasSection({ personaId }: { personaId: number }) {
   );
 
   if (isLoading) return null;
-  if (!velasData || velasData.data.length === 0) return null;
+  if (!velasData || !velasData.data || velasData.data.length === 0) return null;
 
   return (
     <div className="mt-8">

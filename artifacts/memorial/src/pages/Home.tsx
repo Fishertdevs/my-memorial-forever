@@ -1,91 +1,67 @@
 import { Link } from "wouter";
-import { useListPersonas } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
-import personaImg from "@assets/image_1777785665151.png";
-
-/* ─────── Helpers ─────── */
-function formatDateEs(raw?: string): string {
-  if (!raw) return "";
-  try {
-    const [y, m, d] = raw.split("-").map(Number);
-    return new Date(y, m - 1, d).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
-  } catch { return raw; }
-}
 
 /* ─────────────────── HERO ─────────────────── */
-function HeroSection({
-  persona,
-}: {
-  persona: {
-    id: number;
-    nombre: string;
-    fechaNacimiento?: string;
-    fechaFallecimiento?: string;
-  };
-}) {
+const PERSONAS_HOMENAJE = [
+  "Ana Soledad Lizarazo Calderón",
+  "Pablo Esteban Aguirre Camargo",
+  "Carlos Alberto Camargo Munevar",
+];
+
+function HeroSection() {
   return (
-    <section className="bg-white" style={{ borderBottom: "1px solid #0d0d0d" }}>
-      <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-stretch" style={{ minHeight: 440 }}>
-        <div
-          className="flex items-end justify-center flex-shrink-0 gap-4 px-8 pb-8 sm:px-0 sm:pb-0 sm:w-[360px] sm:order-2 order-1"
-          style={{ paddingTop: "6rem" }}
+    <section className="bg-white" style={{ borderBottom: "1px solid #e5e7eb" }}>
+      <div
+        className="max-w-4xl mx-auto flex flex-col items-center text-center px-6"
+        style={{ paddingTop: "5rem", paddingBottom: "4.5rem" }}
+      >
+        <span
+          className="block mb-8 text-xs uppercase tracking-[0.32em]"
+          style={{ color: "#f97316" }}
         >
-          <div className="flex-shrink-0 mb-2">
-            <CandleFlame size="md" />
-          </div>
+          En conmemoración a
+        </span>
 
-          <img
-            src={personaImg}
-            alt={persona.nombre}
-            style={{
-              display: "block",
-              width: 240,
-              height: 290,
-              objectFit: "cover",
-              borderRadius: "2.5rem 0.8rem 2.5rem 0.8rem",
-              boxShadow: "0 0 0 3px #fff, 0 0 0 5px #0d0d0d",
-            }}
-          />
+        <div className="flex flex-col items-center gap-0 w-full max-w-2xl">
+          {PERSONAS_HOMENAJE.map((nombre, i) => (
+            <div key={nombre} className="flex flex-col items-center w-full">
+              <h1
+                className="font-serif leading-snug hero-enter-1"
+                style={{
+                  fontSize: "clamp(1.55rem, 3.5vw, 2.55rem)",
+                  color: "#0d0d0d",
+                  animationDelay: `${i * 0.18}s`,
+                }}
+              >
+                {nombre}
+              </h1>
+              {i < PERSONAS_HOMENAJE.length - 1 && (
+                <div
+                  className="my-4"
+                  style={{ width: 28, height: 1.5, background: "#f97316", borderRadius: 1, opacity: 0.55 }}
+                />
+              )}
+            </div>
+          ))}
         </div>
 
-        {/* Text — centered vertically, centered horizontally */}
-        <div className="flex flex-col justify-center items-center text-center px-8 sm:px-12 lg:px-16 flex-1 sm:order-1 order-2" style={{ paddingTop: "0.5rem", paddingBottom: "2rem" }}>
-          <span
-            className="block mb-6 text-xs uppercase tracking-[0.28em]"
-            style={{ color: "#f97316" }}
-          >
-            En conmemoración a
-          </span>
+        <div className="mt-10 mb-8" style={{ width: 48, height: 2, background: "#f97316", borderRadius: 1 }} />
 
-          <h1
-            className="font-serif leading-[1.05] mb-5"
-            style={{ fontSize: "clamp(2.4rem, 4.5vw, 3.8rem)", color: "#0d0d0d" }}
-          >
-            {persona.nombre}
-          </h1>
-
-          <div className="mb-5" style={{ width: 36, height: 2, background: "#f97316", borderRadius: 1 }} />
-
-          {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
-            <p
-              className="text-sm mb-4"
-              style={{ color: "rgba(0,0,0,0.35)", letterSpacing: "0.04em" }}
-            >
-              {formatDateEs(persona.fechaNacimiento)}
-              {persona.fechaNacimiento && persona.fechaFallecimiento && <span style={{ margin: "0 0.5em" }}>—</span>}
-              {formatDateEs(persona.fechaFallecimiento)}
-            </p>
-          )}
-
-          <p
-            className="text-xs italic"
-            style={{ color: "rgba(0,0,0,0.28)", maxWidth: 300, lineHeight: 1.8, marginTop: "-0.35rem" }}
-          >
-            "Que su alma descanse en la paz del Señor y su luz brille eternamente."
-          </p>
+        <div className="flex items-end justify-center gap-10 sm:gap-16">
+          {PERSONAS_HOMENAJE.map((nombre) => (
+            <div key={nombre} className="flex flex-col items-center gap-1">
+              <CandleFlame size="sm" />
+            </div>
+          ))}
         </div>
 
+        <p
+          className="mt-8 text-xs italic"
+          style={{ color: "rgba(0,0,0,0.28)", maxWidth: 340, lineHeight: 1.85 }}
+        >
+          "Que sus almas descansen en la paz del Señor y su luz brille eternamente."
+        </p>
       </div>
     </section>
   );
@@ -93,21 +69,11 @@ function HeroSection({
 
 /* ─────────────────── HOME ─────────────────── */
 export default function Home() {
-  const { data: personas } = useListPersonas();
-  const persona = personas?.[0]
-    ? {
-        ...personas[0],
-        fechaNacimiento: personas[0].fechaNacimiento ?? undefined,
-        fechaFallecimiento: personas[0].fechaFallecimiento ?? undefined,
-        biografia: personas[0].biografia ?? undefined,
-        fotoPrincipal: personas[0].fotoPrincipal ?? undefined,
-      }
-    : undefined;
   return (
     <div className="min-h-screen bg-white text-black">
       <Navbar />
 
-      {persona && <HeroSection persona={persona} />}
+      <HeroSection />
 
       {/* Homenaje */}
       <section className="py-24 px-4 text-center" style={{ background: "#ffffff" }}>
