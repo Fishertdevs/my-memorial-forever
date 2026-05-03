@@ -29,7 +29,7 @@ function HeroSection({
       <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-stretch" style={{ minHeight: 440 }}>
         <div
           className="flex items-end justify-center flex-shrink-0 gap-4 px-8 pb-8 sm:px-0 sm:pb-0 sm:w-[360px] sm:order-2 order-1"
-          style={{ paddingTop: "4rem" }}
+          style={{ paddingTop: "6rem" }}
         >
           <div className="flex-shrink-0 mb-2">
             <CandleFlame size="md" />
