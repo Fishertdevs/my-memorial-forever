@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { useListVelas, useListPersonas } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
+import heroImage from "@assets/image_1777777551997.png";
 
 
 interface Vela { id: number; nombreRecordado: string; nombreAutor: string; mensaje: string; tiempoTranscurrido: string; }
@@ -129,42 +130,55 @@ export default function Home() {
     <div className="min-h-screen bg-white text-black">
       <Navbar />
 
-      {/* Persona spotlight */}
+      {/* Unified hero */}
       {persona && (
-        <section className="py-16 px-6 border-b border-gray-100">
-          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center gap-8">
-            <div className="relative flex-shrink-0">
-              <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-gray-100 border-2 border-orange-200 flex items-center justify-center font-serif text-5xl text-orange-400 overflow-hidden">
-                {persona.fotoPrincipal
-                  ? <img src={persona.fotoPrincipal} alt={persona.nombre} className="w-full h-full object-cover" />
-                  : persona.nombre.charAt(0)}
+        <section className="relative overflow-hidden bg-[#0b0b10] text-white">
+          <div className="absolute inset-0">
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,#f97316_0%,#f97316_47%,#0b0b10_47%,#0b0b10_100%)] opacity-95" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_35%,rgba(255,255,255,0.14),transparent_26%),radial-gradient(circle_at_72%_50%,rgba(255,255,255,0.08),transparent_28%)]" />
+          </div>
+
+          <div className="relative max-w-7xl mx-auto px-6 py-14 sm:py-20">
+            <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+              <div className="relative z-10 max-w-2xl">
+                <p className="text-xs tracking-[0.28em] uppercase text-white/60 mb-4">
+                  En su memoria
+                </p>
+                <h1 className="font-serif text-5xl sm:text-6xl lg:text-7xl leading-[0.95] text-white mb-6">
+                  {persona.nombre}
+                </h1>
+                <p className="text-white/55 text-sm tracking-wide mb-4">
+                  {persona.fechaNacimiento} — {persona.fechaFallecimiento}
+                </p>
+                <p className="text-white/75 text-base sm:text-lg leading-relaxed max-w-xl mb-8">
+                  {persona.biografia}
+                </p>
+                <Link href={`/personas/${persona.id}`} className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/15">
+                  Recuérdalo aquí →
+                </Link>
               </div>
-              <div className="absolute -bottom-2 -right-1"><CandleFlame size="sm" /></div>
-            </div>
-            <div className="text-center sm:text-left">
-              <p className="text-xs text-orange-500 tracking-widest uppercase mb-2 font-bold">En su memoria</p>
-              <h2 className="font-serif text-3xl sm:text-4xl text-black mb-2">{persona.nombre}</h2>
-              {persona.fechaNacimiento && persona.fechaFallecimiento && (
-                <p className="text-black/40 text-sm tracking-wide mb-3">{persona.fechaNacimiento} — {persona.fechaFallecimiento}</p>
-              )}
-              {persona.biografia && (
-                <p className="text-black/55 leading-relaxed text-sm max-w-lg line-clamp-3 mb-4">{persona.biografia}</p>
-              )}
-              <Link href={`/personas/${persona.id}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors">
-                Recuérdalo aquí →
-              </Link>
+
+              <div className="relative z-10">
+                <div className="relative mx-auto aspect-[4/5] max-w-[420px] overflow-hidden rounded-[2rem] shadow-2xl shadow-black/40">
+                  <img
+                    src={heroImage}
+                    alt="Memorial"
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.05)_0%,rgba(0,0,0,0.16)_100%)]" />
+                  <div className="absolute bottom-5 left-5 rounded-full bg-black/40 px-4 py-2 text-xs font-semibold tracking-[0.22em] text-white/90 backdrop-blur">
+                    Velitas encendidas
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
       )}
 
-
-      {/* Orange divider */}
-      <div className="w-full" style={{ height: 3, background: "#f97316" }} />
-
       {/* Candles carousel */}
       {velasData && velasData.data.length > 0 && (
-        <section className="py-16 px-8 border-b border-gray-100">
+        <section className="py-16 px-8 bg-white">
           <div className="max-w-5xl mx-auto">
             <h2 className="font-serif text-3xl text-black text-center mb-8">Velitas encendidas</h2>
             <CandlesCarousel velas={velasData.data} />
