@@ -438,10 +438,9 @@ export default function Recuerdos() {
             <p className="text-xs font-bold tracking-widest uppercase mb-3" style={{ color: "#f97316" }}>
               {persona ? `En memoria de ${persona.nombre}` : `En memoria de ${NOMBRES_CORTOS}`}
             </p>
-            <h1 className="font-serif text-4xl text-black mb-3">Sus recuerdos</h1>
+            <h1 className="font-serif text-4xl text-black mb-3">Un recuerdo es una alegría que aún perdura</h1>
             <p className="text-black/45 max-w-sm mx-auto text-sm leading-relaxed">
-              Comparte una foto, una historia o un momento que atesoras con ellos.
-              Cada recuerdo mantiene su luz viva.
+              Comparte una foto, una historia o un instante especial. Cada recuerdo es una luz que nunca se apaga.
             </p>
           </div>
 

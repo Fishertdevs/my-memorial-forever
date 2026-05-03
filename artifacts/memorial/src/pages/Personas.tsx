@@ -149,7 +149,7 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
               onChange={(e) => setMensaje(e.target.value)}
               rows={3}
               className={inputClass + " resize-none"}
-              placeholder={`Escribe un mensaje para ${personaNombre}…`}
+              placeholder="Escribe un mensaje especial…"
               maxLength={400}
             />
             <div className="flex items-center justify-between pt-1">
@@ -375,15 +375,11 @@ export default function Personas() {
             <p className="text-xs font-bold tracking-widest uppercase mb-3" style={{ color: "#f97316" }}>
               En conmemoración a
             </p>
-            {isLoading ? (
-              <Skeleton className="h-10 w-80 mx-auto bg-gray-100" />
-            ) : (
-              <h1 className="font-serif text-4xl text-black mb-4 leading-snug">{tituloSeccion}</h1>
-            )}
+            <h1 className="font-serif text-4xl text-black mb-3 leading-snug">
+              Siempre estarás en nuestra memoria
+            </h1>
             <p className="text-black/50 max-w-md mx-auto leading-relaxed">
-              {personas && personas.length === 1
-                ? "Su vida fue un regalo y su recuerdo, un tesoro que guardamos para siempre en el corazón. Aquí honramos su memoria con amor y gratitud."
-                : "Cada vida es una historia que merece ser recordada. Aquí honramos a quienes amamos con todo el corazón."}
+              Con esta velita te recordaremos siempre. Que su luz siga brillando en cada corazón que los amó.
             </p>
           </div>
 
