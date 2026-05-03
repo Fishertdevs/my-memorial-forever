@@ -140,10 +140,7 @@ function HeroSection({
       <div className="relative max-w-7xl mx-auto flex" style={{ minHeight: "calc(100vh - 64px)" }}>
 
         {/* LEFT */}
-        <div
-          className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-20"
-          style={{ width: "55%", backgroundImage: `url(${heroImage})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", minHeight: "calc(100vh - 64px)" }}
-        >
+        <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-20" style={{ width: "55%", minHeight: "calc(100vh - 64px)", background: "#fff" }}>
           <div style={{ maxWidth: 540 }}>
             <h1
               className="hero-enter-2 font-serif leading-[0.9] mb-5"
@@ -151,6 +148,11 @@ function HeroSection({
             >
               {persona.nombre}
             </h1>
+            <p className="hero-enter-3 text-sm tracking-wide mb-6" style={{ color: "rgba(0,0,0,0.38)" }}>
+              {formatDateEs(persona.fechaNacimiento)}
+              {persona.fechaNacimiento && persona.fechaFallecimiento && " — "}
+              {formatDateEs(persona.fechaFallecimiento)}
+            </p>
             <div className="hero-enter-5 mb-8 flex items-center gap-4">
               <div className="w-10 h-0.5 rounded-full" style={{ background: "#f97316" }} />
               <Link
@@ -165,49 +167,22 @@ function HeroSection({
         </div>
 
         {/* RIGHT */}
-        <div className="hidden lg:flex items-center justify-center py-14 pr-12" style={{ width: "45%", background: "transparent" }}>
+        <div className="hidden lg:flex items-center justify-center py-14 pr-12" style={{ width: "45%", background: "#fff" }}>
           <div className="relative" style={{ width: "100%", maxWidth: 400 }}>
-            {/* Top-left corner */}
-            <div className="absolute -top-3 -left-3 z-10 pointer-events-none" style={{ width: 28, height: 28 }}>
-              <div className="absolute top-0 left-0 w-full h-0.5 rounded-full" style={{ background: "#f97316" }} />
-              <div className="absolute top-0 left-0 h-full w-0.5 rounded-full" style={{ background: "#f97316" }} />
-            </div>
-            {/* Top-right corner */}
-            <div className="absolute -top-3 -right-3 z-10 pointer-events-none" style={{ width: 28, height: 28 }}>
-              <div className="absolute top-0 right-0 w-full h-0.5 rounded-full" style={{ background: "#f97316" }} />
-              <div className="absolute top-0 right-0 h-full w-0.5 rounded-full" style={{ background: "#f97316" }} />
-            </div>
-            {/* Bottom-left corner */}
-            <div className="absolute -bottom-3 -left-3 z-10 pointer-events-none" style={{ width: 28, height: 28 }}>
-              <div className="absolute bottom-0 left-0 w-full h-0.5 rounded-full" style={{ background: "#f97316" }} />
-              <div className="absolute bottom-0 left-0 h-full w-0.5 rounded-full" style={{ background: "#f97316" }} />
-            </div>
-            {/* Bottom-right corner */}
-            <div className="absolute -bottom-3 -right-3 z-10 pointer-events-none" style={{ width: 28, height: 28 }}>
-              <div className="absolute bottom-0 right-0 w-full h-0.5 rounded-full" style={{ background: "#f97316" }} />
-              <div className="absolute bottom-0 right-0 h-full w-0.5 rounded-full" style={{ background: "#f97316" }} />
-            </div>
-
-          <div
-            className="relative overflow-hidden"
-            style={{
-              width: "100%",
-              aspectRatio: "3/4",
-              borderRadius: "2.4rem 1.3rem 2.2rem 1.5rem",
-              boxShadow: "0 30px 70px rgba(0,0,0,0.16), 0 0 0 1px rgba(255,255,255,0.08)",
-              backgroundImage: `url(${heroImage})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-            }}
-          >
             <div
-              className="absolute inset-0"
+              className="relative overflow-hidden"
               style={{
-                background: "linear-gradient(to top, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 38%)",
+                width: "100%",
+                aspectRatio: "3/4",
+                borderRadius: "2.4rem 1.3rem 2.2rem 1.5rem",
+                border: "1px solid rgba(0,0,0,0.08)",
+                boxShadow: "0 24px 50px rgba(0,0,0,0.10)",
+                backgroundImage: `url(${heroImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
               }}
             />
-          </div>
         </div>
       </div>
     </section>
