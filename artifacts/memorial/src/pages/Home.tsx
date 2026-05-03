@@ -1,109 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Link, useLocation } from "wouter";
-import { useGetStats, useListVelas, useListPersonas } from "@workspace/api-client-react";
+import { Link } from "wouter";
+import { useListVelas, useListPersonas } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
 
-const HERO_CARDS = [
-  {
-    href: "/personas",
-    label: "Memorial",
-    title: "Su historia,\nsu legado",
-    subtitle: "Conoce la vida de quien siempre recordaremos con amor",
-    cta: "Ver memorial",
-    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&q=80",
-  },
-  {
-    href: "/velas",
-    label: "Encender Velita",
-    title: "Una llama\npor él",
-    subtitle: "Enciende una velita y deja un mensaje desde el corazón",
-    cta: "Encender velita",
-    img: "https://images.unsplash.com/photo-1605106702842-01a887a31122?w=1200&q=80",
-  },
-  {
-    href: "/recuerdos",
-    label: "Recuerdos",
-    title: "Momentos\neternos",
-    subtitle: "Fotos y recuerdos que mantienen su memoria viva para siempre",
-    cta: "Ver recuerdos",
-    img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1200&q=80",
-  },
-];
-
-function HeroCarousel() {
-  const [current, setCurrent] = useState(0);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [, navigate] = useLocation();
-
-  const next = useCallback(() => setCurrent((c) => (c + 1) % HERO_CARDS.length), []);
-  const prev = useCallback(() => setCurrent((c) => (c - 1 + HERO_CARDS.length) % HERO_CARDS.length), []);
-
-  const resetTimer = useCallback(() => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(next, 5500);
-  }, [next]);
-
-  useEffect(() => { resetTimer(); return () => { if (timerRef.current) clearInterval(timerRef.current); }; }, [resetTimer]);
-
-  const card = HERO_CARDS[current];
-
-  return (
-    <div className="relative w-full overflow-hidden" style={{ height: "85vh", minHeight: 520 }}>
-      {HERO_CARDS.map((c, i) => (
-        <div key={i} className="absolute inset-0 transition-opacity duration-700" style={{ opacity: i === current ? 1 : 0, zIndex: i === current ? 1 : 0 }}>
-          <img src={c.img} alt="" className="w-full h-full object-cover" style={{ filter: "brightness(0.25)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.25) 70%, transparent 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 50%)" }} />
-        </div>
-      ))}
-
-      <div className="relative z-10 flex flex-col justify-center h-full max-w-6xl mx-auto px-6 sm:px-10">
-        <div key={current} className="slide-left max-w-xl">
-          <span className="inline-block text-xs font-bold tracking-[0.22em] uppercase px-3 py-1.5 rounded-full mb-5 bg-orange-500/20 text-orange-400 border border-orange-500/30">
-            {card.label}
-          </span>
-          <h1 className="font-serif text-5xl sm:text-6xl md:text-7xl font-bold text-white leading-tight mb-5 whitespace-pre-line">
-            {card.title}
-          </h1>
-          <p className="text-white/65 text-lg mb-8 leading-relaxed font-light">{card.subtitle}</p>
-          <button
-            onClick={() => navigate(card.href)}
-            className="inline-flex items-center gap-2 px-7 py-3.5 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-all duration-200 text-sm shadow-lg shadow-orange-900/30"
-          >
-            {card.cta}
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
-          </button>
-        </div>
-      </div>
-
-      <button onClick={() => { prev(); resetTimer(); }} className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white/80 hover:bg-orange-500 hover:border-orange-500 transition-all">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4l-5 5 5 5"/></svg>
-      </button>
-      <button onClick={() => { next(); resetTimer(); }} className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white/80 hover:bg-orange-500 hover:border-orange-500 transition-all">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2"><path d="M7 4l5 5-5 5"/></svg>
-      </button>
-
-      <div className="absolute bottom-7 left-1/2 -translate-x-1/2 z-20 flex gap-3">
-        {HERO_CARDS.map((c, i) => (
-          <button
-            key={i}
-            onClick={() => { setCurrent(i); resetTimer(); }}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl border backdrop-blur-sm text-xs font-semibold transition-all duration-300"
-            style={{
-              background: i === current ? "rgba(249,115,22,0.25)" : "rgba(0,0,0,0.45)",
-              borderColor: i === current ? "rgba(249,115,22,0.6)" : "rgba(255,255,255,0.12)",
-              color: i === current ? "#fb923c" : "rgba(255,255,255,0.5)",
-            }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full transition-all" style={{ background: i === current ? "#f97316" : "rgba(255,255,255,0.3)" }} />
-            {c.label}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 interface Vela { id: number; nombreRecordado: string; nombreAutor: string; mensaje: string; tiempoTranscurrido: string; }
 
@@ -120,7 +20,7 @@ function VelaCard({ vela, index }: { vela: Vela; index: number }) {
 
   return (
     <div
-      className="relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 h-full select-none cursor-default overflow-hidden"
+      className="relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 h-full overflow-hidden"
     >
 
       <div className="flex items-start gap-3">
@@ -221,7 +121,6 @@ function CandlesCarousel({ velas }: { velas: Vela[] }) {
 }
 
 export default function Home() {
-  const { data: stats, isLoading: statsLoading } = useGetStats();
   const { data: velasData } = useListVelas({ limit: 30 });
   const { data: personas } = useListPersonas();
   const persona = personas?.[0];
@@ -229,7 +128,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white text-black">
       <Navbar />
-      <div className="pt-16"><HeroCarousel /></div>
 
       {/* Persona spotlight */}
       {persona && (
