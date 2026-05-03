@@ -25,9 +25,9 @@ function HeroSection({
 }) {
   return (
     <section className="bg-white" style={{ borderBottom: "1px solid #0d0d0d" }}>
-      <div className="max-w-5xl mx-auto flex items-stretch" style={{ minHeight: 420 }}>
-        {/* Text — left, vertically centered */}
-        <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-16 flex-1">
+      <div className="max-w-5xl mx-auto flex items-stretch" style={{ minHeight: 440 }}>
+        {/* Text — centered vertically, centered horizontally */}
+        <div className="flex flex-col justify-center items-center text-center px-8 sm:px-12 lg:px-16 py-16 flex-1">
           <span
             className="block mb-6 text-xs uppercase tracking-[0.28em]"
             style={{ color: "#f97316" }}
@@ -37,7 +37,7 @@ function HeroSection({
 
           <h1
             className="font-serif leading-[1.05] mb-5"
-            style={{ fontSize: "clamp(2.4rem, 4.5vw, 3.8rem)", color: "#0d0d0d", maxWidth: 460 }}
+            style={{ fontSize: "clamp(2.4rem, 4.5vw, 3.8rem)", color: "#0d0d0d" }}
           >
             {persona.nombre}
           </h1>
@@ -63,10 +63,10 @@ function HeroSection({
           </p>
         </div>
 
-        {/* Image — right, vertically centered, floating above divider */}
+        {/* Image — right, vertically centered with top/bottom breathing room */}
         <div
           className="hidden sm:flex items-center justify-center flex-shrink-0"
-          style={{ width: 340, padding: "2.5rem 2.5rem 2.5rem 1rem" }}
+          style={{ width: 340, padding: "3.5rem 2.5rem 3.5rem 1rem" }}
         >
           <img
             src={personaImg}
@@ -77,9 +77,8 @@ function HeroSection({
               height: 300,
               objectFit: "cover",
               borderRadius: "2.5rem 0.8rem 2.5rem 0.8rem",
-              /* layered borders: image → white gap → orange → white gap → black */
-              boxShadow:
-                "0 0 0 3px #fff, 0 0 0 5px #f97316, 0 0 0 7px #fff, 0 0 0 9px #0d0d0d",
+              /* layered borders: white gap → black only */
+              boxShadow: "0 0 0 3px #fff, 0 0 0 5px #0d0d0d",
             }}
           />
         </div>
