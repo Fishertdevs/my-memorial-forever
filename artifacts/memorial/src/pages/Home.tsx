@@ -50,7 +50,7 @@ function HeroSection({
         </div>
 
         {/* Text — centered vertically, centered horizontally */}
-        <div className="flex flex-col justify-center items-center text-center px-8 sm:px-12 lg:px-16 flex-1 sm:order-1 order-2" style={{ paddingTop: "2rem", paddingBottom: "3rem" }}>
+        <div className="flex flex-col justify-center items-center text-center px-8 sm:px-12 lg:px-16 flex-1 sm:order-1 order-2" style={{ paddingTop: "1.25rem", paddingBottom: "3rem" }}>
           <span
             className="block mb-6 text-xs uppercase tracking-[0.28em]"
             style={{ color: "#f97316" }}
