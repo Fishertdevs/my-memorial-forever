@@ -82,7 +82,7 @@ function CarouselModal({ persona, onClose }: { persona: Persona; onClose: () => 
         </button>
 
         {/* Image carousel */}
-        <div className="relative overflow-hidden rounded-t-2xl bg-gray-900" style={{ height: 300 }}>
+        <div className="relative overflow-hidden rounded-t-2xl" style={{ height: 300 }}>
           {images.map((src, i) => (
             <div key={i} className="absolute inset-0 transition-opacity duration-500" style={{ opacity: i === current ? 1 : 0 }}>
               <img src={src} alt={persona.nombre} className="w-full h-full object-cover" />

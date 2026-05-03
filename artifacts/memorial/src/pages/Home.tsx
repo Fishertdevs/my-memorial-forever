@@ -175,44 +175,12 @@ function HeroSection({
               style={{ color: "#f97316" }}
             >
               Recuérdalo aquí
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
             </Link>
-          </div>
-
-          {/* Stats row */}
-          <div className="flex gap-6 mt-12 pt-8" style={{ borderTop: "1.5px solid #f97316" }}>
-            <div>
-              <p className="text-2xl font-serif font-bold text-black">∞</p>
-              <p className="text-xs text-black/40 mt-0.5 tracking-wide">Días en nuestro corazón</p>
-            </div>
-            <div style={{ width: 1, background: "rgba(0,0,0,0.08)" }} />
-            {persona.totalVelas !== undefined && (
-              <div>
-                <p className="text-2xl font-serif font-bold" style={{ color: "#f97316" }}>
-                  {persona.totalVelas}
-                </p>
-                <p className="text-xs text-black/40 mt-0.5 tracking-wide">Velitas encendidas</p>
-              </div>
-            )}
-            {persona.totalRecuerdos !== undefined && (
-              <>
-                <div style={{ width: 1, background: "rgba(0,0,0,0.08)" }} />
-                <div>
-                  <p className="text-2xl font-serif font-bold text-black">
-                    {persona.totalRecuerdos}
-                  </p>
-                  <p className="text-xs text-black/40 mt-0.5 tracking-wide">Recuerdos</p>
-                </div>
-              </>
-            )}
           </div>
         </div>
 
         {/* RIGHT */}
-        <div
-          className="hidden lg:flex items-center justify-center py-14 pr-12"
-          style={{ width: "45%", background: "#0d0d0d" }}
-        >
+        <div className="hidden lg:flex items-center justify-center py-14 pr-12" style={{ width: "45%" }}>
           {/* Decorative corner accents */}
           <div className="relative" style={{ width: "100%", maxWidth: 400 }}>
             {/* Top-left corner */}
@@ -278,12 +246,6 @@ function HeroSection({
                 )}
               </div>
             )}
-
-            {/* Bottom gradient */}
-            <div
-              className="absolute bottom-0 left-0 right-0 pointer-events-none"
-              style={{ height: "40%", background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 100%)" }}
-            />
 
             {/* Bottom label */}
             <div className="absolute bottom-5 left-5 right-5">
