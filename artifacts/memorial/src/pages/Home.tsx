@@ -27,8 +27,30 @@ function HeroSection({
   return (
     <section className="bg-white" style={{ borderBottom: "1px solid #0d0d0d" }}>
       <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-stretch" style={{ minHeight: 440 }}>
+        <div
+          className="flex items-end justify-center flex-shrink-0 gap-4 px-8 pb-8 sm:px-0 sm:pb-0 sm:w-[360px] sm:order-2 order-1"
+          style={{ paddingTop: "1rem" }}
+        >
+          <div className="flex-shrink-0 mb-2">
+            <CandleFlame size="md" />
+          </div>
+
+          <img
+            src={personaImg}
+            alt={persona.nombre}
+            style={{
+              display: "block",
+              width: 240,
+              height: 290,
+              objectFit: "cover",
+              borderRadius: "2.5rem 0.8rem 2.5rem 0.8rem",
+              boxShadow: "0 0 0 3px #fff, 0 0 0 5px #0d0d0d",
+            }}
+          />
+        </div>
+
         {/* Text — centered vertically, centered horizontally */}
-        <div className="flex flex-col justify-center items-center text-center px-8 sm:px-12 lg:px-16 flex-1" style={{ paddingTop: "5rem", paddingBottom: "3rem" }}>
+        <div className="flex flex-col justify-center items-center text-center px-8 sm:px-12 lg:px-16 flex-1 sm:order-1 order-2" style={{ paddingTop: "5rem", paddingBottom: "3rem" }}>
           <span
             className="block mb-6 text-xs uppercase tracking-[0.28em]"
             style={{ color: "#f97316" }}
@@ -64,29 +86,6 @@ function HeroSection({
           </p>
         </div>
 
-        {/* Image + candle — right */}
-        <div
-          className="flex items-end justify-center flex-shrink-0 gap-4 px-8 pb-8 sm:px-0 sm:pb-0 sm:w-[360px]"
-          style={{ paddingTop: "1rem" }}
-        >
-          {/* Candle beside the image */}
-          <div className="flex-shrink-0 mb-2">
-            <CandleFlame size="md" />
-          </div>
-
-          <img
-            src={personaImg}
-            alt={persona.nombre}
-            style={{
-              display: "block",
-              width: 240,
-              height: 290,
-              objectFit: "cover",
-              borderRadius: "2.5rem 0.8rem 2.5rem 0.8rem",
-              boxShadow: "0 0 0 3px #fff, 0 0 0 5px #0d0d0d",
-            }}
-          />
-        </div>
       </div>
     </section>
   );
