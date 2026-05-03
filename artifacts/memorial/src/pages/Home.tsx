@@ -203,19 +203,18 @@ function HeroSection({
               aspectRatio: "3/4",
               borderRadius: "2.4rem 1.3rem 2.2rem 1.5rem",
               boxShadow: "0 30px 70px rgba(0,0,0,0.16), 0 0 0 1px rgba(255,255,255,0.08)",
+              backgroundImage: `url(${heroImage})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
             }}
           >
-            <img src={heroImage} alt={persona.nombre} className="w-full h-full object-cover" />
-
-            {/* Bottom label */}
-            <div className="absolute bottom-5 left-5 right-5">
-              <span
-                className="text-[10px] tracking-[0.28em] uppercase font-semibold px-3 py-1.5 rounded-full"
-                style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.80)", backdropFilter: "blur(6px)" }}
-              >
-                Siempre en nuestros corazones
-              </span>
-            </div>
+            <div
+              className="absolute inset-0"
+              style={{
+                background: "linear-gradient(to top, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 38%)",
+              }}
+            />
           </div>
           </div>{/* /decorative wrapper */}
         </div>
