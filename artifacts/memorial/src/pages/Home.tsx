@@ -25,48 +25,50 @@ function HeroSection({
 }) {
   return (
     <section className="bg-white" style={{ borderBottom: "1px solid #0d0d0d" }}>
-      <div className="max-w-5xl mx-auto flex items-stretch">
+      <div className="max-w-5xl mx-auto flex items-center">
         {/* Text — left */}
-        <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-20 sm:py-24 flex-1">
+        <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-20 sm:py-28 flex-1">
+          {/* Label */}
+          <span
+            className="block mb-6 text-xs uppercase tracking-[0.28em]"
+            style={{ color: "#f97316" }}
+          >
+            En su memoria
+          </span>
+
           <h1
-            className="font-serif leading-tight mb-4"
-            style={{ fontSize: "clamp(2.4rem, 4.5vw, 3.8rem)", color: "#0d0d0d", maxWidth: 520 }}
+            className="font-serif leading-[1.05] mb-5"
+            style={{ fontSize: "clamp(2.6rem, 4.8vw, 4rem)", color: "#0d0d0d", maxWidth: 480 }}
           >
             {persona.nombre}
           </h1>
 
+          {/* Thin orange rule */}
+          <div className="mb-5" style={{ width: 40, height: 2, background: "#f97316", borderRadius: 1 }} />
+
           {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
-            <p className="text-sm mb-8" style={{ color: "rgba(0,0,0,0.38)", letterSpacing: "0.01em" }}>
+            <p
+              className="text-sm"
+              style={{ color: "rgba(0,0,0,0.35)", letterSpacing: "0.04em", fontVariantNumeric: "tabular-nums" }}
+            >
               {formatDateEs(persona.fechaNacimiento)}
-              {persona.fechaNacimiento && persona.fechaFallecimiento && " — "}
+              {persona.fechaNacimiento && persona.fechaFallecimiento && <span style={{ margin: "0 0.5em" }}>—</span>}
               {formatDateEs(persona.fechaFallecimiento)}
             </p>
           )}
-
-          <div className="flex items-center gap-3">
-            <div className="h-px w-8" style={{ background: "#f97316" }} />
-            <div className="h-px w-3" style={{ background: "#f97316" }} />
-            <Link
-              href={`/personas/${persona.id}`}
-              className="text-sm font-medium transition-opacity hover:opacity-70"
-              style={{ color: "#f97316" }}
-            >
-              Recuérdalo aquí
-            </Link>
-          </div>
         </div>
 
         {/* Image — right */}
-        <div className="hidden sm:flex items-center justify-center flex-shrink-0 py-8 px-10" style={{ width: 320 }}>
+        <div className="hidden sm:flex items-end justify-center flex-shrink-0 pt-12 px-10 pb-0" style={{ width: 320, alignSelf: "flex-end" }}>
           <img
             src={personaImg}
             alt={persona.nombre}
             style={{
               display: "block",
               width: 260,
-              height: 300,
+              height: 320,
               objectFit: "cover",
-              borderRadius: "3rem 0.8rem 3rem 0.8rem",
+              borderRadius: "3rem 0.8rem 0 0.8rem",
               border: "2px solid #0d0d0d",
             }}
           />
