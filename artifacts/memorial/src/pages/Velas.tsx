@@ -177,11 +177,11 @@ export default function Velas() {
         </div>
 
         {/* Candles list at bottom */}
-        {velasData && velasData.data.length > 0 && (
+        {velasData && Array.isArray(velasData.data) && velasData.data.length > 0 && (
           <div className="border-t border-gray-100 px-4 py-10 bg-gray-50">
             <div className="max-w-4xl mx-auto">
               <p className="text-center text-xs font-bold tracking-widest uppercase mb-8" style={{ color: "#f97316" }}>
-                {velasData.total} velitas encendidas
+                {velasData.total ?? velasData.data.length} velitas encendidas
               </p>
               <div className="flex flex-wrap justify-center gap-6">
                 {velasData.data.slice(0, 12).map((vela) => (
