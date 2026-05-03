@@ -155,30 +155,30 @@ function VelaCard({ vela, index }: { vela: Vela; index: number }) {
         <div className="flex-1 min-w-0">
           <p className="text-xs font-bold text-orange-500 mb-1.5 truncate">Por {vela.nombreRecordado}</p>
           <p className="text-black/65 text-sm leading-relaxed line-clamp-4 mb-3">{vela.mensaje}</p>
-          <div className="flex items-center justify-between text-xs text-black/35">
+          <div className="flex items-center justify-between text-xs text-black/35 mt-1">
             <span className="truncate mr-2">{vela.nombreAutor}</span>
-            <span className="flex-shrink-0">{vela.tiempoTranscurrido}</span>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span>{vela.tiempoTranscurrido}</span>
+              <button
+                className="transition-all duration-200 active:scale-90 flex-shrink-0"
+                style={{ background: "none", border: "none", padding: 0, cursor: "pointer", lineHeight: 1 }}
+                onClick={() => { setLiked((l) => !l); if (!liked) { setBurst(true); setTimeout(() => setBurst(false), 900); } }}
+                aria-label="Me gusta"
+              >
+                {liked ? (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="#f43f5e">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                ) : (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="1.5">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Small heart icon bottom-right, IG style */}
-      <button
-        className="absolute bottom-4 right-4 transition-all duration-200 active:scale-90"
-        style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
-        onClick={() => { setLiked((l) => !l); if (!liked) { setBurst(true); setTimeout(() => setBurst(false), 900); } }}
-        aria-label="Me gusta"
-      >
-        {liked ? (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="#f43f5e">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-          </svg>
-        ) : (
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="1.5">
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-          </svg>
-        )}
-      </button>
     </div>
   );
 }
@@ -285,22 +285,6 @@ export default function Home() {
         </section>
       )}
 
-      {/* Stats */}
-      <section className="py-14 px-4 bg-black text-white">
-        <div className="max-w-3xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[
-            { label: "Velitas encendidas",    value: statsLoading ? "—" : stats?.totalVelas ?? 0 },
-            { label: "Recuerdos compartidos", value: statsLoading ? "—" : stats?.totalRecuerdos ?? 0 },
-            { label: "Velitas hoy",           value: statsLoading ? "—" : stats?.velasHoy ?? 0 },
-            { label: "Con amor eterno",       value: "∞" },
-          ].map((s, i) => (
-            <div key={i} className="fade-in-up" style={{ animationDelay: `${i * 0.08}s` }}>
-              <div className="font-serif text-4xl font-bold text-orange-400 mb-1">{s.value}</div>
-              <div className="text-xs text-white/50 font-light tracking-wide">{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
 
       {/* Candles carousel */}
       {velasData && velasData.data.length > 0 && (
