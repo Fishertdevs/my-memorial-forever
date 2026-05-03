@@ -254,6 +254,18 @@ export default function PersonaDetail() {
             </button>
           </div>
 
+          {activeTab === "velas" && (
+            <div className="text-center mb-10">
+              <p className="text-xs font-bold tracking-widest uppercase mb-2" style={{ color: "#f97316" }}>
+                Llama viva
+              </p>
+              <h2 className="font-serif text-3xl text-black">Velitas encendidas</h2>
+              <p className="text-black/40 text-sm mt-2">
+                {velaCount} personas han honrado su memoria
+              </p>
+            </div>
+          )}
+
           {/* Velas tab */}
           {activeTab === "velas" && (
             <div className="space-y-5">
