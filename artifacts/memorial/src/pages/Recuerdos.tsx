@@ -136,7 +136,7 @@ function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?:
             src={recuerdo.fotoUrl}
             alt={`Recuerdo de ${recuerdo.nombreAutor}`}
             className="w-full object-cover"
-            style={{ maxHeight: 420 }}
+            style={{ maxHeight: 280 }}
           />
           <div className="absolute bottom-3 right-3">
             <CandleFlame size="sm" />
@@ -252,10 +252,11 @@ function RecuerdosCarousel({ recuerdos, personaId }: { recuerdos: RecuerdoItem[]
 
       {recuerdos.length > 1 && (
         <>
+          {/* Navigation arrows - hidden on mobile, visible on md+ */}
           {safeCurrent > 0 && (
             <button
               onClick={prev}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-8 h-8 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all z-10"
+              className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-8 h-8 rounded-full bg-white border border-gray-200 shadow-md items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all z-10"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
             </button>
@@ -263,7 +264,7 @@ function RecuerdosCarousel({ recuerdos, personaId }: { recuerdos: RecuerdoItem[]
           {safeCurrent < recuerdos.length - 1 && (
             <button
               onClick={next}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-8 h-8 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all z-10"
+              className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-8 h-8 rounded-full bg-white border border-gray-200 shadow-md items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all z-10"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
