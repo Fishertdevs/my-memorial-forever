@@ -142,7 +142,7 @@ function HeroSection({
         {/* LEFT */}
         <div
           className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-20"
-          style={{ width: "55%" }}
+          style={{ width: "55%", backgroundImage: `url(${heroImage})`, backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", minHeight: "calc(100vh - 64px)" }}
         >
           <div style={{ maxWidth: 540 }}>
             <h1
@@ -151,13 +151,6 @@ function HeroSection({
             >
               {persona.nombre}
             </h1>
-            {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
-              <p className="hero-enter-3 text-sm tracking-wide mb-6" style={{ color: "rgba(0,0,0,0.38)" }}>
-                {formatDateEs(persona.fechaNacimiento)}
-                {persona.fechaNacimiento && persona.fechaFallecimiento && " — "}
-                {formatDateEs(persona.fechaFallecimiento)}
-              </p>
-            )}
             <div className="hero-enter-5 mb-8 flex items-center gap-4">
               <div className="w-10 h-0.5 rounded-full" style={{ background: "#f97316" }} />
               <Link
@@ -173,7 +166,6 @@ function HeroSection({
 
         {/* RIGHT */}
         <div className="hidden lg:flex items-center justify-center py-14 pr-12" style={{ width: "45%", background: "transparent" }}>
-          {/* Decorative corner accents */}
           <div className="relative" style={{ width: "100%", maxWidth: 400 }}>
             {/* Top-left corner */}
             <div className="absolute -top-3 -left-3 z-10 pointer-events-none" style={{ width: 28, height: 28 }}>
@@ -216,7 +208,6 @@ function HeroSection({
               }}
             />
           </div>
-          </div>{/* /decorative wrapper */}
         </div>
       </div>
     </section>
