@@ -33,7 +33,7 @@ function HeroSection({
             className="block mb-6 text-xs uppercase tracking-[0.28em]"
             style={{ color: "#f97316" }}
           >
-            En su memoria
+            En conmemoración a
           </span>
 
           <h1
@@ -48,7 +48,7 @@ function HeroSection({
 
           {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
             <p
-              className="text-sm"
+              className="text-sm mb-4"
               style={{ color: "rgba(0,0,0,0.35)", letterSpacing: "0.04em", fontVariantNumeric: "tabular-nums" }}
             >
               {formatDateEs(persona.fechaNacimiento)}
@@ -56,22 +56,32 @@ function HeroSection({
               {formatDateEs(persona.fechaFallecimiento)}
             </p>
           )}
+
+          {/* Blessing */}
+          <p
+            className="text-xs italic"
+            style={{ color: "rgba(0,0,0,0.30)", maxWidth: 320, lineHeight: 1.7 }}
+          >
+            "Que su alma descanse en la paz del Señor y su luz brille eternamente."
+          </p>
         </div>
 
         {/* Image — right */}
-        <div className="hidden sm:flex items-end justify-center flex-shrink-0 pt-12 px-10 pb-0" style={{ width: 320, alignSelf: "flex-end" }}>
-          <img
-            src={personaImg}
-            alt={persona.nombre}
-            style={{
-              display: "block",
-              width: 260,
-              height: 320,
-              objectFit: "cover",
-              borderRadius: "3rem 0.8rem 0 0.8rem",
-              border: "2px solid #0d0d0d",
-            }}
-          />
+        <div className="hidden sm:flex items-end justify-center flex-shrink-0 pb-0" style={{ width: 340, alignSelf: "flex-end", paddingTop: "3rem", paddingRight: "2.5rem", paddingLeft: "1rem" }}>
+          <div style={{ padding: 6, background: "#0d0d0d", borderRadius: "3rem 1rem 0 1rem", display: "inline-block" }}>
+            <img
+              src={personaImg}
+              alt={persona.nombre}
+              style={{
+                display: "block",
+                width: 260,
+                height: 320,
+                objectFit: "cover",
+                borderRadius: "2.6rem 0.7rem 0 0.7rem",
+                border: "4px solid #fff",
+              }}
+            />
+          </div>
         </div>
       </div>
     </section>
