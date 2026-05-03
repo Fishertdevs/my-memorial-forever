@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { useListPersonas } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
+import CandleFlame from "@/components/CandleFlame";
 import personaImg from "@assets/image_1777785665151.png";
 
 /* ─────── Helpers ─────── */
@@ -63,21 +64,25 @@ function HeroSection({
           </p>
         </div>
 
-        {/* Image — right, vertically centered with top/bottom breathing room */}
+        {/* Image + candle — right */}
         <div
-          className="hidden sm:flex items-center justify-center flex-shrink-0"
-          style={{ width: 340, padding: "3.5rem 2.5rem 3.5rem 1rem" }}
+          className="hidden sm:flex items-end justify-center flex-shrink-0 gap-4"
+          style={{ width: 360, paddingTop: "5rem", paddingBottom: "2.5rem", paddingRight: "2.5rem", paddingLeft: "0.5rem" }}
         >
+          {/* Candle beside the image */}
+          <div className="flex-shrink-0 mb-2">
+            <CandleFlame size="md" />
+          </div>
+
           <img
             src={personaImg}
             alt={persona.nombre}
             style={{
               display: "block",
-              width: 250,
-              height: 300,
+              width: 240,
+              height: 290,
               objectFit: "cover",
               borderRadius: "2.5rem 0.8rem 2.5rem 0.8rem",
-              /* layered borders: white gap → black only */
               boxShadow: "0 0 0 3px #fff, 0 0 0 5px #0d0d0d",
             }}
           />
