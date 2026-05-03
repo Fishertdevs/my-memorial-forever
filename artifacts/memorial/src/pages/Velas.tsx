@@ -108,7 +108,13 @@ export default function Velas() {
                             style={{ borderColor: form.personaId === p.id ? "#f97316" : "#e5e7eb", background: form.personaId === p.id ? "#fff7ed" : "white", color: form.personaId === p.id ? "#ea580c" : "#111" }}
                           >
                             {p.nombre}
-                            {p.fechaNacimiento && p.fechaFallecimiento && <span className="ml-2 text-xs opacity-50">{p.fechaNacimiento} — {p.fechaFallecimiento}</span>}
+                            {(p.fechaNacimiento || p.fechaFallecimiento) && (
+                            <span className="ml-2 text-xs opacity-50">
+                              {p.fechaNacimiento ? new Date(p.fechaNacimiento + "T00:00:00").toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }) : ""}
+                              {p.fechaNacimiento && p.fechaFallecimiento ? " — " : ""}
+                              {p.fechaFallecimiento ? new Date(p.fechaFallecimiento + "T00:00:00").toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }) : ""}
+                            </span>
+                          )}
                           </button>
                         ))}
                       </div>

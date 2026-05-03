@@ -65,8 +65,12 @@ function CarouselModal({ persona, onClose }: { persona: Persona; onClose: () => 
           )}
           <div className="absolute bottom-0 left-0 right-0 z-10 px-6 pb-5 pt-12">
             <h2 className="font-serif text-2xl text-white">{persona.nombre}</h2>
-            {persona.fechaNacimiento && persona.fechaFallecimiento && (
-              <p className="text-white/60 text-xs tracking-wide">{persona.fechaNacimiento} — {persona.fechaFallecimiento}</p>
+            {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
+              <p className="text-white/60 text-xs tracking-wide">
+                {persona.fechaNacimiento ? new Date(persona.fechaNacimiento + "T00:00:00").toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }) : ""}
+                {persona.fechaNacimiento && persona.fechaFallecimiento ? " — " : ""}
+                {persona.fechaFallecimiento ? new Date(persona.fechaFallecimiento + "T00:00:00").toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }) : ""}
+              </p>
             )}
           </div>
         </div>
@@ -126,8 +130,12 @@ function PinCard({ persona, onClick, delay }: { persona: Persona; onClick: () =>
         </div>
         <div className="absolute bottom-0 left-0 right-0 p-4">
           <h3 className="font-serif text-lg text-white leading-tight">{persona.nombre}</h3>
-          {persona.fechaNacimiento && persona.fechaFallecimiento && (
-            <p className="text-white/60 text-xs mt-0.5">{persona.fechaNacimiento} — {persona.fechaFallecimiento}</p>
+          {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
+            <p className="text-white/60 text-xs mt-0.5">
+              {persona.fechaNacimiento ? new Date(persona.fechaNacimiento + "T00:00:00").toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }) : ""}
+              {persona.fechaNacimiento && persona.fechaFallecimiento ? " — " : ""}
+              {persona.fechaFallecimiento ? new Date(persona.fechaFallecimiento + "T00:00:00").toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" }) : ""}
+            </p>
           )}
         </div>
       </div>

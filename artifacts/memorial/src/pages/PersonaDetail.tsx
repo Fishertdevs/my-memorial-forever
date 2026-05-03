@@ -1,5 +1,14 @@
 import { useParams, Link } from "wouter";
 import { useState } from "react";
+
+function formatDateEs(raw?: string | null): string {
+  if (!raw) return "";
+  try {
+    const [y, m, d] = raw.split("-").map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
+  } catch { return raw; }
+}
+
 import {
   useGetPersona, useListVelas, useListRecuerdos,
   getGetPersonaQueryKey, getListVelasQueryKey, getListRecuerdosQueryKey,
@@ -76,25 +85,65 @@ export default function PersonaDetail() {
       <Navbar />
       <div className="pt-16">
         {/* Banner */}
-        <div className="relative h-64 sm:h-80 bg-gray-100 overflow-hidden">
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%)" }} />
+        <div
+          className="relative h-72 sm:h-96 overflow-hidden"
+          style={{
+            background: persona.fotoPrincipal
+              ? undefined
+              : "linear-gradient(135deg, #1a1a2e 0%, #16213e 45%, #0f3460 100%)",
+          }}
+        >
+          {/* Background photo blur */}
+          {persona.fotoPrincipal && (
+            <>
+              <img src={persona.fotoPrincipal} alt="" className="absolute inset-0 w-full h-full object-cover scale-110 blur-sm opacity-40" aria-hidden />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 45%, rgba(15,52,96,0.85) 100%)" }} />
+            </>
+          )}
+          {/* Ambient glow */}
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              width: 320, height: 320, borderRadius: "50%",
+              background: "radial-gradient(circle, rgba(249,115,22,0.18) 0%, transparent 70%)",
+              top: "50%", left: "50%", transform: "translate(-50%,-50%)",
+            }}
+          />
           <div className="absolute inset-0 flex items-end">
-            <div className="max-w-4xl mx-auto px-6 pb-8 flex items-end gap-6 w-full">
-              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gray-200 border-4 border-white shadow-xl flex items-center justify-center font-serif text-4xl text-orange-400 flex-shrink-0 overflow-hidden">
-                {persona.fotoPrincipal
-                  ? <img src={persona.fotoPrincipal} alt={persona.nombre} className="w-full h-full object-cover" />
-                  : persona.nombre.charAt(0)}
-              </div>
-              <div className="flex-1 pb-1">
-                <h1 className="font-serif text-3xl sm:text-4xl text-white mb-1">{persona.nombre}</h1>
-                {persona.fechaNacimiento && persona.fechaFallecimiento && (
-                  <p className="text-white/60 text-sm tracking-wide">{persona.fechaNacimiento} — {persona.fechaFallecimiento}</p>
+            <div className="max-w-4xl mx-auto px-6 pb-10 flex items-end gap-6 w-full">
+              {/* Avatar */}
+              <div
+                className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl flex-shrink-0 overflow-hidden shadow-2xl"
+                style={{ border: "3px solid rgba(249,115,22,0.5)" }}
+              >
+                {persona.fotoPrincipal ? (
+                  <img src={persona.fotoPrincipal} alt={persona.nombre} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center" style={{ background: "rgba(249,115,22,0.12)" }}>
+                    <span className="font-serif text-4xl text-orange-400">{persona.nombre.charAt(0)}</span>
+                  </div>
                 )}
-                <div className="flex gap-4 mt-1.5 text-xs text-white/40">
-                  <span>{persona.totalVelas} velitas</span><span>·</span><span>{persona.totalRecuerdos} recuerdos</span>
+              </div>
+              {/* Info */}
+              <div className="flex-1 pb-1">
+                <p className="text-xs font-bold tracking-[0.28em] uppercase mb-2" style={{ color: "#f97316" }}>En tu memoria</p>
+                <h1 className="font-serif text-3xl sm:text-4xl text-white mb-2 leading-tight">{persona.nombre}</h1>
+                {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
+                  <p className="text-white/55 text-sm tracking-wide mb-2">
+                    {formatDateEs(persona.fechaNacimiento)}
+                    {persona.fechaNacimiento && persona.fechaFallecimiento && " — "}
+                    {formatDateEs(persona.fechaFallecimiento)}
+                  </p>
+                )}
+                <div className="flex gap-3 text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
+                  <span>🕯 {persona.totalVelas} velitas</span>
+                  <span>·</span>
+                  <span>💬 {persona.totalRecuerdos} recuerdos</span>
                 </div>
               </div>
-              <div className="hidden sm:block"><CandleFlame size="md" /></div>
+              <div className="hidden sm:block mb-2">
+                <CandleFlame size="md" />
+              </div>
             </div>
           </div>
         </div>
