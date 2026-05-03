@@ -28,7 +28,7 @@ function HeroSection({
     <section className="bg-white" style={{ borderBottom: "1px solid #0d0d0d" }}>
       <div className="max-w-5xl mx-auto flex items-stretch" style={{ minHeight: 440 }}>
         {/* Text — centered vertically, centered horizontally */}
-        <div className="flex flex-col justify-center items-center text-center px-8 sm:px-12 lg:px-16 py-16 flex-1">
+        <div className="flex flex-col justify-center items-center text-center px-8 sm:px-12 lg:px-16 flex-1" style={{ paddingTop: "5rem", paddingBottom: "3rem" }}>
           <span
             className="block mb-6 text-xs uppercase tracking-[0.28em]"
             style={{ color: "#f97316" }}
