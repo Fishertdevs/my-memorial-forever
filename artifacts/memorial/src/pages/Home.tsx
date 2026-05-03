@@ -116,6 +116,10 @@ export default function Home() {
         </p>
       </section>
 
+      <div className="max-w-5xl mx-auto px-4">
+        <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, rgba(249,115,22,0.55) 50%, transparent 100%)" }} />
+      </div>
+
       {/* CTA */}
       <section className="py-24 px-4 text-center" style={{ background: "#0d0d0d" }}>
         <h2 className="font-serif text-4xl text-white mb-3">Siempre en nuestro corazón</h2>
@@ -125,15 +129,15 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/velas"
-            className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-xl transition-all duration-200"
+            className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-full transition-all duration-200"
             style={{ background: "#f97316", color: "#fff", boxShadow: "none" }}
           >
             Enciende tu velita
           </Link>
           <Link
             href="/recuerdos"
-            className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-xl transition-all duration-200"
-            style={{ background: "rgba(255,255,255,0.08)", color: "#fff", border: "1.5px solid rgba(255,255,255,0.15)" }}
+            className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-full transition-all duration-200"
+            style={{ background: "#1f1f1f", color: "#fff", boxShadow: "none" }}
           >
             Ver recuerdos
           </Link>
