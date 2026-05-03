@@ -1,5 +1,5 @@
 import { useParams, Link } from "wouter";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function formatDateEs(raw?: string | null): string {
   if (!raw) return "";
@@ -32,6 +32,7 @@ export default function PersonaDetail() {
   const id = Number(params.id);
   const [activeTab, setActiveTab] = useState<"recuerdos" | "velas">("recuerdos");
   const [velaSubmitted, setVelaSubmitted] = useState(false);
+  const [recuerdoIndex, setRecuerdoIndex] = useState(0);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -108,6 +109,19 @@ export default function PersonaDetail() {
 
   const velaCount = velasData?.total ?? persona.totalVelas ?? 0;
   const recuerdoCount = recuerdosData?.total ?? persona.totalRecuerdos ?? 0;
+  const recuerdos = recuerdosData?.data ?? [];
+
+  useEffect(() => {
+    if (activeTab !== "recuerdos" || recuerdos.length <= 1) return;
+    const timer = window.setInterval(() => {
+      setRecuerdoIndex((current) => (current + 1) % recuerdos.length);
+    }, 4500);
+    return () => window.clearInterval(timer);
+  }, [activeTab, recuerdos.length]);
+
+  useEffect(() => {
+    if (recuerdoIndex >= recuerdos.length) setRecuerdoIndex(0);
+  }, [recuerdos.length, recuerdoIndex]);
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -222,36 +236,22 @@ export default function PersonaDetail() {
 
           {/* Tabs */}
           <div className="flex border-b-2 border-gray-100 mb-8">
-            <button
-              onClick={() => setActiveTab("recuerdos")}
-              className={`px-6 py-3 text-sm font-semibold transition-colors border-b-2 -mb-0.5 flex items-center gap-2 ${
-                activeTab === "recuerdos"
-                  ? "border-orange-500 text-orange-500"
-                  : "border-transparent text-black/40 hover:text-black"
-              }`}
-            >
+            <div className={`px-6 py-3 text-sm font-semibold border-b-2 -mb-0.5 flex items-center gap-2 ${activeTab === "recuerdos" ? "border-orange-500 text-orange-500" : "border-transparent text-black/40"}`}>
               Recuerdos
               {recuerdoCount > 0 && (
                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${activeTab === "recuerdos" ? "bg-orange-100 text-orange-500" : "bg-gray-100 text-black/35"}`}>
                   {recuerdoCount}
                 </span>
               )}
-            </button>
-            <button
-              onClick={() => setActiveTab("velas")}
-              className={`px-6 py-3 text-sm font-semibold transition-colors border-b-2 -mb-0.5 flex items-center gap-2 ${
-                activeTab === "velas"
-                  ? "border-orange-500 text-orange-500"
-                  : "border-transparent text-black/40 hover:text-black"
-              }`}
-            >
+            </div>
+            <div className={`px-6 py-3 text-sm font-semibold border-b-2 -mb-0.5 flex items-center gap-2 ${activeTab === "velas" ? "border-orange-500 text-orange-500" : "border-transparent text-black/40"}`}>
               Velitas encendidas
               {velaCount > 0 && (
                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${activeTab === "velas" ? "bg-orange-100 text-orange-500" : "bg-gray-100 text-black/35"}`}>
                   {velaCount}
                 </span>
               )}
-            </button>
+            </div>
           </div>
 
           {activeTab === "velas" && (
@@ -353,24 +353,22 @@ export default function PersonaDetail() {
                   </button>
                 </form>
               </div>
-              {recuerdosData?.data.length ? (
-                recuerdosData.data.map((r) => (
-                  <div
-                    key={r.id}
-                    className="border border-gray-100 rounded-2xl p-6 hover:border-orange-200 transition-colors"
-                  >
-                    <div className="flex items-center gap-3 mb-4">
+              {recuerdos.length ? (
+                <div className="border border-gray-100 rounded-2xl p-6 transition-colors min-h-[160px]">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full bg-orange-100 flex items-center justify-center font-serif font-bold text-orange-500 text-sm">
-                        {r.nombreAutor.charAt(0).toUpperCase()}
+                        {recuerdos[recuerdoIndex]?.nombreAutor.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-black">{r.nombreAutor}</p>
-                        <p className="text-xs text-black/35">{r.tiempoTranscurrido}</p>
+                        <p className="text-sm font-semibold text-black">{recuerdos[recuerdoIndex]?.nombreAutor}</p>
+                        <p className="text-xs text-black/35">{recuerdos[recuerdoIndex]?.tiempoTranscurrido}</p>
                       </div>
                     </div>
-                    <p className="text-black/65 text-sm leading-relaxed">{r.mensaje}</p>
+                    <div className="text-xs text-black/25 uppercase tracking-[0.2em]">Automático</div>
                   </div>
-                ))
+                  <p className="text-black/65 text-sm leading-relaxed">{recuerdos[recuerdoIndex]?.mensaje}</p>
+                </div>
               ) : (
                 <div className="text-center py-16 text-black/30">
                   <svg className="mx-auto mb-4 opacity-30" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>

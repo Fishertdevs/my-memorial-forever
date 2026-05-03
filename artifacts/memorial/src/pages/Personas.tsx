@@ -31,8 +31,8 @@ export default function Personas() {
           </div>
 
           {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[1, 2, 3].map((i) => (
+            <div className="grid grid-cols-1 gap-8 justify-items-center">
+              {[1].map((i) => (
                 <div key={i} className="border border-gray-100 rounded-2xl overflow-hidden">
                   <Skeleton className="h-52 w-full bg-gray-100" />
                   <div className="p-6 space-y-3">
@@ -44,14 +44,12 @@ export default function Personas() {
               ))}
             </div>
           ) : personas && personas.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {personas.map((persona, i) => (
-                <Link key={persona.id} href={`/personas/${persona.id}`} className="group block">
-                  <div
-                    className="border border-gray-100 rounded-2xl overflow-hidden hover:border-orange-200 hover:shadow-lg hover:shadow-orange-50 transition-all duration-300 fade-in-up"
-                    style={{ animationDelay: `${i * 0.1}s` }}
-                  >
-                    {/* Photo */}
+            <div className="grid grid-cols-1 gap-8 justify-items-center">
+              {(() => {
+                const persona = personas[0];
+                return (
+                  <Link key={persona.id} href={`/personas/${persona.id}`} className="group block w-full max-w-xl">
+                  <div className="border border-gray-100 rounded-2xl overflow-hidden hover:border-orange-200 hover:shadow-lg hover:shadow-orange-50 transition-all duration-300 fade-in-up">
                     <div className="relative h-56 bg-gray-50 flex items-center justify-center overflow-hidden">
                       {persona.fotoPrincipal ? (
                         <img
@@ -74,8 +72,6 @@ export default function Personas() {
                         <CandleFlame size="sm" />
                       </div>
                     </div>
-
-                    {/* Info */}
                     <div className="p-6 bg-white">
                       <h2 className="font-serif text-xl text-black mb-1 group-hover:text-orange-500 transition-colors">
                         {persona.nombre}
@@ -105,8 +101,9 @@ export default function Personas() {
                       </div>
                     </div>
                   </div>
-                </Link>
-              ))}
+                  </Link>
+                );
+              })()}
             </div>
           ) : (
             <div className="text-center py-24">
