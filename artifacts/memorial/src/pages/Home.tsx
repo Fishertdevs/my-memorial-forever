@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { useListVelas, useListPersonas } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
-import heroImage from "@assets/image_1777781942049.png";
+import heroImage from "@assets/image_1777782317576.png";
 
 /* ─────── Helpers ─────── */
 function formatDateEs(raw?: string): string {
@@ -148,12 +148,9 @@ function HeroSection({
           style={{ width: "55%" }}
         >
           <div style={{ maxWidth: 540 }}>
-            <p className="hero-enter-1 text-xs tracking-[0.3em] uppercase font-bold mb-5" style={{ color: "#f97316" }}>
-              En tu memoria
-            </p>
             <h1
               className="hero-enter-2 font-serif leading-[0.9] mb-5"
-              style={{ fontSize: "clamp(3rem, 5vw, 5.5rem)", color: "#0d0d0d" }}
+              style={{ fontSize: "clamp(2.4rem, 4.2vw, 4.4rem)", color: "#0d0d0d" }}
             >
               {persona.nombre}
             </h1>
@@ -212,8 +209,8 @@ function HeroSection({
             style={{
               width: "100%",
               aspectRatio: "3/4",
-              borderRadius: "2rem",
-              boxShadow: "0 32px 72px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06)",
+              borderRadius: "2.25rem 1.2rem 2.1rem 1.4rem",
+              boxShadow: "0 32px 72px rgba(0,0,0,0.18), 0 0 0 1px rgba(255,255,255,0.08)",
             }}
           >
             <img src={heroImage} alt={persona.nombre} className="w-full h-full object-cover" />
