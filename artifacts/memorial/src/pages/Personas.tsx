@@ -78,10 +78,16 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
       {!open ? (
         <button
           onClick={() => setOpen(true)}
-          className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl border-2 border-orange-200 text-orange-500 font-semibold text-sm hover:bg-orange-50 hover:border-orange-400 transition-all"
+          className="w-full relative flex items-center justify-center gap-2.5 py-4 rounded-xl border-2 border-orange-200 text-orange-500 font-semibold text-sm hover:bg-orange-50 hover:border-orange-400 transition-all overflow-hidden"
         >
+          <span className="absolute left-4 bottom-0">
+            <CandleFlame size="sm" />
+          </span>
           <CandleFlame size="sm" />
           Enciende tu velita
+          <span className="absolute right-4 bottom-0">
+            <CandleFlame size="sm" />
+          </span>
         </button>
       ) : done ? (
         <div className="border-2 border-orange-200 bg-orange-50 rounded-2xl p-6 text-center">
@@ -148,14 +154,6 @@ function VelasSection({ personaId }: { personaId: number }) {
 
   return (
     <div className="mt-8">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="h-px flex-1 bg-gray-100" />
-        <p className="text-xs font-bold tracking-widest uppercase" style={{ color: "#f97316" }}>
-          {velasData.total} velita{velasData.total !== 1 ? "s" : ""} encendida{velasData.total !== 1 ? "s" : ""}
-        </p>
-        <div className="h-px flex-1 bg-gray-100" />
-      </div>
-
       {/* Row of candle flames */}
       <div className="flex flex-wrap justify-center gap-4 mb-8">
         {velasData.data.slice(0, 20).map((vela, idx) => (
@@ -172,22 +170,37 @@ function VelasSection({ personaId }: { personaId: number }) {
         ))}
       </div>
 
-      {/* Message cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Elegant message cards */}
+      <div className="grid grid-cols-1 gap-4">
         {velasData.data.map((vela, idx) => (
           <div
             key={vela.id}
-            className="flex gap-3 p-4 rounded-xl border border-gray-100 hover:border-orange-200 hover:bg-orange-50/30 transition-all"
+            className="relative rounded-2xl overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%)",
+              boxShadow: "0 4px 24px rgba(249,115,22,0.08)",
+            }}
           >
-            <div className="flex-shrink-0 pt-0.5">
-              <MiniCandle colorIdx={idx} />
-            </div>
-            <div className="min-w-0">
-              <p className="text-black/70 text-sm leading-relaxed mb-2 italic">"{vela.mensaje}"</p>
-              <div className="flex items-center gap-2 text-xs text-black/35">
-                <span className="font-semibold text-black/50">{vela.nombreAutor}</span>
-                <span>·</span>
-                <span>{vela.tiempoTranscurrido}</span>
+            {/* Glow */}
+            <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 20% 50%, rgba(249,115,22,0.07) 0%, transparent 65%)" }} />
+            <div className="relative flex gap-4 p-5 items-start">
+              <div className="flex-shrink-0 mt-1">
+                <MiniCandle colorIdx={idx} />
+              </div>
+              <div className="min-w-0 flex-1">
+                {/* Large opening quote */}
+                <span className="font-serif text-4xl leading-none text-orange-400/40 select-none float-left mr-1 mt-1">"</span>
+                <p className="font-serif text-white/85 text-sm leading-relaxed italic pt-2">
+                  {vela.mensaje}
+                </p>
+                <div className="mt-3 flex items-center gap-2">
+                  <div className="h-px flex-1" style={{ background: "rgba(249,115,22,0.2)" }} />
+                  <span className="text-xs font-semibold tracking-wide" style={{ color: "#f97316" }}>
+                    {vela.nombreAutor}
+                  </span>
+                  <span className="text-white/20 text-xs">·</span>
+                  <span className="text-white/30 text-xs">{vela.tiempoTranscurrido}</span>
+                </div>
               </div>
             </div>
           </div>

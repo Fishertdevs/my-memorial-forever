@@ -229,7 +229,7 @@ function NewPostForm({
 
             {/* Photo drop zone */}
             <div
-              className="relative rounded-xl border-2 border-dashed border-gray-200 hover:border-orange-300 transition-colors cursor-pointer overflow-hidden"
+              className="relative rounded-xl border-2 border-gray-200 hover:border-orange-300 transition-colors cursor-pointer overflow-hidden"
               style={{ minHeight: fotoPreview ? undefined : 72 }}
               onDrop={onDrop}
               onDragOver={(e) => e.preventDefault()}
