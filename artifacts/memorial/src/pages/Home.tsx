@@ -56,38 +56,20 @@ function HeroSection({
           </div>
         </div>
 
-        {/* Vertical divider */}
-        <div className="hidden sm:block w-px self-stretch" style={{ background: "#0d0d0d" }} />
-
         {/* Image — right */}
-        <div className="hidden sm:flex items-center justify-center flex-shrink-0 py-10 px-10" style={{ width: 280 }}>
-          <div className="relative">
-            {/* Decorative offset frame */}
-            <div
-              className="absolute"
-              style={{
-                inset: 0,
-                transform: "translate(10px, 10px)",
-                border: "2px solid #f97316",
-                borderRadius: "2rem 0.6rem 2rem 0.6rem",
-                zIndex: 0,
-              }}
-            />
-            <img
-              src={personaImg}
-              alt={persona.nombre}
-              className="relative"
-              style={{
-                display: "block",
-                width: 200,
-                height: 200,
-                objectFit: "cover",
-                borderRadius: "2rem 0.6rem 2rem 0.6rem",
-                border: "2px solid #0d0d0d",
-                zIndex: 1,
-              }}
-            />
-          </div>
+        <div className="hidden sm:flex items-center justify-center flex-shrink-0 py-8 px-10" style={{ width: 320 }}>
+          <img
+            src={personaImg}
+            alt={persona.nombre}
+            style={{
+              display: "block",
+              width: 260,
+              height: 300,
+              objectFit: "cover",
+              borderRadius: "3rem 0.8rem 3rem 0.8rem",
+              border: "2px solid #0d0d0d",
+            }}
+          />
         </div>
       </div>
     </section>
@@ -114,11 +96,12 @@ export default function Home() {
 
       {/* Homenaje */}
       <section className="py-24 px-4 text-center" style={{ background: "#ffffff" }}>
-        <h2 className="font-serif text-4xl text-black mb-4">Su memoria vive en cada latido de nuestro recuerdo.</h2>
-        <p className="text-black/45 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-black/50 max-w-2xl mx-auto leading-relaxed">
           Hoy y siempre, su luz permanece con nosotros, iluminando los momentos que compartimos, las risas que aún resuenan en el alma y el amor inmenso que dejó sembrado en cada corazón.
           Aunque el tiempo avance, su presencia sigue siendo abrigo, guía y ternura; un recuerdo eterno que nos invita a vivir con gratitud, a amar con profundidad y a honrar su legado con cada gesto de cariño.
-          <span className="block mt-3 text-xs uppercase tracking-[0.28em]" style={{ color: "#f97316" }}>
+          Porque quienes amamos de verdad no se van del todo: viven en las palabras que nos enseñaron, en los valores que sembraron, en la forma en que miramos el mundo y elegimos ser mejores personas cada día.
+          Su memoria es un faro que no se apaga, una voz suave que nos acompaña en cada paso del camino, recordándonos que el amor verdadero trasciende el tiempo y permanece para siempre en el corazón de quienes tuvieron la dicha de conocerle.
+          <span className="block mt-5 text-xs uppercase tracking-[0.28em]" style={{ color: "#f97316" }}>
             — Eclesiastés 3:1
           </span>
         </p>
