@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { useListVelas, useListPersonas } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
-import heroImage from "@assets/image_1777782442837.png";
+import heroImage from "@assets/image_1777782607280.png";
 
 /* ─────── Helpers ─────── */
 function formatDateEs(raw?: string): string {
