@@ -135,10 +135,7 @@ function HeroSection({
   return (
     <section className="relative overflow-hidden" style={{ minHeight: "calc(100vh - 64px)" }}>
       {/* Split background */}
-      <div className="absolute inset-0 flex pointer-events-none" aria-hidden>
-        <div style={{ width: "55%", background: "#f7f7f7" }} />
-        <div style={{ width: "45%", background: "#0d0d0d" }} />
-      </div>
+      <div className="absolute inset-0 pointer-events-none bg-white" aria-hidden />
 
       <div className="relative max-w-7xl mx-auto flex" style={{ minHeight: "calc(100vh - 64px)" }}>
 
