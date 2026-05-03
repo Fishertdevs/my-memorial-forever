@@ -117,36 +117,11 @@ const FLAME_COLORS = [
 function VelaCard({ vela, index }: { vela: Vela; index: number }) {
   const fc = FLAME_COLORS[index % FLAME_COLORS.length];
   const [liked, setLiked] = useState(false);
-  const [burst, setBurst] = useState(false);
-
-  const handleDoubleClick = () => {
-    if (!liked) setLiked(true);
-    setBurst(true);
-    setTimeout(() => setBurst(false), 900);
-  };
 
   return (
     <div
       className="relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 h-full select-none cursor-default overflow-hidden"
-      onDoubleClick={handleDoubleClick}
     >
-      {/* IG-style big heart burst — centered on card */}
-      {burst && (
-        <div
-          className="pointer-events-none absolute inset-0 flex items-center justify-center"
-          style={{ zIndex: 20 }}
-        >
-          <span
-            style={{
-              fontSize: 72,
-              lineHeight: 1,
-              animation: "ig-heart 0.9s ease-out forwards",
-              display: "block",
-              filter: "drop-shadow(0 2px 12px rgba(244,63,94,0.35))",
-            }}
-          >❤️</span>
-        </div>
-      )}
 
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0 pt-0.5">
@@ -162,7 +137,7 @@ function VelaCard({ vela, index }: { vela: Vela; index: number }) {
               <button
                 className="transition-all duration-200 active:scale-90 flex-shrink-0"
                 style={{ background: "none", border: "none", padding: 0, cursor: "pointer", lineHeight: 1 }}
-                onClick={() => { setLiked((l) => !l); if (!liked) { setBurst(true); setTimeout(() => setBurst(false), 900); } }}
+                onClick={() => setLiked((l) => !l)}
                 aria-label="Me gusta"
               >
                 {liked ? (
@@ -285,6 +260,9 @@ export default function Home() {
         </section>
       )}
 
+
+      {/* Orange divider */}
+      <div className="w-full" style={{ height: 3, background: "#f97316" }} />
 
       {/* Candles carousel */}
       {velasData && velasData.data.length > 0 && (
