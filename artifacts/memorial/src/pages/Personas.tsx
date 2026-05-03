@@ -372,9 +372,6 @@ export default function Personas() {
       <div className="pt-24 pb-16 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-xs font-bold tracking-widest uppercase mb-3" style={{ color: "#f97316" }}>
-              En conmemoración a
-            </p>
             <h1 className="font-serif text-4xl text-black mb-3 leading-snug">
               Siempre estarás en nuestra memoria
             </h1>

@@ -391,7 +391,7 @@ function NewPostForm({
               onChange={(e) => setMensaje(e.target.value)}
               rows={3}
               className={inputClass + " resize-none"}
-              placeholder={`Comparte un recuerdo especial de ${personaNombre}…`}
+              placeholder="Comparte un recuerdo especial…"
               maxLength={600}
             />
 
@@ -435,9 +435,6 @@ export default function Recuerdos() {
 
           {/* Header */}
           <div className="text-center mb-10">
-            <p className="text-xs font-bold tracking-widest uppercase mb-3" style={{ color: "#f97316" }}>
-              {persona ? `En memoria de ${persona.nombre}` : `En memoria de ${NOMBRES_CORTOS}`}
-            </p>
             <h1 className="font-serif text-4xl text-black mb-3">Un recuerdo es una alegría que aún perdura</h1>
             <p className="text-black/45 max-w-sm mx-auto text-sm leading-relaxed">
               Comparte una foto, una historia o un instante especial. Cada recuerdo es una luz que nunca se apaga.
