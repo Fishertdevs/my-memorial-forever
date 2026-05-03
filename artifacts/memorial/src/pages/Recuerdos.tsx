@@ -241,17 +241,21 @@ function NewPostForm({
           maxLength={600}
         />
 
-        <div className="flex items-center justify-between">
+        <div className="flex justify-end">
           <span className="text-xs text-black/25">{mensaje.length}/600</span>
-          <button
-            type="submit"
-            disabled={!canSubmit || loading}
-            className="px-7 py-2.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-30 text-white"
-            style={{ background: canSubmit ? "#f97316" : "#f3f4f6", color: canSubmit ? "white" : "#9ca3af", boxShadow: canSubmit ? "0 4px 14px rgba(249,115,22,0.28)" : "none" }}
-          >
-            {loading ? "Publicando…" : "Publicar recuerdo"}
-          </button>
         </div>
+        <button
+          type="submit"
+          disabled={!canSubmit || loading}
+          className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl border-2 border-dashed font-semibold text-sm transition-all disabled:opacity-30"
+          style={{
+            borderColor: canSubmit ? "#fdba74" : "#e5e7eb",
+            color: canSubmit ? "#f97316" : "#9ca3af",
+            background: "transparent",
+          }}
+        >
+          {loading ? "Publicando…" : "Compartir recuerdo"}
+        </button>
       </form>
     </div>
   );
