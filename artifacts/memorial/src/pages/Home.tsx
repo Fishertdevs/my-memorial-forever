@@ -26,21 +26,8 @@ function HeroSection({
   return (
     <section className="bg-white" style={{ borderBottom: "1px solid #0d0d0d" }}>
       <div className="max-w-5xl mx-auto flex items-stretch">
-        {/* Image — left */}
-        <div className="hidden sm:block flex-shrink-0" style={{ width: 220 }}>
-          <img
-            src={personaImg}
-            alt={persona.nombre}
-            className="w-full h-full object-cover"
-            style={{ display: "block" }}
-          />
-        </div>
-
-        {/* Vertical divider */}
-        <div className="hidden sm:block w-px self-stretch" style={{ background: "#0d0d0d" }} />
-
-        {/* Text — right */}
-        <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-20 sm:py-24">
+        {/* Text — left */}
+        <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-20 sm:py-24 flex-1">
           <h1
             className="font-serif leading-tight mb-4"
             style={{ fontSize: "clamp(2.4rem, 4.5vw, 3.8rem)", color: "#0d0d0d", maxWidth: 520 }}
@@ -66,6 +53,40 @@ function HeroSection({
             >
               Recuérdalo aquí
             </Link>
+          </div>
+        </div>
+
+        {/* Vertical divider */}
+        <div className="hidden sm:block w-px self-stretch" style={{ background: "#0d0d0d" }} />
+
+        {/* Image — right */}
+        <div className="hidden sm:flex items-center justify-center flex-shrink-0 py-10 px-10" style={{ width: 280 }}>
+          <div className="relative">
+            {/* Decorative offset frame */}
+            <div
+              className="absolute"
+              style={{
+                inset: 0,
+                transform: "translate(10px, 10px)",
+                border: "2px solid #f97316",
+                borderRadius: "2rem 0.6rem 2rem 0.6rem",
+                zIndex: 0,
+              }}
+            />
+            <img
+              src={personaImg}
+              alt={persona.nombre}
+              className="relative"
+              style={{
+                display: "block",
+                width: 200,
+                height: 200,
+                objectFit: "cover",
+                borderRadius: "2rem 0.6rem 2rem 0.6rem",
+                border: "2px solid #0d0d0d",
+                zIndex: 1,
+              }}
+            />
           </div>
         </div>
       </div>
