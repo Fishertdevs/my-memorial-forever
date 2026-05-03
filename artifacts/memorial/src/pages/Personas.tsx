@@ -1,4 +1,4 @@
-import { useListPersonas } from "@workspace/api-client-react";
+import { useListPersonas, useListVelas, getListVelasQueryKey } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,6 +9,91 @@ function formatDateEs(raw?: string | null): string {
     const [y, m, d] = raw.split("-").map(Number);
     return new Date(y, m - 1, d).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
   } catch { return raw; }
+}
+
+const FLAME_COLORS = [
+  { outer: "#f97316", inner: "#fbbf24", glow: "rgba(249,115,22,0.35)" },
+  { outer: "#2196f3", inner: "#7ec8e3", glow: "rgba(33,150,243,0.35)" },
+  { outer: "#9c27b0", inner: "#ce93d8", glow: "rgba(156,39,176,0.35)" },
+  { outer: "#e91e63", inner: "#f48fb1", glow: "rgba(233,30,99,0.35)" },
+  { outer: "#00897b", inner: "#80cbc4", glow: "rgba(0,137,123,0.35)" },
+  { outer: "#9ca3af", inner: "#e5e7eb", glow: "rgba(156,163,175,0.35)" },
+];
+
+function MiniCandle({ colorIdx }: { colorIdx: number }) {
+  const c = FLAME_COLORS[colorIdx % FLAME_COLORS.length];
+  const fw = 16, fh = 24, ww = 13, wh = 36;
+  return (
+    <div className="flex flex-col items-center select-none">
+      <div className="relative" style={{ width: fw, height: fh }}>
+        <div style={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", width: fw, height: fh, background: `radial-gradient(ellipse at 50% 80%, ${c.outer} 0%, ${c.outer}77 48%, transparent 80%)`, borderRadius: "50% 50% 30% 30%", filter: "blur(1px)" }} />
+        <div style={{ position: "absolute", bottom: 1, left: "50%", transform: "translateX(-50%)", width: fw * 0.52, height: fh * 0.62, background: `radial-gradient(ellipse at 50% 70%, ${c.inner} 0%, ${c.outer}bb 65%, transparent 100%)`, borderRadius: "50% 50% 30% 30%" }} />
+        <div style={{ position: "absolute", bottom: 3, left: "50%", transform: "translateX(-50%)", width: fw * 0.17, height: fh * 0.27, background: "rgba(255,255,240,0.95)", borderRadius: "50%", filter: "blur(0.3px)" }} />
+      </div>
+      <div style={{ width: 1.5, height: 3, background: "#666", borderRadius: 1 }} />
+      <div style={{ width: ww, height: wh, background: "linear-gradient(160deg,#f0f0f0 0%,#d1d5db 55%,#9ca3af 100%)", borderRadius: "2px 2px 1px 1px", border: "1px solid #d1d5db", filter: `drop-shadow(0 0 7px ${c.glow})` }} />
+    </div>
+  );
+}
+
+function VelasSection({ personaId }: { personaId: number }) {
+  const { data: velasData, isLoading } = useListVelas(
+    { personaId, limit: 50 },
+    { query: { queryKey: getListVelasQueryKey({ personaId, limit: 50 }) } }
+  );
+
+  if (isLoading) return null;
+  if (!velasData || velasData.data.length === 0) return null;
+
+  return (
+    <div className="mt-8">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="h-px flex-1 bg-gray-100" />
+        <p className="text-xs font-bold tracking-widest uppercase" style={{ color: "#f97316" }}>
+          {velasData.total} velita{velasData.total !== 1 ? "s" : ""} encendida{velasData.total !== 1 ? "s" : ""}
+        </p>
+        <div className="h-px flex-1 bg-gray-100" />
+      </div>
+
+      {/* Row of candle flames */}
+      <div className="flex flex-wrap justify-center gap-4 mb-8">
+        {velasData.data.slice(0, 20).map((vela, idx) => (
+          <div key={vela.id} className="group relative flex flex-col items-center gap-1.5">
+            <MiniCandle colorIdx={idx} />
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+              <div className="bg-black text-white rounded-lg px-3 py-2 text-xs whitespace-nowrap shadow-xl max-w-[200px]">
+                <p className="font-semibold truncate">{vela.nombreAutor}</p>
+                <p className="text-white/60 truncate">{vela.mensaje}</p>
+              </div>
+              <div className="w-2 h-2 bg-black rotate-45 mx-auto -mt-1" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Message cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {velasData.data.map((vela, idx) => (
+          <div
+            key={vela.id}
+            className="flex gap-3 p-4 rounded-xl border border-gray-100 hover:border-orange-200 hover:bg-orange-50/30 transition-all"
+          >
+            <div className="flex-shrink-0 pt-0.5">
+              <MiniCandle colorIdx={idx} />
+            </div>
+            <div className="min-w-0">
+              <p className="text-black/70 text-sm leading-relaxed mb-2 italic">"{vela.mensaje}"</p>
+              <div className="flex items-center gap-2 text-xs text-black/35">
+                <span className="font-semibold text-black/50">{vela.nombreAutor}</span>
+                <span>·</span>
+                <span>{vela.tiempoTranscurrido}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function Personas() {
@@ -101,6 +186,9 @@ export default function Personas() {
                     )}
                   </div>
                 </div>
+
+                {/* Velas section */}
+                <VelasSection personaId={personas[0].id} />
               </div>
             </div>
           ) : (
