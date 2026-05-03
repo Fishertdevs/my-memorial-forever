@@ -108,7 +108,8 @@ export default function Home() {
       <section className="py-24 px-4 text-center" style={{ background: "#ffffff" }}>
         <h2 className="font-serif text-4xl text-black mb-4">Su memoria vive en cada latido de nuestro recuerdo.</h2>
         <p className="text-black/45 max-w-2xl mx-auto leading-relaxed">
-          Hoy y siempre, su luz permanece con nosotros, iluminando los momentos que compartimos y el amor que nunca se apaga.
+          Hoy y siempre, su luz permanece con nosotros, iluminando los momentos que compartimos, las risas que aún resuenan en el alma y el amor inmenso que dejó sembrado en cada corazón.
+          Aunque el tiempo avance, su presencia sigue siendo abrigo, guía y ternura; un recuerdo eterno que nos invita a vivir con gratitud, a amar con profundidad y a honrar su legado con cada gesto de cariño.
         </p>
       </section>
 
