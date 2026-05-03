@@ -3,62 +3,100 @@ import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
 
 /* ─────────────────── HERO ─────────────────── */
-const PERSONAS_HOMENAJE = [
-  "Ana Soledad Lizarazo Calderón",
-  "Pablo Esteban Aguirre Camargo",
-  "Carlos Alberto Camargo Munevar",
+const PERSONAS_HOMENAJE: { nombre: string; foto: string | null }[] = [
+  { nombre: "Ana Soledad Lizarazo Calderón", foto: null },
+  { nombre: "Pablo Esteban Aguirre Camargo", foto: null },
+  { nombre: "Carlos Alberto Camargo Munevar", foto: null },
 ];
+
+function initials(nombre: string) {
+  return nombre
+    .split(" ")
+    .filter((_, i) => i < 2)
+    .map((p) => p[0])
+    .join("")
+    .toUpperCase();
+}
+
+function PersonaCard({
+  nombre,
+  foto,
+  delay,
+}: {
+  nombre: string;
+  foto: string | null;
+  delay: number;
+}) {
+  return (
+    <div
+      className="flex flex-col items-center text-center hero-enter-1"
+      style={{ animationDelay: `${delay}s`, flex: "1 1 0", minWidth: 0 }}
+    >
+      <h2
+        className="font-serif leading-snug mb-5"
+        style={{ fontSize: "clamp(1rem, 2vw, 1.45rem)", color: "#0d0d0d", minHeight: "3.5em", display: "flex", alignItems: "center", justifyContent: "center" }}
+      >
+        {nombre}
+      </h2>
+
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 200,
+          aspectRatio: "3/4",
+          borderRadius: "2.2rem 0.7rem 2.2rem 0.7rem",
+          overflow: "hidden",
+          boxShadow: "0 0 0 3px #fff, 0 0 0 5px #0d0d0d",
+          background: "#f3f0eb",
+          position: "relative",
+        }}
+      >
+        {foto ? (
+          <img
+            src={foto}
+            alt={nombre}
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+          />
+        ) : (
+          <div
+            className="flex items-center justify-center w-full h-full font-serif"
+            style={{ fontSize: "clamp(2rem, 5vw, 3.2rem)", color: "#d1c9bb", userSelect: "none" }}
+          >
+            {initials(nombre)}
+          </div>
+        )}
+      </div>
+
+      <div className="mt-6 mb-1">
+        <CandleFlame size="sm" />
+      </div>
+    </div>
+  );
+}
 
 function HeroSection() {
   return (
     <section className="bg-white" style={{ borderBottom: "1px solid #e5e7eb" }}>
       <div
-        className="max-w-4xl mx-auto flex flex-col items-center text-center px-6"
-        style={{ paddingTop: "5rem", paddingBottom: "4.5rem" }}
+        className="max-w-5xl mx-auto flex flex-col items-center px-6"
+        style={{ paddingTop: "4.5rem", paddingBottom: "4rem" }}
       >
         <span
-          className="block mb-8 text-xs uppercase tracking-[0.32em]"
+          className="block mb-10 text-xs uppercase tracking-[0.32em]"
           style={{ color: "#f97316" }}
         >
           En conmemoración a
         </span>
 
-        <div className="flex flex-col items-center gap-0 w-full max-w-2xl">
-          {PERSONAS_HOMENAJE.map((nombre, i) => (
-            <div key={nombre} className="flex flex-col items-center w-full">
-              <h1
-                className="font-serif leading-snug hero-enter-1"
-                style={{
-                  fontSize: "clamp(1.55rem, 3.5vw, 2.55rem)",
-                  color: "#0d0d0d",
-                  animationDelay: `${i * 0.18}s`,
-                }}
-              >
-                {nombre}
-              </h1>
-              {i < PERSONAS_HOMENAJE.length - 1 && (
-                <div
-                  className="my-4"
-                  style={{ width: 28, height: 1.5, background: "#f97316", borderRadius: 1, opacity: 0.55 }}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-10 mb-8" style={{ width: 48, height: 2, background: "#f97316", borderRadius: 1 }} />
-
-        <div className="flex items-end justify-center gap-10 sm:gap-16">
-          {PERSONAS_HOMENAJE.map((nombre) => (
-            <div key={nombre} className="flex flex-col items-center gap-1">
-              <CandleFlame size="sm" />
-            </div>
+        <div className="flex flex-row items-start justify-center gap-8 sm:gap-14 w-full">
+          {PERSONAS_HOMENAJE.map(({ nombre, foto }, i) => (
+            <PersonaCard key={nombre} nombre={nombre} foto={foto} delay={i * 0.15} />
           ))}
         </div>
 
         <p
-          className="mt-8 text-xs italic"
-          style={{ color: "rgba(0,0,0,0.28)", maxWidth: 340, lineHeight: 1.85 }}
+          className="mt-10 text-xs italic text-center"
+          style={{ color: "rgba(0,0,0,0.28)", maxWidth: 360, lineHeight: 1.85 }}
         >
           "Que sus almas descansen en la paz del Señor y su luz brille eternamente."
         </p>
