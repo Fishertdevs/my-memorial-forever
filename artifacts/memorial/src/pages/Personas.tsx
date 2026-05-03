@@ -1,4 +1,3 @@
-import { Link } from "wouter";
 import { useListPersonas } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
@@ -45,65 +44,49 @@ export default function Personas() {
             </div>
           ) : personas && personas.length > 0 ? (
             <div className="grid grid-cols-1 gap-8 justify-items-center">
-              {(() => {
-                const persona = personas[0];
-                return (
-                  <Link key={persona.id} href={`/personas/${persona.id}`} className="group block w-full max-w-xl">
-                  <div className="border border-gray-100 rounded-2xl overflow-hidden hover:border-orange-200 hover:shadow-lg hover:shadow-orange-50 transition-all duration-300 fade-in-up">
-                    <div className="relative h-56 bg-gray-50 flex items-center justify-center overflow-hidden">
-                      {persona.fotoPrincipal ? (
-                        <img
-                          src={persona.fotoPrincipal}
-                          alt={persona.nombre}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      ) : (
-                        <div
-                          className="w-full h-full flex items-center justify-center"
-                          style={{ background: "linear-gradient(155deg, #1c1c2e 0%, #16213e 55%, #0f3460 100%)" }}
-                        >
-                          <span className="font-serif text-4xl text-orange-300/80">
-                            {persona.nombre.charAt(0)}
-                          </span>
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                      <div className="absolute bottom-3 right-3">
-                        <CandleFlame size="sm" />
-                      </div>
-                    </div>
-                    <div className="p-6 bg-white">
-                      <h2 className="font-serif text-xl text-black mb-1 group-hover:text-orange-500 transition-colors">
-                        {persona.nombre}
-                      </h2>
-                      {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
-                        <p className="text-xs mb-3 tracking-wide font-medium" style={{ color: "#f97316" }}>
-                          {formatDateEs(persona.fechaNacimiento)}
-                          {persona.fechaNacimiento && persona.fechaFallecimiento && " — "}
-                          {formatDateEs(persona.fechaFallecimiento)}
-                        </p>
-                      )}
-                      {persona.biografia && (
-                        <p className="text-black/50 text-sm leading-relaxed line-clamp-3 mb-4">
-                          {persona.biografia}
-                        </p>
-                      )}
-                      <div className="flex gap-4 text-xs text-black/35 pt-3 border-t border-gray-100">
-                        <span className="flex items-center gap-1">
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 14c0 4-7 8-7 8S3 18 3 14a7 7 0 0114 0z"/><circle cx="10" cy="14" r="3"/></svg>
-                          {persona.totalVelas ?? 0} velitas
-                        </span>
-                        <span>·</span>
-                        <span className="flex items-center gap-1">
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-                          {persona.totalRecuerdos ?? 0} recuerdos
+              <div className="group block w-full max-w-xl">
+                <div className="border border-gray-100 rounded-2xl overflow-hidden hover:border-orange-200 hover:shadow-lg hover:shadow-orange-50 transition-all duration-300 fade-in-up">
+                  <div className="relative h-56 bg-gray-50 flex items-center justify-center overflow-hidden">
+                    {personas[0].fotoPrincipal ? (
+                      <img
+                        src={personas[0].fotoPrincipal}
+                        alt={personas[0].nombre}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    ) : (
+                      <div
+                        className="w-full h-full flex items-center justify-center"
+                        style={{ background: "linear-gradient(155deg, #1c1c2e 0%, #16213e 55%, #0f3460 100%)" }}
+                      >
+                        <span className="font-serif text-4xl text-orange-300/80">
+                          {personas[0].nombre.charAt(0)}
                         </span>
                       </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                    <div className="absolute bottom-3 right-3">
+                      <CandleFlame size="sm" />
                     </div>
                   </div>
-                  </Link>
-                );
-              })()}
+                  <div className="p-6 bg-white">
+                    <h2 className="font-serif text-xl text-black mb-1">
+                      {personas[0].nombre}
+                    </h2>
+                    {(personas[0].fechaNacimiento || personas[0].fechaFallecimiento) && (
+                      <p className="text-xs mb-3 tracking-wide font-medium" style={{ color: "#f97316" }}>
+                        {formatDateEs(personas[0].fechaNacimiento)}
+                        {personas[0].fechaNacimiento && personas[0].fechaFallecimiento && " — "}
+                        {formatDateEs(personas[0].fechaFallecimiento)}
+                      </p>
+                    )}
+                    {personas[0].biografia && (
+                      <p className="text-black/50 text-sm leading-relaxed line-clamp-3 mb-4">
+                        {personas[0].biografia}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="text-center py-24">
