@@ -9,11 +9,8 @@ function formatDateEs(raw?: string): string {
   if (!raw) return "";
   try {
     const [y, m, d] = raw.split("-").map(Number);
-    const date = new Date(y, m - 1, d);
-    return date.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
-  } catch {
-    return raw;
-  }
+    return new Date(y, m - 1, d).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
+  } catch { return raw; }
 }
 
 /* ─────── Types ─────── */
@@ -32,13 +29,13 @@ const FLAME_COLORS = [
   { outer: "#f97316", inner: "#fed7aa", glow: "rgba(249,115,22,0.20)" },
 ];
 
-/* ─────── VelaCard (sección inferior) ─────── */
+/* ─────── VelaCard ─────── */
 function VelaCard({ vela, index }: { vela: Vela; index: number }) {
   const fc = FLAME_COLORS[index % FLAME_COLORS.length];
   const [liked, setLiked] = useState(false);
 
   return (
-    <div className="relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 overflow-hidden">
+    <div className="relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300">
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0 pt-0.5">
           <CandleFlame size="sm" outerColor={fc.outer} innerColor={fc.inner} glowColor={fc.glow} />
@@ -46,7 +43,7 @@ function VelaCard({ vela, index }: { vela: Vela; index: number }) {
         <div className="flex-1 min-w-0">
           <p className="text-xs font-bold text-orange-500 mb-1.5 truncate">Por {vela.nombreRecordado}</p>
           <p className="text-black/65 text-sm leading-relaxed line-clamp-4 mb-3">{vela.mensaje}</p>
-          <div className="flex items-center justify-between text-xs text-black/35 mt-1">
+          <div className="flex items-center justify-between text-xs text-black/35">
             <span className="truncate mr-2">{vela.nombreAutor}</span>
             <div className="flex items-center gap-2 flex-shrink-0">
               <span>{vela.tiempoTranscurrido}</span>
@@ -56,13 +53,9 @@ function VelaCard({ vela, index }: { vela: Vela; index: number }) {
                 aria-label="Me gusta"
               >
                 {liked ? (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="#f43f5e">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                  </svg>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="#f43f5e"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
                 ) : (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="1.5">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                  </svg>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
                 )}
               </button>
             </div>
@@ -73,7 +66,7 @@ function VelaCard({ vela, index }: { vela: Vela; index: number }) {
   );
 }
 
-/* ─────── Carrusel inferior ─────── */
+/* ─────── Carrusel de velitas ─────── */
 function CandlesCarousel({ velas }: { velas: Vela[] }) {
   const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -123,16 +116,9 @@ function CandlesCarousel({ velas }: { velas: Vela[] }) {
   );
 }
 
-/* ─────────────────────────────────────────────────
-   HERO UNIFICADO
-   Izquierda: rota entre "En su memoria" y "Velitas"
-   Derecha:   tarjeta con foto fija + vela animada
-───────────────────────────────────────────────── */
-type HeroSlide = "memorial";
-
+/* ─────────────────── HERO ─────────────────── */
 function HeroSection({
   persona,
-  velas,
 }: {
   persona: {
     id: number;
@@ -142,169 +128,94 @@ function HeroSection({
     biografia?: string;
     fotoPrincipal?: string;
   };
-  velas: Vela[];
 }) {
-  const [slide, setSlide] = useState<HeroSlide>("memorial");
-  const [visible, setVisible] = useState(true);
-  const [progress, setProgress] = useState(0);
-  const slideTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const progressTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const SLIDE_DURATION = 9000; // ms
-
-  /* Fade-switch helper */
-  const switchTo = useCallback((next: HeroSlide) => {
-    setVisible(false);
-    setTimeout(() => { setSlide(next); setVisible(true); }, 380);
-  }, []);
-
-  /* Progress bar reset */
-  const startProgress = useCallback(() => {
-    setProgress(0);
-    if (progressTimerRef.current) clearInterval(progressTimerRef.current);
-    const step = 100;
-    let elapsed = 0;
-    progressTimerRef.current = setInterval(() => {
-      elapsed += step;
-      setProgress(Math.min((elapsed / SLIDE_DURATION) * 100, 100));
-      if (elapsed >= SLIDE_DURATION && progressTimerRef.current) {
-        clearInterval(progressTimerRef.current);
-      }
-    }, step);
-  }, []);
-
-  /* Auto-advance slides every 9 s */
-  const startSlideTimer = useCallback((current: HeroSlide) => {
-    if (slideTimerRef.current) clearInterval(slideTimerRef.current);
-    startProgress();
-    slideTimerRef.current = setInterval(() => {
-      switchTo("memorial");
-    }, SLIDE_DURATION);
-  }, [switchTo, startProgress]);
-
-  useEffect(() => {
-    startSlideTimer(slide);
-    return () => {
-      if (slideTimerRef.current) clearInterval(slideTimerRef.current);
-      if (progressTimerRef.current) clearInterval(progressTimerRef.current);
-    };
-  }, [slide, startSlideTimer]);
-
-  const handleTab = (s: HeroSlide) => {
-    if (s !== slide) { switchTo(s); startSlideTimer(s); }
-  };
-
-  const isMemorial = slide === "memorial";
-
   return (
-    <section
-      className="relative overflow-hidden"
-      style={{ minHeight: "calc(100vh - 64px)" }}
-    >
-      {/* ── Split background ── */}
+    <section className="relative overflow-hidden" style={{ minHeight: "calc(100vh - 64px)" }}>
+      {/* Split background */}
       <div className="absolute inset-0 flex pointer-events-none" aria-hidden>
-        <div
-          className="transition-colors duration-700"
-          style={{ width: "55%", background: isMemorial ? "#f7f7f7" : "#0d0d0d" }}
-        />
+        <div style={{ width: "55%", background: "#f7f7f7" }} />
         <div style={{ width: "45%", background: "#0d0d0d" }} />
       </div>
 
-      {/* ── Main content ── */}
-      <div
-        className="relative max-w-7xl mx-auto h-full flex"
-        style={{ minHeight: "calc(100vh - 64px)" }}
-      >
+      <div className="relative max-w-7xl mx-auto flex" style={{ minHeight: "calc(100vh - 64px)" }}>
 
-        {/* ══ LEFT: rotating text ══ */}
+        {/* LEFT */}
         <div
           className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-20"
           style={{ width: "55%" }}
         >
-          {/* Pill tabs */}
-          <div className="flex gap-2.5 mb-5">
-            <button
-              onClick={() => handleTab("memorial")}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300"
-              style={{ background: "#f97316", color: "#fff", border: "1.5px solid #f97316" }}
+          {/* Badge */}
+          <div className="flex gap-2.5 mb-6">
+            <span
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide"
+              style={{ background: "#f97316", color: "#fff" }}
             >
-              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#fff" }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-white" />
               En su memoria
-            </button>
+            </span>
           </div>
 
-          {/* Progress bar */}
-          <div
-            className="rounded-full mb-10 overflow-hidden"
-            style={{
-              height: 3,
-              width: 120,
-              background: isMemorial ? "rgba(0,0,0,0.10)" : "rgba(255,255,255,0.12)",
-            }}
-          >
-            <div
-              className="h-full rounded-full"
-              style={{
-                width: `${progress}%`,
-                background: "#f97316",
-                transition: "width 0.1s linear",
-              }}
-            />
+          <div style={{ maxWidth: 540 }}>
+            <p className="text-xs tracking-[0.3em] uppercase font-bold mb-5" style={{ color: "#f97316" }}>
+              En tu memoria
+            </p>
+            <h1
+              className="font-serif leading-[0.9] mb-5"
+              style={{ fontSize: "clamp(3rem, 5vw, 5.5rem)", color: "#0d0d0d" }}
+            >
+              {persona.nombre}
+            </h1>
+            {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
+              <p className="text-sm tracking-wide mb-6" style={{ color: "rgba(0,0,0,0.38)" }}>
+                {formatDateEs(persona.fechaNacimiento)}
+                {persona.fechaNacimiento && persona.fechaFallecimiento && " — "}
+                {formatDateEs(persona.fechaFallecimiento)}
+              </p>
+            )}
+            {persona.biografia && (
+              <p className="text-[1.0625rem] leading-[1.7] mb-9 line-clamp-4" style={{ color: "rgba(0,0,0,0.52)" }}>
+                {persona.biografia}
+              </p>
+            )}
+            <div className="w-10 h-0.5 rounded-full mb-8" style={{ background: "#f97316" }} />
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={`/personas/${persona.id}`}
+                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 shadow-lg"
+                style={{ background: "#f97316", boxShadow: "0 8px 24px rgba(249,115,22,0.28)" }}
+              >
+                Recuérdalo aquí
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
+              </Link>
+              <Link
+                href="/velas"
+                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200"
+                style={{ background: "transparent", color: "#0d0d0d", border: "2px solid rgba(0,0,0,0.12)" }}
+              >
+                Encender velita
+              </Link>
+            </div>
           </div>
 
-          {/* Animated content area */}
-          <div
-            style={{
-              opacity: visible ? 1 : 0,
-              transform: visible ? "translateY(0)" : "translateY(16px)",
-              transition: "opacity 0.38s ease, transform 0.38s ease",
-              maxWidth: 540,
-            }}
-          >
-            {isMemorial ? (
-              /* ── Slide: En su memoria ── */
-              <>
-                <p className="text-xs tracking-[0.3em] uppercase font-bold mb-5" style={{ color: "#f97316" }}>
-                  En tu memoria
-                </p>
-                <h1
-                  className="font-serif leading-[0.9] mb-5"
-                  style={{ fontSize: "clamp(3rem, 5vw, 5.5rem)", color: "#0d0d0d" }}
-                >
-                  {persona.nombre}
-                </h1>
-                {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
-                  <p className="text-sm tracking-wide mb-5" style={{ color: "rgba(0,0,0,0.38)" }}>
-                    {formatDateEs(persona.fechaNacimiento)}
-                    {persona.fechaNacimiento && persona.fechaFallecimiento && " — "}
-                    {formatDateEs(persona.fechaFallecimiento)}
-                  </p>
-                )}
-                {persona.biografia && (
-                  <p className="text-[1.0625rem] leading-[1.7] mb-9 line-clamp-4" style={{ color: "rgba(0,0,0,0.52)" }}>
-                    {persona.biografia}
-                  </p>
-                )}
-                {/* Accent line — like example */}
-                <div className="w-10 h-0.5 rounded-full mb-8" style={{ background: "#f97316" }} />
-                <Link
-                  href={`/personas/${persona.id}`}
-                  className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 shadow-lg"
-                  style={{ background: "#f97316", boxShadow: "0 8px 24px rgba(249,115,22,0.28)" }}
-                >
-                  Recuérdalo aquí
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
-                </Link>
-              </>
-            ) : null}
+          {/* Stats row */}
+          <div className="flex gap-6 mt-12 pt-8" style={{ borderTop: "1.5px solid rgba(0,0,0,0.07)" }}>
+            <div>
+              <p className="text-2xl font-serif font-bold text-black">∞</p>
+              <p className="text-xs text-black/40 mt-0.5 tracking-wide">Días en nuestro corazón</p>
+            </div>
+            <div style={{ width: 1, background: "rgba(0,0,0,0.08)" }} />
+            <div>
+              <p className="text-2xl font-serif font-bold" style={{ color: "#f97316" }}>🕯</p>
+              <p className="text-xs text-black/40 mt-0.5 tracking-wide">Velitas encendidas</p>
+            </div>
           </div>
         </div>
 
-        {/* ══ RIGHT: static photo card ══ */}
+        {/* RIGHT */}
         <div
           className="hidden lg:flex items-center justify-center py-14 pr-12"
           style={{ width: "45%", background: "#0d0d0d" }}
         >
-          {/* Photo card */}
           <div
             className="relative overflow-hidden"
             style={{
@@ -316,30 +227,18 @@ function HeroSection({
             }}
           >
             {persona.fotoPrincipal ? (
-              <img
-                src={persona.fotoPrincipal}
-                alt={persona.nombre}
-                className="w-full h-full object-cover"
-              />
+              <img src={persona.fotoPrincipal} alt={persona.nombre} className="w-full h-full object-cover" />
             ) : (
-              /* Tarjeta memorial elegante cuando no hay foto */
               <div
                 className="w-full h-full flex flex-col items-center justify-center relative"
-                style={{
-                  background: "linear-gradient(155deg, #1c1c2e 0%, #16213e 55%, #0f3460 100%)",
-                }}
+                style={{ background: "linear-gradient(155deg, #1c1c2e 0%, #16213e 55%, #0f3460 100%)" }}
               >
-                {/* Glow behind candle */}
                 <div
-                  className="absolute"
+                  className="absolute pointer-events-none"
                   style={{
-                    width: 180,
-                    height: 180,
-                    borderRadius: "50%",
+                    width: 200, height: 200, borderRadius: "50%",
                     background: "radial-gradient(circle, rgba(249,115,22,0.22) 0%, transparent 70%)",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -60%)",
+                    top: "50%", left: "50%", transform: "translate(-50%, -60%)",
                   }}
                 />
                 <div className="mb-6 relative z-10">
@@ -361,17 +260,14 @@ function HeroSection({
               </div>
             )}
 
-            {/* Bottom gradient overlay */}
+            {/* Bottom gradient */}
             <div
-              className="absolute bottom-0 left-0 right-0"
-              style={{
-                height: "40%",
-                background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 100%)",
-              }}
+              className="absolute bottom-0 left-0 right-0 pointer-events-none"
+              style={{ height: "40%", background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 100%)" }}
             />
 
             {/* Bottom label */}
-            <div className="absolute bottom-5 left-5 right-5 flex items-center justify-between">
+            <div className="absolute bottom-5 left-5 right-5">
               <span
                 className="text-[10px] tracking-[0.28em] uppercase font-semibold px-3 py-1.5 rounded-full"
                 style={{ background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.80)", backdropFilter: "blur(6px)" }}
@@ -397,18 +293,29 @@ export default function Home() {
     <div className="min-h-screen bg-white text-black">
       <Navbar />
 
-      {/* Hero unificado */}
-      {persona && <HeroSection persona={persona} velas={velas} />}
+      {persona && <HeroSection persona={persona} />}
 
-      {/* Carrusel de velitas */}
+      {/* Velitas section */}
       {velas.length > 0 && (
-        <section className="py-16 px-8 bg-white border-t-4 border-orange-500">
+        <section className="py-20 px-8" style={{ background: "#fafafa", borderTop: "4px solid #f97316" }}>
           <div className="max-w-5xl mx-auto">
-            <h2 className="font-serif text-3xl text-black text-center mb-8">Velitas encendidas</h2>
+            <div className="text-center mb-10">
+              <p className="text-xs font-bold tracking-widest uppercase mb-2" style={{ color: "#f97316" }}>
+                Llama viva
+              </p>
+              <h2 className="font-serif text-3xl text-black">Velitas encendidas</h2>
+              <p className="text-black/40 text-sm mt-2">
+                {velasData?.total ?? velas.length} personas han honrado su memoria
+              </p>
+            </div>
             <CandlesCarousel velas={velas} />
-            <div className="text-center mt-7">
-              <Link href="/velas" className="text-sm font-semibold text-black/40 hover:text-orange-500 transition-colors">
-                Ver todas →
+            <div className="text-center mt-8">
+              <Link
+                href="/velas"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-black/40 hover:text-orange-500 transition-colors"
+              >
+                Ver todas las velitas
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
               </Link>
             </div>
           </div>
@@ -416,35 +323,34 @@ export default function Home() {
       )}
 
       {/* CTA */}
-      <section className="py-20 px-4 text-center">
+      <section className="py-24 px-4 text-center" style={{ background: "#0d0d0d" }}>
         <CandleFlame size="lg" className="mx-auto mb-6" />
-        <h2 className="font-serif text-4xl text-black mb-3">Siempre en nuestro corazón</h2>
-        <p className="text-black/45 mb-10 max-w-md mx-auto leading-relaxed">
+        <h2 className="font-serif text-4xl text-white mb-3">Siempre en nuestro corazón</h2>
+        <p className="text-white/40 mb-10 max-w-md mx-auto leading-relaxed">
           Cada recuerdo compartido es una forma de mantener viva su luz para siempre.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/velas"
-            className="inline-flex items-center justify-center px-8 py-3.5 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-all duration-200 shadow-md shadow-orange-200"
+            className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-xl transition-all duration-200 shadow-lg"
+            style={{ background: "#f97316", color: "#fff", boxShadow: "0 8px 24px rgba(249,115,22,0.35)" }}
           >
             Encender una velita
           </Link>
           <Link
             href="/recuerdos"
-            className="inline-flex items-center justify-center px-8 py-3.5 bg-black hover:bg-black/80 text-white font-semibold rounded-xl transition-all duration-200"
+            className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-xl transition-all duration-200"
+            style={{ background: "rgba(255,255,255,0.08)", color: "#fff", border: "1.5px solid rgba(255,255,255,0.15)" }}
           >
             Ver recuerdos
           </Link>
         </div>
       </section>
 
-      <footer className="py-10 px-4 text-center" style={{ borderTop: "3px solid #000" }}>
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <img src="/candle-logo.png" alt="" className="h-8 w-auto opacity-50" />
-        </div>
-        <p className="text-black/40 text-sm font-light tracking-wide">
-          En Tu Memoria — Siempre estarás en nuestros corazones
-        </p>
+      {/* Footer */}
+      <footer className="py-10 px-4 text-center" style={{ background: "#0d0d0d", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <p className="font-serif text-white/20 text-sm tracking-widest uppercase mb-1">En Tu Memoria</p>
+        <p className="text-white/15 text-xs font-light">Siempre estarás en nuestros corazones</p>
       </footer>
     </div>
   );
