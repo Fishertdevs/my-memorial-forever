@@ -126,20 +126,21 @@ export default function Home() {
         <p className="text-white/40 mb-10 max-w-md mx-auto leading-relaxed">
           Cada recuerdo compartido es una forma de mantener viva su luz para siempre.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row items-center gap-6 justify-center">
           <Link
             href="/velas"
-            className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-full transition-all duration-200"
-            style={{ background: "#f97316", color: "#fff", boxShadow: "none" }}
+            className="text-xs uppercase tracking-[0.28em] transition-opacity duration-200 hover:opacity-70"
+            style={{ color: "#f97316" }}
           >
-            Enciende tu velita
+            — Enciende tu velita
           </Link>
+          <span className="hidden sm:block w-px h-4 bg-white/20" />
           <Link
             href="/recuerdos"
-            className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-full transition-all duration-200"
-            style={{ background: "#1f1f1f", color: "#fff", boxShadow: "none" }}
+            className="text-xs uppercase tracking-[0.28em] transition-opacity duration-200 hover:opacity-70"
+            style={{ color: "#f97316" }}
           >
-            Ver recuerdos
+            — Ver recuerdos
           </Link>
         </div>
       </section>
