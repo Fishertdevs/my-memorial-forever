@@ -116,8 +116,8 @@ export default function Home() {
         </p>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4">
-        <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent 0%, rgba(249,115,22,0.55) 50%, transparent 100%)" }} />
+      <div className="px-4">
+        <div className="max-w-5xl mx-auto h-px" style={{ background: "linear-gradient(90deg, transparent 0%, rgba(249,115,22,0.55) 50%, transparent 100%)" }} />
       </div>
 
       {/* CTA */}
