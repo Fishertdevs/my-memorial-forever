@@ -183,6 +183,7 @@ function HeroSection({
                 backgroundRepeat: "no-repeat",
               }}
             />
+          </div>
         </div>
       </div>
     </section>
@@ -193,7 +194,15 @@ function HeroSection({
 export default function Home() {
   const { data: velasData } = useListVelas({ limit: 30 });
   const { data: personas } = useListPersonas();
-  const persona = personas?.[0];
+  const persona = personas?.[0]
+    ? {
+        ...personas[0],
+        fechaNacimiento: personas[0].fechaNacimiento ?? undefined,
+        fechaFallecimiento: personas[0].fechaFallecimiento ?? undefined,
+        biografia: personas[0].biografia ?? undefined,
+        fotoPrincipal: personas[0].fotoPrincipal ?? undefined,
+      }
+    : undefined;
   const velas: Vela[] = velasData?.data ?? [];
 
   return (
