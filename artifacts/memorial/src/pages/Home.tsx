@@ -26,7 +26,7 @@ function HeroSection({
 }) {
   return (
     <section className="bg-white" style={{ borderBottom: "1px solid #0d0d0d" }}>
-      <div className="max-w-5xl mx-auto flex items-stretch" style={{ minHeight: 440 }}>
+      <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-stretch" style={{ minHeight: 440 }}>
         {/* Text — centered vertically, centered horizontally */}
         <div className="flex flex-col justify-center items-center text-center px-8 sm:px-12 lg:px-16 flex-1" style={{ paddingTop: "5rem", paddingBottom: "3rem" }}>
           <span
@@ -66,8 +66,8 @@ function HeroSection({
 
         {/* Image + candle — right */}
         <div
-          className="hidden sm:flex items-end justify-center flex-shrink-0 gap-4"
-          style={{ width: 360, paddingTop: "5rem", paddingBottom: "2.5rem", paddingRight: "2.5rem", paddingLeft: "0.5rem" }}
+          className="flex items-end justify-center flex-shrink-0 gap-4 px-8 pb-8 sm:px-0 sm:pb-0 sm:w-[360px]"
+          style={{ paddingTop: "1rem" }}
         >
           {/* Candle beside the image */}
           <div className="flex-shrink-0 mb-2">
