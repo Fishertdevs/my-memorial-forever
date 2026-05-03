@@ -103,7 +103,7 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
       ) : (
         <div className="border-2 border-orange-200 rounded-2xl p-5 bg-orange-50/30">
           <div className="flex items-center justify-between mb-4">
-            <p className="text-xs font-bold tracking-widest uppercase" style={{ color: "#f97316" }}>
+            <p className="flex-1 text-center text-xs font-bold tracking-widest uppercase" style={{ color: "#f97316" }}>
               Encender una velita
             </p>
             <button onClick={() => setOpen(false)} className="text-black/30 hover:text-black/60 transition-colors">
@@ -157,8 +157,8 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
               <button
                 type="submit"
                 disabled={!canSubmit || createVela.isPending}
-                className="px-7 py-2.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-30 text-white"
-                style={{ background: canSubmit ? "#f97316" : "#f3f4f6", color: canSubmit ? "white" : "#9ca3af" }}
+                className="px-7 py-2.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-40 border-0 outline-none"
+                style={{ background: "#f97316", color: "white", opacity: (!canSubmit || createVela.isPending) ? 0.4 : 1 }}
               >
                 {createVela.isPending ? "Encendiendo…" : "🕯 Encender"}
               </button>
