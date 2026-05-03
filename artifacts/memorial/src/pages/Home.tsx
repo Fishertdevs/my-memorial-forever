@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import { useState, useRef } from "react";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
 
@@ -74,6 +75,108 @@ function PersonaCard({
   );
 }
 
+function HeroCarousel() {
+  const [current, setCurrent] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const total = PERSONAS_HOMENAJE.length;
+
+  const prev = () => setCurrent((c) => (c - 1 + total) % total);
+  const next = () => setCurrent((c) => (c + 1) % total);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchStartX.current;
+    if (dx < -40) next();
+    else if (dx > 40) prev();
+    touchStartX.current = null;
+  };
+
+  const { nombre, foto } = PERSONAS_HOMENAJE[current];
+
+  return (
+    <div
+      className="flex flex-col items-center w-full"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      <div
+        key={current}
+        className="flex flex-col items-center text-center w-full hero-enter-1"
+        style={{ animationDelay: "0s" }}
+      >
+        <h2
+          className="font-serif leading-snug mb-6"
+          style={{ fontSize: "clamp(1.3rem, 6vw, 1.9rem)", color: "#0d0d0d", minHeight: "2.8em", display: "flex", alignItems: "center", justifyContent: "center" }}
+        >
+          {nombre}
+        </h2>
+
+        <div
+          style={{
+            width: 200,
+            aspectRatio: "3/4",
+            borderRadius: "2.2rem 0.7rem 2.2rem 0.7rem",
+            overflow: "hidden",
+            boxShadow: "0 0 0 3px #fff, 0 0 0 5px #0d0d0d",
+            background: "#f3f0eb",
+          }}
+        >
+          {foto ? (
+            <img src={foto} alt={nombre} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+          ) : (
+            <div className="flex items-center justify-center w-full h-full font-serif" style={{ fontSize: "3rem", color: "#d1c9bb" }}>
+              {initials(nombre)}
+            </div>
+          )}
+        </div>
+
+        <div className="mt-6 mb-1">
+          <CandleFlame size="sm" />
+        </div>
+      </div>
+
+      <div className="flex items-center gap-6 mt-6">
+        <button
+          onClick={prev}
+          aria-label="Anterior"
+          style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 8px", color: "#f97316", fontSize: "1.3rem", lineHeight: 1 }}
+        >
+          ‹
+        </button>
+        <div className="flex gap-2">
+          {PERSONAS_HOMENAJE.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrent(i)}
+              aria-label={`Ir a ${PERSONAS_HOMENAJE[i].nombre}`}
+              style={{
+                width: i === current ? 20 : 7,
+                height: 7,
+                borderRadius: 4,
+                background: i === current ? "#f97316" : "#d1c9bb",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+                transition: "width 0.3s ease, background 0.3s ease",
+              }}
+            />
+          ))}
+        </div>
+        <button
+          onClick={next}
+          aria-label="Siguiente"
+          style={{ background: "none", border: "none", cursor: "pointer", padding: "4px 8px", color: "#f97316", fontSize: "1.3rem", lineHeight: 1 }}
+        >
+          ›
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function HeroSection() {
   return (
     <section className="bg-white" style={{ borderBottom: "1px solid #e5e7eb" }}>
@@ -88,7 +191,13 @@ function HeroSection() {
           En conmemoración a
         </span>
 
-        <div className="flex flex-row items-start justify-center gap-8 sm:gap-14 w-full">
+        {/* Mobile: carrusel */}
+        <div className="sm:hidden w-full flex flex-col items-center">
+          <HeroCarousel />
+        </div>
+
+        {/* Desktop: 3 columnas */}
+        <div className="hidden sm:flex flex-row items-start justify-center gap-8 sm:gap-14 w-full">
           {PERSONAS_HOMENAJE.map(({ nombre, foto }, i) => (
             <PersonaCard key={nombre} nombre={nombre} foto={foto} delay={i * 0.15} />
           ))}
