@@ -5,6 +5,7 @@ const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/personas", label: "Memorial" },
   { href: "/recuerdos", label: "Recuerdos" },
+  { href: "/velas", label: "Enciende tu velita" },
 ];
 
 export default function Navbar() {
@@ -42,21 +43,6 @@ export default function Navbar() {
               </Link>
             );
           })}
-          {/* CTA button */}
-          <Link
-            href="/velas"
-            className="ml-3 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-all duration-200 shadow-sm"
-            style={{
-              background: location === "/velas" ? "#ea580c" : "#f97316",
-              boxShadow: "0 2px 8px rgba(249,115,22,0.30)",
-            }}
-          >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-              <path d="M17 14c0 4-7 8-7 8S3 18 3 14a7 7 0 0114 0z"/>
-              <circle cx="10" cy="14" r="3"/>
-            </svg>
-            Encender Velita
-          </Link>
         </div>
 
         <button
@@ -90,14 +76,6 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link
-            href="/velas"
-            onClick={() => setOpen(false)}
-            className="block px-4 py-2.5 text-sm font-semibold rounded-lg text-white text-center"
-            style={{ background: "#f97316" }}
-          >
-            Encender Velita
-          </Link>
         </div>
       )}
     </nav>
