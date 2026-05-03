@@ -128,7 +128,7 @@ function CandlesCarousel({ velas }: { velas: Vela[] }) {
    Izquierda: rota entre "En su memoria" y "Velitas"
    Derecha:   tarjeta con foto fija + vela animada
 ───────────────────────────────────────────────── */
-type HeroSlide = "memorial" | "velitas";
+type HeroSlide = "memorial";
 
 function HeroSection({
   persona,
@@ -146,11 +146,9 @@ function HeroSection({
 }) {
   const [slide, setSlide] = useState<HeroSlide>("memorial");
   const [visible, setVisible] = useState(true);
-  const [velaIdx, setVelaIdx] = useState(0);
   const [progress, setProgress] = useState(0);
   const slideTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const progressTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const velaTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const SLIDE_DURATION = 9000; // ms
 
   /* Fade-switch helper */
@@ -179,7 +177,7 @@ function HeroSection({
     if (slideTimerRef.current) clearInterval(slideTimerRef.current);
     startProgress();
     slideTimerRef.current = setInterval(() => {
-      switchTo(current === "memorial" ? "velitas" : "memorial");
+      switchTo("memorial");
     }, SLIDE_DURATION);
   }, [switchTo, startProgress]);
 
@@ -191,21 +189,11 @@ function HeroSection({
     };
   }, [slide, startSlideTimer]);
 
-  /* Auto-rotate velitas every 7 s */
-  useEffect(() => {
-    if (!velas.length) return;
-    if (velaTimerRef.current) clearInterval(velaTimerRef.current);
-    velaTimerRef.current = setInterval(() => setVelaIdx((i) => (i + 1) % velas.length), 7000);
-    return () => { if (velaTimerRef.current) clearInterval(velaTimerRef.current); };
-  }, [velas.length]);
-
   const handleTab = (s: HeroSlide) => {
     if (s !== slide) { switchTo(s); startSlideTimer(s); }
   };
 
   const isMemorial = slide === "memorial";
-  const vela = velas[velaIdx] ?? null;
-  const fc = FLAME_COLORS[velaIdx % FLAME_COLORS.length];
 
   return (
     <section
@@ -233,30 +221,15 @@ function HeroSection({
           style={{ width: "55%" }}
         >
           {/* Pill tabs */}
-          <div className="flex flex-wrap gap-2.5 mb-5">
-            {(["memorial", "velitas"] as HeroSlide[]).map((s) => {
-              const active = slide === s;
-              return (
-                <button
-                  key={s}
-                  onClick={() => handleTab(s)}
-                  className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300"
-                  style={
-                    active
-                      ? { background: "#f97316", color: "#fff", border: "1.5px solid #f97316" }
-                      : isMemorial
-                        ? { background: "rgba(0,0,0,0.06)", color: "rgba(0,0,0,0.35)", border: "1.5px solid rgba(0,0,0,0.10)" }
-                        : { background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.45)", border: "1.5px solid rgba(255,255,255,0.14)" }
-                  }
-                >
-                  <span
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: active ? "#fff" : isMemorial ? "rgba(0,0,0,0.25)" : "rgba(255,255,255,0.3)" }}
-                  />
-                  {s === "memorial" ? "En su memoria" : "Velitas encendidas"}
-                </button>
-              );
-            })}
+          <div className="flex gap-2.5 mb-5">
+            <button
+              onClick={() => handleTab("memorial")}
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-300"
+              style={{ background: "#f97316", color: "#fff", border: "1.5px solid #f97316" }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: "#fff" }} />
+              En su memoria
+            </button>
           </div>
 
           {/* Progress bar */}
@@ -319,66 +292,6 @@ function HeroSection({
                   style={{ background: "#f97316", boxShadow: "0 8px 24px rgba(249,115,22,0.28)" }}
                 >
                   Recuérdalo aquí
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
-                </Link>
-              </>
-            ) : vela ? (
-              /* ── Slide: Velitas encendidas ── */
-              <>
-                <p className="text-xs tracking-[0.3em] uppercase font-bold mb-5" style={{ color: "#f97316" }}>
-                  Velitas encendidas
-                </p>
-                <div className="flex items-start gap-5 mb-7">
-                  <div className="flex-shrink-0 mt-1">
-                    <CandleFlame size="md" outerColor={fc.outer} innerColor={fc.inner} glowColor={fc.glow} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold mb-3" style={{ color: "#f97316" }}>
-                      Por {vela.nombreRecordado}
-                    </p>
-                    <p
-                      className="font-serif leading-snug mb-4"
-                      style={{ fontSize: "clamp(1.55rem, 3vw, 2.5rem)", color: "#f7f7f7", lineHeight: 1.2 }}
-                    >
-                      "{vela.mensaje}"
-                    </p>
-                    <p className="text-sm" style={{ color: "rgba(255,255,255,0.38)" }}>
-                      — {vela.nombreAutor} · {vela.tiempoTranscurrido}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Accent line */}
-                <div className="w-10 h-0.5 rounded-full mb-6" style={{ background: "#f97316" }} />
-
-                {/* Velitas dots */}
-                {velas.length > 1 && (
-                  <div className="flex gap-2 mb-8">
-                    {velas.map((_, i) => (
-                      <span
-                        key={i}
-                        className="rounded-full transition-all duration-300 inline-block"
-                        style={{
-                          width: i === velaIdx ? 20 : 7,
-                          height: 7,
-                          background: i === velaIdx ? "#f97316" : "rgba(255,255,255,0.20)",
-                        }}
-                      />
-                    ))}
-                  </div>
-                )}
-
-                <Link
-                  href="/velas"
-                  className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200"
-                  style={{
-                    background: "rgba(255,255,255,0.09)",
-                    color: "#fff",
-                    border: "1.5px solid rgba(255,255,255,0.18)",
-                    backdropFilter: "blur(4px)",
-                  }}
-                >
-                  Encender una velita
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
                 </Link>
               </>
