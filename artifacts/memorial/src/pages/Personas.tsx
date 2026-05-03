@@ -373,7 +373,7 @@ export default function Personas() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
             <h1 className="font-serif text-4xl text-black mb-3 leading-snug">
-              Siempre estarás en nuestra memoria
+              Siempre estarán en nuestra memoria
             </h1>
             <p className="text-black/50 max-w-md mx-auto leading-relaxed">
               Con esta velita te recordaremos siempre. Que su luz siga brillando en cada corazón que los amó.
