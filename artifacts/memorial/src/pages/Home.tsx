@@ -114,10 +114,43 @@ const FLAME_COLORS = [
   { outer: "#f97316", inner: "#fed7aa", glow: "rgba(249,115,22,0.20)" },
 ];
 
+interface FloatingHeart { id: number; x: number; y: number; }
+
 function VelaCard({ vela, index }: { vela: Vela; index: number }) {
   const fc = FLAME_COLORS[index % FLAME_COLORS.length];
+  const [hearts, setHearts] = useState(0);
+  const [floating, setFloating] = useState<FloatingHeart[]>([]);
+
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const id = Date.now();
+    setHearts((h) => h + 1);
+    setFloating((f) => [...f, { id, x, y }]);
+    setTimeout(() => setFloating((f) => f.filter((h) => h.id !== id)), 900);
+  };
+
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 h-full">
+    <div
+      className="relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 h-full select-none cursor-default"
+      onDoubleClick={handleDoubleClick}
+    >
+      {/* Floating hearts */}
+      {floating.map((fh) => (
+        <span
+          key={fh.id}
+          className="pointer-events-none absolute text-2xl"
+          style={{
+            left: fh.x,
+            top: fh.y,
+            transform: "translate(-50%, -50%)",
+            animation: "float-heart 0.9s ease-out forwards",
+            zIndex: 20,
+          }}
+        >❤️</span>
+      ))}
+
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0 pt-0.5">
           <CandleFlame size="sm" outerColor={fc.outer} innerColor={fc.inner} glowColor={fc.glow} />
@@ -129,6 +162,11 @@ function VelaCard({ vela, index }: { vela: Vela; index: number }) {
             <span className="truncate mr-2">{vela.nombreAutor}</span>
             <span className="flex-shrink-0">{vela.tiempoTranscurrido}</span>
           </div>
+          {hearts > 0 && (
+            <div className="mt-2 text-xs text-rose-400 font-medium">
+              ❤️ {hearts} {hearts === 1 ? "corazón" : "corazones"}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -136,75 +174,63 @@ function VelaCard({ vela, index }: { vela: Vela; index: number }) {
 }
 
 function CandlesCarousel({ velas }: { velas: Vela[] }) {
-  const [page, setPage] = useState(0);
+  const [current, setCurrent] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const touchStartX = useRef<number | null>(null);
+  const total = velas.length;
 
-  /* Responsive: 3 per page on md+, 1 on mobile */
-  const [perPage, setPerPage] = useState(typeof window !== "undefined" && window.innerWidth >= 768 ? 3 : 1);
-  useEffect(() => {
-    const update = () => setPerPage(window.innerWidth >= 768 ? 3 : 1);
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-
-  const totalPages = Math.ceil(velas.length / perPage);
-
-  const next = useCallback(() => setPage((p) => (p + 1) % totalPages), [totalPages]);
-  const prev = useCallback(() => setPage((p) => (p - 1 + totalPages) % totalPages), [totalPages]);
+  const next = useCallback(() => setCurrent((c) => (c + 1) % total), [total]);
+  const prev = useCallback(() => setCurrent((c) => (c - 1 + total) % total), [total]);
 
   const resetTimer = useCallback(() => {
     if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(next, 6000);
+    timerRef.current = setInterval(next, 10000);
   }, [next]);
 
-  useEffect(() => { resetTimer(); return () => { if (timerRef.current) clearInterval(timerRef.current); }; }, [resetTimer]);
+  useEffect(() => {
+    resetTimer();
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [resetTimer]);
 
-  const visibleVelas = velas.slice(page * perPage, page * perPage + perPage);
+  const onTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) { diff > 0 ? next() : prev(); resetTimer(); }
+    touchStartX.current = null;
+  };
+
+  const vela = velas[current];
 
   return (
     <div>
-      {/* Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6" style={{ minHeight: 160 }}>
-        {visibleVelas.map((vela, i) => (
-          <div key={`${page}-${vela.id}`} className="fade-in-up" style={{ animationDelay: `${i * 0.07}s` }}>
-            <VelaCard vela={vela} index={page * perPage + i} />
-          </div>
-        ))}
+      {/* Single card — swipeable */}
+      <div
+        className="max-w-lg mx-auto mb-5"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        <div key={current} className="fade-in-up">
+          <VelaCard vela={vela} index={current} />
+        </div>
+        <p className="text-center text-xs text-black/25 mt-2 select-none">Doble clic para dejar un ❤️</p>
       </div>
 
-      {/* Centered nav arrows + dots */}
-      <div className="flex items-center justify-center gap-4 mt-2">
-        <button
-          onClick={() => { prev(); resetTimer(); }}
-          className="w-10 h-10 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all"
-          aria-label="Anterior"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10 3l-5 5 5 5"/></svg>
-        </button>
-
-        <div className="flex items-center gap-2">
-          {Array.from({ length: totalPages }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => { setPage(i); resetTimer(); }}
-              className="rounded-full transition-all duration-300"
-              style={{
-                width: i === page ? 22 : 8,
-                height: 8,
-                background: i === page ? "#f97316" : "#e5e7eb",
-              }}
-              aria-label={`Página ${i + 1}`}
-            />
-          ))}
-        </div>
-
-        <button
-          onClick={() => { next(); resetTimer(); }}
-          className="w-10 h-10 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all"
-          aria-label="Siguiente"
-        >
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 3l5 5-5 5"/></svg>
-        </button>
+      {/* Dots only — no arrows */}
+      <div className="flex items-center justify-center gap-2">
+        {velas.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => { setCurrent(i); resetTimer(); }}
+            className="rounded-full transition-all duration-300"
+            style={{
+              width: i === current ? 22 : 8,
+              height: 8,
+              background: i === current ? "#f97316" : "#e5e7eb",
+            }}
+            aria-label={`Velita ${i + 1}`}
+          />
+        ))}
       </div>
     </div>
   );
@@ -299,11 +325,13 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="border-t border-gray-100 py-8 px-4 text-center">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <img src="/candle-logo.png" alt="" className="h-7 w-auto opacity-60" />
+      <footer className="py-10 px-4 text-center" style={{ borderTop: "3px solid #000" }}>
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <img src="/candle-logo.png" alt="" className="h-8 w-auto opacity-50" />
         </div>
-        <p className="text-black/30 text-sm font-light">En Tu Memoria — Siempre estarás en nuestros corazones</p>
+        <p className="text-black/40 text-sm font-light tracking-wide">
+          En Tu Memoria — Siempre estarás en nuestros corazones
+        </p>
       </footer>
     </div>
   );
