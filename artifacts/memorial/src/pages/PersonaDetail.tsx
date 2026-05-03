@@ -246,11 +246,6 @@ export default function PersonaDetail() {
             </div>
             <div className={`px-6 py-3 text-sm font-semibold border-b-2 -mb-0.5 flex items-center gap-2 ${activeTab === "velas" ? "border-orange-500 text-orange-500" : "border-transparent text-black/40"}`}>
               Velitas encendidas
-              {velaCount > 0 && (
-                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${activeTab === "velas" ? "bg-orange-100 text-orange-500" : "bg-gray-100 text-black/35"}`}>
-                  {velaCount}
-                </span>
-              )}
             </div>
           </div>
 
@@ -283,7 +278,7 @@ export default function PersonaDetail() {
                 </div>
               ) : (
                 <div className="border-2 border-gray-100 rounded-2xl p-6">
-                  <h3 className="font-serif text-xl text-black mb-5">Encender una velita</h3>
+                  <h3 className="font-serif text-xl text-black mb-5">Enciende tu velita</h3>
                   <form onSubmit={velaForm.handleSubmit(onSubmitVela)} className="space-y-4">
                     <input
                       {...velaForm.register("nombreAutor", { required: true })}
