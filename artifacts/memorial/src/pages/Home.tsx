@@ -3,7 +3,7 @@ import { Link } from "wouter";
 import { useListVelas, useListPersonas } from "@workspace/api-client-react";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
-import heroImage from "@assets/image_1777782607280.png";
+import heroImage from "@assets/image_1777782921821.png";
 
 /* ─────── Helpers ─────── */
 function formatDateEs(raw?: string): string {
@@ -247,13 +247,13 @@ export default function Home() {
           Cada recuerdo compartido es una forma de mantener viva su luz para siempre.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            href="/velas"
-            className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-xl transition-all duration-200 shadow-lg"
-            style={{ background: "#f97316", color: "#fff", boxShadow: "0 8px 24px rgba(249,115,22,0.35)" }}
-          >
-            Encender una velita
-          </Link>
+            <Link
+              href="/velas"
+              className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-xl transition-all duration-200"
+              style={{ background: "#f97316", color: "#fff", boxShadow: "none" }}
+            >
+              Enciende tu velita
+            </Link>
           <Link
             href="/recuerdos"
             className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-xl transition-all duration-200"
