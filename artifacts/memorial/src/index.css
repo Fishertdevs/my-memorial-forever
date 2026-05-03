@@ -147,6 +147,21 @@
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
+/* Hero staggered entry */
+@keyframes hero-enter {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-enter-1 { opacity: 0; animation: hero-enter 0.55s ease-out 0.05s forwards; }
+.hero-enter-2 { opacity: 0; animation: hero-enter 0.55s ease-out 0.18s forwards; }
+.hero-enter-3 { opacity: 0; animation: hero-enter 0.55s ease-out 0.30s forwards; }
+.hero-enter-4 { opacity: 0; animation: hero-enter 0.55s ease-out 0.42s forwards; }
+.hero-enter-5 { opacity: 0; animation: hero-enter 0.55s ease-out 0.54s forwards; }
+.hero-enter-6 { opacity: 0; animation: hero-enter 0.55s ease-out 0.66s forwards; }
+
+/* Smooth scroll */
+html { scroll-behavior: smooth; }
+
 @keyframes ig-heart {
   0%   { opacity: 0;   transform: translate(-50%, -50%) scale(0.2); }
   15%  { opacity: 1;   transform: translate(-50%, -50%) scale(1.3); }

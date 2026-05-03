@@ -180,9 +180,11 @@ export default function Velas() {
         {velasData && velasData.data.length > 0 && (
           <div className="border-t border-gray-100 px-4 py-10 bg-gray-50">
             <div className="max-w-4xl mx-auto">
-              <p className="text-center text-xs font-bold tracking-widest uppercase text-orange-500 mb-8">{velasData.total} velitas encendidas</p>
+              <p className="text-center text-xs font-bold tracking-widest uppercase mb-8" style={{ color: "#f97316" }}>
+                {velasData.total} velitas encendidas
+              </p>
               <div className="flex flex-wrap justify-center gap-6">
-                {velasData.data.slice(0, 12).map((vela, i) => (
+                {velasData.data.slice(0, 12).map((vela) => (
                   <div key={vela.id} className="group relative" title={`${vela.nombreRecordado} — ${vela.nombreAutor}`}>
                     <AnimatedCandle color={FLAME_COLORS[vela.id % FLAME_COLORS.length]} size={0.65} />
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
@@ -198,6 +200,11 @@ export default function Velas() {
           </div>
         )}
       </div>
+
+      <footer className="py-8 px-4 text-center" style={{ background: "#ffffff", borderTop: "3px solid #f97316" }}>
+        <p className="font-serif text-black/70 text-sm tracking-widest uppercase mb-1">En Tu Memoria</p>
+        <p className="text-black/35 text-xs font-light">Siempre estarás en nuestros corazones</p>
+      </footer>
     </div>
   );
 }

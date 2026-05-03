@@ -127,6 +127,8 @@ function HeroSection({
     fechaFallecimiento?: string;
     biografia?: string;
     fotoPrincipal?: string;
+    totalVelas?: number;
+    totalRecuerdos?: number;
   };
 }) {
   return (
@@ -145,32 +147,32 @@ function HeroSection({
           style={{ width: "55%" }}
         >
           <div style={{ maxWidth: 540 }}>
-            <p className="text-xs tracking-[0.3em] uppercase font-bold mb-5" style={{ color: "#f97316" }}>
+            <p className="hero-enter-1 text-xs tracking-[0.3em] uppercase font-bold mb-5" style={{ color: "#f97316" }}>
               En tu memoria
             </p>
             <h1
-              className="font-serif leading-[0.9] mb-5"
+              className="hero-enter-2 font-serif leading-[0.9] mb-5"
               style={{ fontSize: "clamp(3rem, 5vw, 5.5rem)", color: "#0d0d0d" }}
             >
               {persona.nombre}
             </h1>
             {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
-              <p className="text-sm tracking-wide mb-6" style={{ color: "rgba(0,0,0,0.38)" }}>
+              <p className="hero-enter-3 text-sm tracking-wide mb-6" style={{ color: "rgba(0,0,0,0.38)" }}>
                 {formatDateEs(persona.fechaNacimiento)}
                 {persona.fechaNacimiento && persona.fechaFallecimiento && " — "}
                 {formatDateEs(persona.fechaFallecimiento)}
               </p>
             )}
             {persona.biografia && (
-              <p className="text-[1.0625rem] leading-[1.7] mb-9 line-clamp-4" style={{ color: "rgba(0,0,0,0.52)" }}>
+              <p className="hero-enter-4 text-[1.0625rem] leading-[1.7] mb-9 line-clamp-4" style={{ color: "rgba(0,0,0,0.52)" }}>
                 {persona.biografia}
               </p>
             )}
-            <div className="w-10 h-0.5 rounded-full mb-8" style={{ background: "#f97316" }} />
+            <div className="hero-enter-5 w-10 h-0.5 rounded-full mb-8" style={{ background: "#f97316" }} />
             <Link
               href={`/personas/${persona.id}`}
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 shadow-lg"
-              style={{ background: "#f97316", boxShadow: "0 8px 24px rgba(249,115,22,0.28)" }}
+              className="hero-enter-6 inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:opacity-75"
+              style={{ color: "#f97316" }}
             >
               Recuérdalo aquí
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
@@ -184,10 +186,25 @@ function HeroSection({
               <p className="text-xs text-black/40 mt-0.5 tracking-wide">Días en nuestro corazón</p>
             </div>
             <div style={{ width: 1, background: "rgba(0,0,0,0.08)" }} />
-            <div>
-              <p className="text-2xl font-serif font-bold" style={{ color: "#f97316" }}>🕯</p>
-              <p className="text-xs text-black/40 mt-0.5 tracking-wide">Velitas encendidas</p>
-            </div>
+            {persona.totalVelas !== undefined && (
+              <div>
+                <p className="text-2xl font-serif font-bold" style={{ color: "#f97316" }}>
+                  {persona.totalVelas}
+                </p>
+                <p className="text-xs text-black/40 mt-0.5 tracking-wide">Velitas encendidas</p>
+              </div>
+            )}
+            {persona.totalRecuerdos !== undefined && (
+              <>
+                <div style={{ width: 1, background: "rgba(0,0,0,0.08)" }} />
+                <div>
+                  <p className="text-2xl font-serif font-bold text-black">
+                    {persona.totalRecuerdos}
+                  </p>
+                  <p className="text-xs text-black/40 mt-0.5 tracking-wide">Recuerdos</p>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
@@ -196,11 +213,33 @@ function HeroSection({
           className="hidden lg:flex items-center justify-center py-14 pr-12"
           style={{ width: "45%", background: "#0d0d0d" }}
         >
+          {/* Decorative corner accents */}
+          <div className="relative" style={{ width: "100%", maxWidth: 400 }}>
+            {/* Top-left corner */}
+            <div className="absolute -top-3 -left-3 z-10 pointer-events-none" style={{ width: 28, height: 28 }}>
+              <div className="absolute top-0 left-0 w-full h-0.5 rounded-full" style={{ background: "#f97316" }} />
+              <div className="absolute top-0 left-0 h-full w-0.5 rounded-full" style={{ background: "#f97316" }} />
+            </div>
+            {/* Top-right corner */}
+            <div className="absolute -top-3 -right-3 z-10 pointer-events-none" style={{ width: 28, height: 28 }}>
+              <div className="absolute top-0 right-0 w-full h-0.5 rounded-full" style={{ background: "#f97316" }} />
+              <div className="absolute top-0 right-0 h-full w-0.5 rounded-full" style={{ background: "#f97316" }} />
+            </div>
+            {/* Bottom-left corner */}
+            <div className="absolute -bottom-3 -left-3 z-10 pointer-events-none" style={{ width: 28, height: 28 }}>
+              <div className="absolute bottom-0 left-0 w-full h-0.5 rounded-full" style={{ background: "#f97316" }} />
+              <div className="absolute bottom-0 left-0 h-full w-0.5 rounded-full" style={{ background: "#f97316" }} />
+            </div>
+            {/* Bottom-right corner */}
+            <div className="absolute -bottom-3 -right-3 z-10 pointer-events-none" style={{ width: 28, height: 28 }}>
+              <div className="absolute bottom-0 right-0 w-full h-0.5 rounded-full" style={{ background: "#f97316" }} />
+              <div className="absolute bottom-0 right-0 h-full w-0.5 rounded-full" style={{ background: "#f97316" }} />
+            </div>
+
           <div
             className="relative overflow-hidden"
             style={{
               width: "100%",
-              maxWidth: 400,
               aspectRatio: "3/4",
               borderRadius: "2rem",
               boxShadow: "0 32px 72px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.06)",
@@ -256,6 +295,7 @@ function HeroSection({
               </span>
             </div>
           </div>
+          </div>{/* /decorative wrapper */}
         </div>
       </div>
     </section>
@@ -292,7 +332,8 @@ export default function Home() {
             <div className="text-center mt-8">
               <Link
                 href="/velas"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-black/40 hover:text-orange-500 transition-colors"
+                className="inline-flex items-center gap-2 text-sm font-semibold transition-colors hover:opacity-75"
+                style={{ color: "#f97316" }}
               >
                 Ver todas las velitas
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 8h10M9 4l4 4-4 4" /></svg>

@@ -147,6 +147,17 @@ export default function PersonaDetail() {
             }}
           />
 
+          {/* Back link */}
+          <div className="absolute top-5 left-0 right-0 max-w-4xl mx-auto px-6">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 text-white/50 hover:text-white text-xs font-semibold transition-colors"
+            >
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M13 8H3M7 4l-4 4 4 4" /></svg>
+              Inicio
+            </Link>
+          </div>
+
           <div className="absolute inset-0 flex items-end">
             <div className="max-w-4xl mx-auto px-6 pb-10 flex items-end gap-6 w-full">
 
@@ -211,19 +222,36 @@ export default function PersonaDetail() {
 
           {/* Tabs */}
           <div className="flex border-b-2 border-gray-100 mb-8">
-            {(["recuerdos", "velas"] as const).map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-6 py-3 text-sm font-semibold transition-colors border-b-2 -mb-0.5 ${
-                  activeTab === tab
-                    ? "border-orange-500 text-orange-500"
-                    : "border-transparent text-black/40 hover:text-black"
-                }`}
-              >
-                {tab === "recuerdos" ? "Recuerdos" : "Velitas encendidas"}
-              </button>
-            ))}
+            <button
+              onClick={() => setActiveTab("recuerdos")}
+              className={`px-6 py-3 text-sm font-semibold transition-colors border-b-2 -mb-0.5 flex items-center gap-2 ${
+                activeTab === "recuerdos"
+                  ? "border-orange-500 text-orange-500"
+                  : "border-transparent text-black/40 hover:text-black"
+              }`}
+            >
+              Recuerdos
+              {recuerdoCount > 0 && (
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${activeTab === "recuerdos" ? "bg-orange-100 text-orange-500" : "bg-gray-100 text-black/35"}`}>
+                  {recuerdoCount}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab("velas")}
+              className={`px-6 py-3 text-sm font-semibold transition-colors border-b-2 -mb-0.5 flex items-center gap-2 ${
+                activeTab === "velas"
+                  ? "border-orange-500 text-orange-500"
+                  : "border-transparent text-black/40 hover:text-black"
+              }`}
+            >
+              Velitas encendidas
+              {velaCount > 0 && (
+                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${activeTab === "velas" ? "bg-orange-100 text-orange-500" : "bg-gray-100 text-black/35"}`}>
+                  {velaCount}
+                </span>
+              )}
+            </button>
           </div>
 
           {/* Velas tab */}
@@ -306,8 +334,8 @@ export default function PersonaDetail() {
                   <button
                     type="submit"
                     disabled={createRecuerdo.isPending}
-                    className="w-full py-3 font-semibold rounded-xl transition-colors disabled:opacity-50 text-white text-sm"
-                    style={{ background: "#0d0d0d" }}
+                    className="w-full py-3 font-semibold rounded-xl transition-all disabled:opacity-50 text-white text-sm shadow-sm"
+                    style={{ background: "#f97316", boxShadow: "0 4px 14px rgba(249,115,22,0.28)" }}
                   >
                     {createRecuerdo.isPending ? "Guardando..." : "Guardar recuerdo"}
                   </button>
@@ -341,6 +369,11 @@ export default function PersonaDetail() {
           )}
         </div>
       </div>
+
+      <footer className="py-8 px-4 text-center" style={{ background: "#ffffff", borderTop: "3px solid #f97316" }}>
+        <p className="font-serif text-black/70 text-sm tracking-widest uppercase mb-1">En Tu Memoria</p>
+        <p className="text-black/35 text-xs font-light">Siempre estarás en nuestros corazones</p>
+      </footer>
     </div>
   );
 }

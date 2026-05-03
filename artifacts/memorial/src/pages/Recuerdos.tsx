@@ -294,6 +294,11 @@ export default function Recuerdos() {
           )}
         </div>
       </div>
+
+      <footer className="py-8 px-4 text-center" style={{ background: "#ffffff", borderTop: "3px solid #f97316" }}>
+        <p className="font-serif text-black/70 text-sm tracking-widest uppercase mb-1">En Tu Memoria</p>
+        <p className="text-black/35 text-xs font-light">Siempre estarás en nuestros corazones</p>
+      </footer>
     </div>
   );
 }
