@@ -25,10 +25,9 @@ function HeroSection({
 }) {
   return (
     <section className="bg-white" style={{ borderBottom: "1px solid #0d0d0d" }}>
-      <div className="max-w-5xl mx-auto flex items-center">
-        {/* Text — left */}
-        <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-20 sm:py-28 flex-1">
-          {/* Label */}
+      <div className="max-w-5xl mx-auto flex items-stretch" style={{ minHeight: 420 }}>
+        {/* Text — left, vertically centered */}
+        <div className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-16 flex-1">
           <span
             className="block mb-6 text-xs uppercase tracking-[0.28em]"
             style={{ color: "#f97316" }}
@@ -38,18 +37,17 @@ function HeroSection({
 
           <h1
             className="font-serif leading-[1.05] mb-5"
-            style={{ fontSize: "clamp(2.6rem, 4.8vw, 4rem)", color: "#0d0d0d", maxWidth: 480 }}
+            style={{ fontSize: "clamp(2.4rem, 4.5vw, 3.8rem)", color: "#0d0d0d", maxWidth: 460 }}
           >
             {persona.nombre}
           </h1>
 
-          {/* Thin orange rule */}
-          <div className="mb-5" style={{ width: 40, height: 2, background: "#f97316", borderRadius: 1 }} />
+          <div className="mb-5" style={{ width: 36, height: 2, background: "#f97316", borderRadius: 1 }} />
 
           {(persona.fechaNacimiento || persona.fechaFallecimiento) && (
             <p
               className="text-sm mb-4"
-              style={{ color: "rgba(0,0,0,0.35)", letterSpacing: "0.04em", fontVariantNumeric: "tabular-nums" }}
+              style={{ color: "rgba(0,0,0,0.35)", letterSpacing: "0.04em" }}
             >
               {formatDateEs(persona.fechaNacimiento)}
               {persona.fechaNacimiento && persona.fechaFallecimiento && <span style={{ margin: "0 0.5em" }}>—</span>}
@@ -57,31 +55,33 @@ function HeroSection({
             </p>
           )}
 
-          {/* Blessing */}
           <p
             className="text-xs italic"
-            style={{ color: "rgba(0,0,0,0.30)", maxWidth: 320, lineHeight: 1.7 }}
+            style={{ color: "rgba(0,0,0,0.28)", maxWidth: 300, lineHeight: 1.8 }}
           >
             "Que su alma descanse en la paz del Señor y su luz brille eternamente."
           </p>
         </div>
 
-        {/* Image — right */}
-        <div className="hidden sm:flex items-end justify-center flex-shrink-0 pb-0" style={{ width: 340, alignSelf: "flex-end", paddingTop: "3rem", paddingRight: "2.5rem", paddingLeft: "1rem" }}>
-          <div style={{ padding: 6, background: "#0d0d0d", borderRadius: "3rem 1rem 0 1rem", display: "inline-block" }}>
-            <img
-              src={personaImg}
-              alt={persona.nombre}
-              style={{
-                display: "block",
-                width: 260,
-                height: 320,
-                objectFit: "cover",
-                borderRadius: "2.6rem 0.7rem 0 0.7rem",
-                border: "4px solid #fff",
-              }}
-            />
-          </div>
+        {/* Image — right, vertically centered, floating above divider */}
+        <div
+          className="hidden sm:flex items-center justify-center flex-shrink-0"
+          style={{ width: 340, padding: "2.5rem 2.5rem 2.5rem 1rem" }}
+        >
+          <img
+            src={personaImg}
+            alt={persona.nombre}
+            style={{
+              display: "block",
+              width: 250,
+              height: 300,
+              objectFit: "cover",
+              borderRadius: "2.5rem 0.8rem 2.5rem 0.8rem",
+              /* layered borders: image → white gap → orange → white gap → black */
+              boxShadow:
+                "0 0 0 3px #fff, 0 0 0 5px #f97316, 0 0 0 7px #fff, 0 0 0 9px #0d0d0d",
+            }}
+          />
         </div>
       </div>
     </section>
