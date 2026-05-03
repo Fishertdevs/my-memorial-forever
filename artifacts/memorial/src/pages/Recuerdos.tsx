@@ -11,23 +11,13 @@ import CandleFlame from "@/components/CandleFlame";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 
-const NOMBRES_HOMENAJE = [
-  "Ana Soledad Lizarazo Calderón",
-  "Pablo Esteban Aguirre Camargo",
-  "Carlos Alberto Camargo Munevar",
-];
 const NOMBRES_CORTOS = "Ana Soledad, Pablo Esteban y Carlos Alberto";
 
 const inputClass =
   "w-full bg-white border-2 border-gray-100 focus:border-orange-400 rounded-xl px-4 py-3 text-black text-sm focus:outline-none transition-colors placeholder:text-black/25";
 
 function Avatar({ name, size = 9 }: { name: string; size?: number }) {
-  const initials = name
-    .trim()
-    .split(" ")
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? "")
-    .join("");
+  const initials = name.trim().split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase() ?? "").join("");
   return (
     <div
       className="rounded-full flex-shrink-0 flex items-center justify-center font-semibold text-orange-600 bg-orange-100"
@@ -50,8 +40,7 @@ function compressImage(file: File, maxSize = 900): Promise<string> {
           if (width > height) { height = Math.round((height * maxSize) / width); width = maxSize; }
           else { width = Math.round((width * maxSize) / height); height = maxSize; }
         }
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = width; canvas.height = height;
         canvas.getContext("2d")!.drawImage(img, 0, 0, width, height);
         resolve(canvas.toDataURL("image/jpeg", 0.82));
       };
@@ -63,19 +52,15 @@ function compressImage(file: File, maxSize = 900): Promise<string> {
   });
 }
 
-function PostCard({
-  recuerdo,
-  personaId,
-}: {
-  recuerdo: {
-    id: number;
-    nombreAutor: string;
-    mensaje: string;
-    fotoUrl?: string | null;
-    tiempoTranscurrido: string;
-  };
-  personaId?: number;
-}) {
+type RecuerdoItem = {
+  id: number;
+  nombreAutor: string;
+  mensaje: string;
+  fotoUrl?: string | null;
+  tiempoTranscurrido: string;
+};
+
+function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?: number }) {
   const likeKey = `like_recuerdo_${recuerdo.id}`;
   const [expanded, setExpanded] = useState(false);
   const [liked, setLiked] = useState(() => localStorage.getItem(likeKey) === "1");
@@ -113,9 +98,7 @@ function PostCard({
       }
     } catch {
       toast({ title: "No se pudo editar el recuerdo", variant: "destructive" });
-    } finally {
-      setSaving(false);
-    }
+    } finally { setSaving(false); }
   };
 
   const handleDelete = async () => {
@@ -134,58 +117,61 @@ function PostCard({
 
   return (
     <div
-      className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:border-orange-200 hover:shadow-md hover:shadow-orange-50 transition-all duration-300 fade-in-up"
+      className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:border-orange-200 hover:shadow-md hover:shadow-orange-50 transition-all duration-300"
       style={{ opacity: deleting ? 0.4 : 1 }}
     >
       {/* Header */}
       <div className="flex items-center gap-3 px-5 pt-5 pb-3">
         <Avatar name={recuerdo.nombreAutor} />
         <div className="min-w-0">
-          <p className="font-semibold text-sm text-black leading-tight truncate">
-            {recuerdo.nombreAutor}
-          </p>
+          <p className="font-semibold text-sm text-black leading-tight truncate">{recuerdo.nombreAutor}</p>
           <p className="text-xs text-black/35">{recuerdo.tiempoTranscurrido}</p>
-        </div>
-        <div className="ml-auto flex-shrink-0">
-          <CandleFlame size="sm" />
         </div>
       </div>
 
-      {/* Photo */}
+      {/* Photo with candle overlay */}
       {recuerdo.fotoUrl && (
-        <div className="overflow-hidden" style={{ maxHeight: 420 }}>
+        <div className="relative overflow-hidden">
           <img
             src={recuerdo.fotoUrl}
             alt={`Recuerdo de ${recuerdo.nombreAutor}`}
             className="w-full object-cover"
             style={{ maxHeight: 420 }}
           />
+          <div className="absolute bottom-3 right-3">
+            <CandleFlame size="sm" />
+          </div>
         </div>
       )}
 
       {/* Caption */}
-      <div className="px-5 py-4">
-        {editing ? (
-          <textarea
-            autoFocus
-            value={editMsg}
-            onChange={(e) => setEditMsg(e.target.value)}
-            rows={4}
-            maxLength={600}
-            className="w-full border-2 border-orange-300 rounded-xl px-3 py-2 text-sm text-black resize-none focus:outline-none focus:border-orange-500"
-          />
-        ) : (
-          <p className="text-black/70 text-sm leading-relaxed">
-            {displayText}
-            {isLong && (
-              <button
-                onClick={() => setExpanded(!expanded)}
-                className="ml-1 text-orange-500 font-semibold hover:underline text-xs"
-              >
-                {expanded ? "ver menos" : "ver más"}
-              </button>
-            )}
-          </p>
+      <div className={`px-5 py-4 ${!recuerdo.fotoUrl ? "flex items-start gap-3" : ""}`}>
+        <div className="flex-1 min-w-0">
+          {editing ? (
+            <textarea
+              autoFocus
+              value={editMsg}
+              onChange={(e) => setEditMsg(e.target.value)}
+              rows={4}
+              maxLength={600}
+              className="w-full border-2 border-orange-300 rounded-xl px-3 py-2 text-sm text-black resize-none focus:outline-none focus:border-orange-500"
+            />
+          ) : (
+            <p className="text-black/70 text-sm leading-relaxed">
+              {displayText}
+              {isLong && (
+                <button onClick={() => setExpanded(!expanded)} className="ml-1 text-orange-500 font-semibold hover:underline text-xs">
+                  {expanded ? "ver menos" : "ver más"}
+                </button>
+              )}
+            </p>
+          )}
+        </div>
+        {/* Candle beside text when no photo */}
+        {!recuerdo.fotoUrl && (
+          <div className="flex-shrink-0 self-center ml-2">
+            <CandleFlame size="sm" />
+          </div>
         )}
       </div>
 
@@ -193,17 +179,10 @@ function PostCard({
       <div className="px-5 pb-4 flex items-center gap-4 border-t border-gray-50 pt-3">
         {editing ? (
           <>
-            <button
-              onClick={handleSaveEdit}
-              disabled={saving}
-              className="text-xs font-semibold text-orange-500 hover:text-orange-600 disabled:opacity-40 transition-colors"
-            >
+            <button onClick={handleSaveEdit} disabled={saving} className="text-xs font-semibold text-orange-500 hover:text-orange-600 disabled:opacity-40 transition-colors">
               {saving ? "Guardando…" : "Guardar"}
             </button>
-            <button
-              onClick={() => { setEditing(false); setEditMsg(currentMsg); }}
-              className="text-xs text-black/35 hover:text-black/60 transition-colors"
-            >
+            <button onClick={() => { setEditing(false); setEditMsg(currentMsg); }} className="text-xs text-black/35 hover:text-black/60 transition-colors">
               Cancelar
             </button>
           </>
@@ -217,28 +196,17 @@ function PostCard({
               <svg width="15" height="15" viewBox="0 0 24 24" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
-              Me gusta
             </button>
-            <button
-              onClick={() => setEditing(true)}
-              className="flex items-center gap-1.5 text-xs text-black/35 hover:text-orange-500 transition-colors"
-            >
+            <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 text-xs text-black/35 hover:text-orange-500 transition-colors">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
               </svg>
               Editar
             </button>
-            <button
-              onClick={handleDelete}
-              disabled={deleting}
-              className="flex items-center gap-1.5 text-xs text-black/35 hover:text-red-500 transition-colors ml-auto disabled:opacity-40"
-            >
+            <button onClick={handleDelete} disabled={deleting} className="flex items-center gap-1.5 text-xs text-black/35 hover:text-red-500 transition-colors ml-auto disabled:opacity-40">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <polyline points="3 6 5 6 21 6" />
-                <path d="M19 6l-1 14H6L5 6" />
-                <path d="M10 11v6M14 11v6" />
-                <path d="M9 6V4h6v2" />
+                <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4h6v2" />
               </svg>
               Eliminar
             </button>
@@ -249,17 +217,76 @@ function PostCard({
   );
 }
 
-function NewPostForm({
-  personaId,
-  personaNombre,
-  onPosted,
-}: {
-  personaId: number;
-  personaNombre: string;
-  onPosted: () => void;
-}) {
+function RecuerdosCarousel({ recuerdos, personaId }: { recuerdos: RecuerdoItem[]; personaId?: number }) {
+  const [current, setCurrent] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+
+  const prev = () => setCurrent((c) => Math.max(0, c - 1));
+  const next = () => setCurrent((c) => Math.min(recuerdos.length - 1, c + 1));
+
+  const onTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? next() : prev();
+    touchStartX.current = null;
+  };
+
+  // Keep current in bounds when items change (e.g. after delete)
+  const safeCurrent = Math.min(current, recuerdos.length - 1);
+
+  return (
+    <div className="relative">
+      <div className="overflow-hidden rounded-2xl" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        <div
+          className="flex transition-transform duration-300 ease-in-out"
+          style={{ transform: `translateX(-${safeCurrent * 100}%)` }}
+        >
+          {recuerdos.map((r) => (
+            <div key={r.id} className="flex-shrink-0 w-full">
+              <PostCard recuerdo={r} personaId={personaId} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {recuerdos.length > 1 && (
+        <>
+          {safeCurrent > 0 && (
+            <button
+              onClick={prev}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-8 h-8 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all z-10"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+          )}
+          {safeCurrent < recuerdos.length - 1 && (
+            <button
+              onClick={next}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-8 h-8 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all z-10"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          )}
+
+          <div className="flex justify-center gap-2 mt-4">
+            {recuerdos.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                className="transition-all duration-300 rounded-full"
+                style={{ width: i === safeCurrent ? 22 : 7, height: 7, background: i === safeCurrent ? "#f97316" : "#e5e7eb" }}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number; personaNombre: string; onPosted: () => void }) {
   const [open, setOpen] = useState(false);
-  const [done, setDone] = useState(false);
   const [nombreAutor, setNombreAutor] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [fotoPreview, setFotoPreview] = useState<string | null>(null);
@@ -295,20 +322,14 @@ function NewPostForm({
     setLoading(true);
     try {
       await createRecuerdo.mutateAsync({
-        data: {
-          personaId,
-          nombreAutor: nombreAutor.trim(),
-          persona: personaNombre,
-          mensaje: mensaje.trim(),
-          fotoUrl: fotoData ?? null,
-        },
+        data: { personaId, nombreAutor: nombreAutor.trim(), persona: personaNombre, mensaje: mensaje.trim(), fotoUrl: fotoData ?? null },
       });
       queryClient.invalidateQueries({ queryKey: getListRecuerdosQueryKey({ personaId, limit: 50 }) });
       setNombreAutor("");
       setMensaje("");
       setFotoPreview(null);
       setFotoData(null);
-      setDone(true);
+      setOpen(false);
       onPosted();
     } catch {
       toast({ title: "No se pudo publicar el recuerdo", variant: "destructive" });
@@ -316,8 +337,6 @@ function NewPostForm({
       setLoading(false);
     }
   };
-
-  const reset = () => { setDone(false); setNombreAutor(""); setMensaje(""); setFotoPreview(null); setFotoData(null); setOpen(false); };
 
   return (
     <div className="mb-8">
@@ -329,15 +348,6 @@ function NewPostForm({
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
           COMPARTIR RECUERDO
         </button>
-      ) : done ? (
-        <div className="border-2 border-orange-200 bg-orange-50 rounded-2xl p-6 text-center">
-          <svg className="mx-auto mb-3 text-orange-400" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 6L9 17l-5-5"/></svg>
-          <p className="font-serif text-lg text-black mb-1">Recuerdo publicado</p>
-          <p className="text-black/45 text-sm mb-4">Gracias por compartir este momento.</p>
-          <button onClick={reset} className="text-orange-500 text-sm font-semibold hover:underline">
-            Compartir otro recuerdo
-          </button>
-        </div>
       ) : (
         <div className="border-2 border-orange-200 rounded-2xl p-5 bg-orange-50/30">
           <div className="flex items-center justify-between mb-4">
@@ -368,11 +378,8 @@ function NewPostForm({
               {fotoPreview ? (
                 <div className="relative">
                   <img src={fotoPreview} alt="preview" className="w-full object-cover rounded-xl" style={{ maxHeight: 260 }} />
-                  <button
-                    type="button"
-                    onClick={(e) => { e.stopPropagation(); setFotoPreview(null); setFotoData(null); }}
-                    className="absolute top-2 right-2 w-7 h-7 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors"
-                  >
+                  <button type="button" onClick={(e) => { e.stopPropagation(); setFotoPreview(null); setFotoData(null); }}
+                    className="absolute top-2 right-2 w-7 h-7 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors">
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" strokeWidth="2"><path d="M1 1l8 8M9 1L1 9"/></svg>
                   </button>
                 </div>
@@ -423,8 +430,7 @@ export default function Recuerdos() {
     { query: { enabled: !!persona?.id, queryKey: getListRecuerdosQueryKey({ personaId: persona?.id, limit: 50 }) } }
   );
   const [, forceUpdate] = useState(0);
-
-  const recuerdos = recuerdosData?.data ?? [];
+  const recuerdos = (recuerdosData?.data ?? []) as RecuerdoItem[];
 
   return (
     <div className="min-h-screen bg-white text-black">
@@ -433,7 +439,6 @@ export default function Recuerdos() {
       <div className="pt-24 pb-16 px-4">
         <div className="max-w-xl mx-auto">
 
-          {/* Header */}
           <div className="text-center mb-10">
             <h1 className="font-serif text-4xl text-black mb-3">Un recuerdo es una alegría que aún perdura</h1>
             <p className="text-black/45 max-w-sm mx-auto text-sm leading-relaxed">
@@ -441,21 +446,15 @@ export default function Recuerdos() {
             </p>
           </div>
 
-          {/* New post form */}
           {loadingPersonas ? (
             <div className="border-2 border-gray-100 rounded-2xl p-5 mb-8">
               <Skeleton className="h-10 w-full mb-3 bg-gray-100" />
               <Skeleton className="h-20 w-full bg-gray-100" />
             </div>
           ) : persona ? (
-            <NewPostForm
-              personaId={persona.id}
-              personaNombre={personaNombre}
-              onPosted={() => forceUpdate((n) => n + 1)}
-            />
+            <NewPostForm personaId={persona.id} personaNombre={personaNombre} onPosted={() => forceUpdate((n) => n + 1)} />
           ) : null}
 
-          {/* Feed */}
           {loadingRecuerdos ? (
             <div className="space-y-5">
               {[1, 2, 3].map((i) => (
@@ -473,11 +472,7 @@ export default function Recuerdos() {
               ))}
             </div>
           ) : recuerdos.length > 0 ? (
-            <div className="space-y-5">
-              {recuerdos.map((r) => (
-                <PostCard key={r.id} recuerdo={r} personaId={persona?.id} />
-              ))}
-            </div>
+            <RecuerdosCarousel recuerdos={recuerdos} personaId={persona?.id} />
           ) : (
             <div className="text-center py-20">
               <CandleFlame size="md" className="mx-auto mb-5 opacity-40" />

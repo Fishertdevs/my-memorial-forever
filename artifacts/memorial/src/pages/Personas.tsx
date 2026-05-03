@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   useListPersonas, useListVelas, useCreateVela,
   getListVelasQueryKey,
@@ -8,20 +8,6 @@ import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-
-const NOMBRES_HOMENAJE = [
-  "Ana Soledad Lizarazo Calderón",
-  "Pablo Esteban Aguirre Camargo",
-  "Carlos Alberto Camargo Munevar",
-];
-
-function formatDateEs(raw?: string | null): string {
-  if (!raw) return "";
-  try {
-    const [y, m, d] = raw.split("-").map(Number);
-    return new Date(y, m - 1, d).toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric" });
-  } catch { return raw; }
-}
 
 const FLAME_COLORS = [
   { id: "amber",   label: "Ámbar",     outer: "#f97316", inner: "#fbbf24", glow: "rgba(249,115,22,0.35)" },
@@ -53,7 +39,6 @@ const inputClass =
 
 function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: number; personaNombre: string; onLit: () => void }) {
   const [open, setOpen] = useState(false);
-  const [done, setDone] = useState(false);
   const [nombreAutor, setNombreAutor] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [flameColor, setFlameColor] = useState<FlameColor>(FLAME_COLORS[0]);
@@ -71,14 +56,15 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
         data: { personaId, nombreRecordado: personaNombre, nombreAutor: nombreAutor.trim(), mensaje: mensaje.trim() },
       });
       queryClient.invalidateQueries({ queryKey: getListVelasQueryKey({ personaId, limit: 50 }) });
-      setDone(true);
+      setNombreAutor("");
+      setMensaje("");
+      setFlameColor(FLAME_COLORS[0]);
+      setOpen(false);
       onLit();
     } catch {
       toast({ title: "No se pudo encender la velita", variant: "destructive" });
     }
   };
-
-  const reset = () => { setDone(false); setNombreAutor(""); setMensaje(""); setFlameColor(FLAME_COLORS[0]); setOpen(false); };
 
   return (
     <div className="mt-6">
@@ -89,17 +75,6 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
         >
           ENCIENDE TU VELITA
         </button>
-      ) : done ? (
-        <div className="border-2 border-orange-200 bg-orange-50 rounded-2xl p-6 text-center">
-          <div className="flex justify-center mb-3">
-            <MiniCandle color={flameColor} size={1.4} />
-          </div>
-          <p className="font-serif text-lg text-black mb-1">Tu velita está encendida</p>
-          <p className="text-black/45 text-sm mb-4">Gracias por honrar su memoria.</p>
-          <button onClick={reset} className="text-orange-500 text-sm font-semibold hover:underline">
-            Encender otra velita
-          </button>
-        </div>
       ) : (
         <div className="border-2 border-orange-200 rounded-2xl p-5 bg-orange-50/30">
           <div className="flex items-center justify-between mb-4">
@@ -120,7 +95,6 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
               maxLength={80}
             />
 
-            {/* Color picker */}
             <div>
               <p className="text-xs text-black/40 mb-2 font-medium">Color de la llama</p>
               <div className="grid grid-cols-6 gap-2">
@@ -157,7 +131,7 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
               <button
                 type="submit"
                 disabled={!canSubmit || createVela.isPending}
-                className="px-7 py-2.5 rounded-xl font-semibold text-sm transition-all disabled:opacity-40 border-0 outline-none"
+                className="px-7 py-2.5 rounded-xl font-semibold text-sm transition-all border-0 outline-none"
                 style={{ background: "#f97316", color: "white", opacity: (!canSubmit || createVela.isPending) ? 0.4 : 1 }}
               >
                 {createVela.isPending ? "Encendiendo…" : "🕯 Encender"}
@@ -258,59 +232,33 @@ function VelaCard({
             <span className="text-black/45 text-xs">{vela.tiempoTranscurrido}</span>
           </div>
 
-          {/* Actions */}
           <div className="mt-3 flex items-center gap-3 pt-2 border-t border-gray-100">
             {editing ? (
               <>
-                <button
-                  onClick={handleSaveEdit}
-                  disabled={saving}
-                  className="text-xs font-semibold text-orange-500 hover:text-orange-600 disabled:opacity-40 transition-colors"
-                >
+                <button onClick={handleSaveEdit} disabled={saving} className="text-xs font-semibold text-orange-500 hover:text-orange-600 disabled:opacity-40 transition-colors">
                   {saving ? "Guardando…" : "Guardar"}
                 </button>
-                <button
-                  onClick={() => { setEditing(false); setEditMsg(currentMsg); }}
-                  className="text-xs text-black/35 hover:text-black/60 transition-colors"
-                >
+                <button onClick={() => { setEditing(false); setEditMsg(currentMsg); }} className="text-xs text-black/35 hover:text-black/60 transition-colors">
                   Cancelar
                 </button>
               </>
             ) : (
               <>
-                <button
-                  onClick={toggleLike}
-                  className="flex items-center gap-1 text-xs transition-colors"
-                  style={{ color: liked ? "#e91e63" : "#9ca3af" }}
-                  title={liked ? "Ya me gusta" : "Me gusta"}
-                >
+                <button onClick={toggleLike} className="flex items-center gap-1 text-xs transition-colors" style={{ color: liked ? "#e91e63" : "#9ca3af" }} title={liked ? "Ya me gusta" : "Me gusta"}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                   </svg>
-                  <span>{liked ? "Me gusta" : "Me gusta"}</span>
                 </button>
-                <button
-                  onClick={() => setEditing(true)}
-                  className="flex items-center gap-1 text-xs text-black/35 hover:text-orange-500 transition-colors"
-                  title="Editar"
-                >
+                <button onClick={() => setEditing(true)} className="flex items-center gap-1 text-xs text-black/35 hover:text-orange-500 transition-colors" title="Editar">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                   </svg>
                   Editar
                 </button>
-                <button
-                  onClick={handleDelete}
-                  disabled={deleting}
-                  className="flex items-center gap-1 text-xs text-black/35 hover:text-red-500 transition-colors ml-auto disabled:opacity-40"
-                  title="Eliminar"
-                >
+                <button onClick={handleDelete} disabled={deleting} className="flex items-center gap-1 text-xs text-black/35 hover:text-red-500 transition-colors ml-auto disabled:opacity-40" title="Eliminar">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="3 6 5 6 21 6" />
-                    <path d="M19 6l-1 14H6L5 6" />
-                    <path d="M10 11v6M14 11v6" />
-                    <path d="M9 6V4h6v2" />
+                    <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4h6v2" />
                   </svg>
                   Eliminar
                 </button>
@@ -319,6 +267,71 @@ function VelaCard({
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function VelasCarousel({ velas, personaId }: { velas: { id: number; nombreAutor: string; mensaje: string; tiempoTranscurrido: string }[]; personaId: number }) {
+  const [current, setCurrent] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+
+  const prev = () => setCurrent((c) => Math.max(0, c - 1));
+  const next = () => setCurrent((c) => Math.min(velas.length - 1, c + 1));
+
+  const onTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? next() : prev();
+    touchStartX.current = null;
+  };
+
+  return (
+    <div className="relative mt-4">
+      <div className="overflow-hidden rounded-2xl" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+        <div
+          className="flex transition-transform duration-300 ease-in-out"
+          style={{ transform: `translateX(-${current * 100}%)` }}
+        >
+          {velas.map((vela, idx) => (
+            <div key={vela.id} className="flex-shrink-0 w-full">
+              <VelaCard vela={vela} colorIdx={idx} personaId={personaId} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {velas.length > 1 && (
+        <>
+          {current > 0 && (
+            <button
+              onClick={prev}
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-8 h-8 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all z-10"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+          )}
+          {current < velas.length - 1 && (
+            <button
+              onClick={next}
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-8 h-8 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all z-10"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          )}
+
+          <div className="flex justify-center gap-2 mt-4">
+            {velas.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                className="transition-all duration-300 rounded-full"
+                style={{ width: i === current ? 22 : 7, height: 7, background: i === current ? "#f97316" : "#e5e7eb" }}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -334,7 +347,7 @@ function VelasSection({ personaId }: { personaId: number }) {
 
   return (
     <div className="mt-8">
-      <div className="flex flex-wrap justify-center gap-4 mb-8">
+      <div className="flex flex-wrap justify-center gap-4 mb-6">
         {velasData.data.slice(0, 20).map((vela, idx) => (
           <div key={vela.id} className="group relative flex flex-col items-center gap-1.5">
             <MiniCandle color={FLAME_COLORS[idx % FLAME_COLORS.length]} />
@@ -349,11 +362,7 @@ function VelasSection({ personaId }: { personaId: number }) {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-4">
-        {velasData.data.map((vela, idx) => (
-          <VelaCard key={vela.id} vela={vela} colorIdx={idx} personaId={personaId} />
-        ))}
-      </div>
+      <VelasCarousel velas={velasData.data} personaId={personaId} />
     </div>
   );
 }
@@ -361,6 +370,12 @@ function VelasSection({ personaId }: { personaId: number }) {
 export default function Personas() {
   const { data: personas, isLoading } = useListPersonas();
   const [, forceUpdate] = useState(0);
+
+  const NOMBRES_HOMENAJE = [
+    "Ana Soledad Lizarazo Calderón",
+    "Pablo Esteban Aguirre Camargo",
+    "Carlos Alberto Camargo Munevar",
+  ];
 
   const tituloSeccion = personas && personas.length === 1
     ? personas[0].nombre
