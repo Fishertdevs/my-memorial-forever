@@ -20,13 +20,28 @@ export default function Personas() {
       <div className="pt-24 pb-16 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <p className="text-xs font-bold tracking-widest uppercase mb-3" style={{ color: "#f97316" }}>
-              Nuestros seres queridos
-            </p>
-            <h1 className="font-serif text-5xl text-black mb-4">En Memoria</h1>
-            <p className="text-black/50 max-w-md mx-auto leading-relaxed">
-              Cada vida es una historia que merece ser recordada. Aquí honramos a quienes amamos.
-            </p>
+            {personas && personas.length === 1 ? (
+              <>
+                <p className="text-xs font-bold tracking-widest uppercase mb-3" style={{ color: "#f97316" }}>
+                  En conmemoración a
+                </p>
+                <h1 className="font-serif text-5xl text-black mb-4">{personas[0].nombre}</h1>
+                <p className="text-black/50 max-w-md mx-auto leading-relaxed">
+                  Su vida fue un regalo y su recuerdo, un tesoro que guardamos para siempre en el corazón.
+                  Aquí honramos su memoria con amor y gratitud.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-xs font-bold tracking-widest uppercase mb-3" style={{ color: "#f97316" }}>
+                  Nuestros seres queridos
+                </p>
+                <h1 className="font-serif text-5xl text-black mb-4">En Memoria</h1>
+                <p className="text-black/50 max-w-md mx-auto leading-relaxed">
+                  Cada vida es una historia que merece ser recordada. Aquí honramos a quienes amamos.
+                </p>
+              </>
+            )}
           </div>
 
           {isLoading ? (
