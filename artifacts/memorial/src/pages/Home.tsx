@@ -114,42 +114,39 @@ const FLAME_COLORS = [
   { outer: "#f97316", inner: "#fed7aa", glow: "rgba(249,115,22,0.20)" },
 ];
 
-interface FloatingHeart { id: number; x: number; y: number; }
-
 function VelaCard({ vela, index }: { vela: Vela; index: number }) {
   const fc = FLAME_COLORS[index % FLAME_COLORS.length];
-  const [hearts, setHearts] = useState(0);
-  const [floating, setFloating] = useState<FloatingHeart[]>([]);
+  const [liked, setLiked] = useState(false);
+  const [burst, setBurst] = useState(false);
 
-  const handleDoubleClick = (e: React.MouseEvent) => {
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const id = Date.now();
-    setHearts((h) => h + 1);
-    setFloating((f) => [...f, { id, x, y }]);
-    setTimeout(() => setFloating((f) => f.filter((h) => h.id !== id)), 900);
+  const handleDoubleClick = () => {
+    if (!liked) setLiked(true);
+    setBurst(true);
+    setTimeout(() => setBurst(false), 900);
   };
 
   return (
     <div
-      className="relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 h-full select-none cursor-default"
+      className="relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-300 h-full select-none cursor-default overflow-hidden"
       onDoubleClick={handleDoubleClick}
     >
-      {/* Floating hearts */}
-      {floating.map((fh) => (
-        <span
-          key={fh.id}
-          className="pointer-events-none absolute text-2xl"
-          style={{
-            left: fh.x,
-            top: fh.y,
-            transform: "translate(-50%, -50%)",
-            animation: "float-heart 0.9s ease-out forwards",
-            zIndex: 20,
-          }}
-        >❤️</span>
-      ))}
+      {/* IG-style big heart burst — centered on card */}
+      {burst && (
+        <div
+          className="pointer-events-none absolute inset-0 flex items-center justify-center"
+          style={{ zIndex: 20 }}
+        >
+          <span
+            style={{
+              fontSize: 72,
+              lineHeight: 1,
+              animation: "ig-heart 0.9s ease-out forwards",
+              display: "block",
+              filter: "drop-shadow(0 2px 12px rgba(244,63,94,0.35))",
+            }}
+          >❤️</span>
+        </div>
+      )}
 
       <div className="flex items-start gap-3">
         <div className="flex-shrink-0 pt-0.5">
@@ -162,13 +159,26 @@ function VelaCard({ vela, index }: { vela: Vela; index: number }) {
             <span className="truncate mr-2">{vela.nombreAutor}</span>
             <span className="flex-shrink-0">{vela.tiempoTranscurrido}</span>
           </div>
-          {hearts > 0 && (
-            <div className="mt-2 text-xs text-rose-400 font-medium">
-              ❤️ {hearts} {hearts === 1 ? "corazón" : "corazones"}
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Small heart icon bottom-right, IG style */}
+      <button
+        className="absolute bottom-4 right-4 transition-all duration-200 active:scale-90"
+        style={{ background: "none", border: "none", padding: 0, cursor: "pointer" }}
+        onClick={() => { setLiked((l) => !l); if (!liked) { setBurst(true); setTimeout(() => setBurst(false), 900); } }}
+        aria-label="Me gusta"
+      >
+        {liked ? (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#f43f5e">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        ) : (
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d1d5db" strokeWidth="1.5">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        )}
+      </button>
     </div>
   );
 }
@@ -213,7 +223,6 @@ function CandlesCarousel({ velas }: { velas: Vela[] }) {
         <div key={current} className="fade-in-up">
           <VelaCard vela={vela} index={current} />
         </div>
-        <p className="text-center text-xs text-black/25 mt-2 select-none">Doble clic para dejar un ❤️</p>
       </div>
 
       {/* Dots only — no arrows */}
@@ -269,7 +278,7 @@ export default function Home() {
                 <p className="text-black/55 leading-relaxed text-sm max-w-lg line-clamp-3 mb-4">{persona.biografia}</p>
               )}
               <Link href={`/personas/${persona.id}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors">
-                Ver perfil completo →
+                Recuérdalo aquí →
               </Link>
             </div>
           </div>
