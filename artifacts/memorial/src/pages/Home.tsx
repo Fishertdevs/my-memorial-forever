@@ -112,6 +112,30 @@ export default function Home() {
         </p>
       </section>
 
+      {/* CTA */}
+      <section className="py-24 px-4 text-center" style={{ background: "#0d0d0d" }}>
+        <h2 className="font-serif text-4xl text-white mb-3">Siempre en nuestro corazón</h2>
+        <p className="text-white/40 mb-10 max-w-md mx-auto leading-relaxed">
+          Cada recuerdo compartido es una forma de mantener viva su luz para siempre.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Link
+            href="/velas"
+            className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-xl transition-all duration-200"
+            style={{ background: "#f97316", color: "#fff", boxShadow: "none" }}
+          >
+            Enciende tu velita
+          </Link>
+          <Link
+            href="/recuerdos"
+            className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-xl transition-all duration-200"
+            style={{ background: "rgba(255,255,255,0.08)", color: "#fff", border: "1.5px solid rgba(255,255,255,0.15)" }}
+          >
+            Ver recuerdos
+          </Link>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-10 px-4 text-center" style={{ background: "#ffffff", borderTop: "3px solid #f97316" }}>
         <p className="font-serif text-black/80 text-sm tracking-widest uppercase mb-1">En Tu Memoria</p>
