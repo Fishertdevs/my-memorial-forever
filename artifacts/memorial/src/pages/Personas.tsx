@@ -80,7 +80,7 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
           onClick={() => setOpen(true)}
           className="w-full flex items-center justify-center gap-2.5 py-4 rounded-xl border-2 border-orange-200 text-orange-500 font-semibold text-sm hover:bg-orange-50 hover:border-orange-400 transition-all"
         >
-          Enciende tu velita
+          ENCIENDE TU VELITA
         </button>
       ) : done ? (
         <div className="border-2 border-orange-200 bg-orange-50 rounded-2xl p-6 text-center">

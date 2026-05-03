@@ -196,7 +196,7 @@ function NewPostForm({
           className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl border-2 border-orange-200 text-orange-500 font-semibold text-sm hover:bg-orange-50 hover:border-orange-400 transition-all"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-          Compartir recuerdo
+          COMPARTIR RECUERDO
         </button>
       ) : done ? (
         <div className="border-2 border-orange-200 bg-orange-50 rounded-2xl p-6 text-center">
