@@ -144,17 +144,6 @@ function HeroSection({
           className="flex flex-col justify-center px-8 sm:px-12 lg:px-16 py-20"
           style={{ width: "55%" }}
         >
-          {/* Badge */}
-          <div className="flex gap-2.5 mb-6">
-            <span
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide"
-              style={{ background: "#f97316", color: "#fff" }}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-white" />
-              En su memoria
-            </span>
-          </div>
-
           <div style={{ maxWidth: 540 }}>
             <p className="text-xs tracking-[0.3em] uppercase font-bold mb-5" style={{ color: "#f97316" }}>
               En tu memoria
@@ -178,27 +167,18 @@ function HeroSection({
               </p>
             )}
             <div className="w-10 h-0.5 rounded-full mb-8" style={{ background: "#f97316" }} />
-            <div className="flex flex-wrap gap-3">
-              <Link
-                href={`/personas/${persona.id}`}
-                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 shadow-lg"
-                style={{ background: "#f97316", boxShadow: "0 8px 24px rgba(249,115,22,0.28)" }}
-              >
-                Recuérdalo aquí
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
-              </Link>
-              <Link
-                href="/velas"
-                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200"
-                style={{ background: "transparent", color: "#0d0d0d", border: "2px solid rgba(0,0,0,0.12)" }}
-              >
-                Encender velita
-              </Link>
-            </div>
+            <Link
+              href={`/personas/${persona.id}`}
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm text-white transition-all duration-200 shadow-lg"
+              style={{ background: "#f97316", boxShadow: "0 8px 24px rgba(249,115,22,0.28)" }}
+            >
+              Recuérdalo aquí
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
+            </Link>
           </div>
 
           {/* Stats row */}
-          <div className="flex gap-6 mt-12 pt-8" style={{ borderTop: "1.5px solid rgba(0,0,0,0.07)" }}>
+          <div className="flex gap-6 mt-12 pt-8" style={{ borderTop: "1.5px solid #f97316" }}>
             <div>
               <p className="text-2xl font-serif font-bold text-black">∞</p>
               <p className="text-xs text-black/40 mt-0.5 tracking-wide">Días en nuestro corazón</p>
@@ -348,9 +328,9 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-10 px-4 text-center" style={{ background: "#0d0d0d", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-        <p className="font-serif text-white/20 text-sm tracking-widest uppercase mb-1">En Tu Memoria</p>
-        <p className="text-white/15 text-xs font-light">Siempre estarás en nuestros corazones</p>
+      <footer className="py-10 px-4 text-center" style={{ background: "#ffffff", borderTop: "3px solid #f97316" }}>
+        <p className="font-serif text-black/80 text-sm tracking-widest uppercase mb-1">En Tu Memoria</p>
+        <p className="text-black/40 text-xs font-light">Siempre estarás en nuestros corazones</p>
       </footer>
     </div>
   );
