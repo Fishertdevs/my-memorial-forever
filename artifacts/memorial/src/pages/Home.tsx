@@ -110,6 +110,9 @@ export default function Home() {
         <p className="text-black/45 max-w-2xl mx-auto leading-relaxed">
           Hoy y siempre, su luz permanece con nosotros, iluminando los momentos que compartimos, las risas que aún resuenan en el alma y el amor inmenso que dejó sembrado en cada corazón.
           Aunque el tiempo avance, su presencia sigue siendo abrigo, guía y ternura; un recuerdo eterno que nos invita a vivir con gratitud, a amar con profundidad y a honrar su legado con cada gesto de cariño.
+          <span className="block mt-3 text-xs uppercase tracking-[0.28em]" style={{ color: "#f97316" }}>
+            — Eclesiastés 3:1
+          </span>
         </p>
       </section>
 
