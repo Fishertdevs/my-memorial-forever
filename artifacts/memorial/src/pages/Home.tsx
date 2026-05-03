@@ -104,29 +104,12 @@ export default function Home() {
 
       {persona && <HeroSection persona={persona} />}
 
-      {/* CTA */}
-      <section className="py-24 px-4 text-center" style={{ background: "#0d0d0d" }}>
-        <CandleFlame size="lg" className="mx-auto mb-6" />
-        <h2 className="font-serif text-4xl text-white mb-3">Siempre en nuestro corazón</h2>
-        <p className="text-white/40 mb-10 max-w-md mx-auto leading-relaxed">
-          Cada recuerdo compartido es una forma de mantener viva su luz para siempre.
+      {/* Homenaje */}
+      <section className="py-24 px-4 text-center" style={{ background: "#ffffff" }}>
+        <h2 className="font-serif text-4xl text-black mb-4">Su memoria vive en cada latido de nuestro recuerdo.</h2>
+        <p className="text-black/45 max-w-2xl mx-auto leading-relaxed">
+          Hoy y siempre, su luz permanece con nosotros, iluminando los momentos que compartimos y el amor que nunca se apaga.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/velas"
-              className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-xl transition-all duration-200"
-              style={{ background: "#f97316", color: "#fff", boxShadow: "none" }}
-            >
-              Enciende tu velita
-            </Link>
-          <Link
-            href="/recuerdos"
-            className="inline-flex items-center justify-center px-8 py-3.5 font-semibold rounded-xl transition-all duration-200"
-            style={{ background: "rgba(255,255,255,0.08)", color: "#fff", border: "1.5px solid rgba(255,255,255,0.15)" }}
-          >
-            Ver recuerdos
-          </Link>
-        </div>
       </section>
 
       {/* Footer */}
