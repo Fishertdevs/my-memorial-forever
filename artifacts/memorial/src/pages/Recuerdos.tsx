@@ -483,9 +483,9 @@ export default function Recuerdos() {
         </div>
       </div>
 
-      <footer className="py-8 px-4 text-center" style={{ background: ESPRESSO, borderTop: `2px solid ${GOLD}44` }}>
-        <p className="font-serif text-sm tracking-widest uppercase mb-1" style={{ color: `${CREAM}80` }}>En Tu Memoria</p>
-        <p className="text-xs font-light" style={{ color: `${CREAM}40` }}>Siempre estarás en nuestros corazones</p>
+      <footer className="py-10 px-4 text-center bg-white" style={{ borderTop: `2px solid ${GOLD}33` }}>
+        <p className="font-serif text-sm tracking-widest uppercase mb-1 text-black">En Tu Memoria</p>
+        <p className="text-xs font-light" style={{ color: "rgba(0,0,0,0.45)" }}>Siempre estarás en nuestros corazones</p>
       </footer>
     </div>
   );
