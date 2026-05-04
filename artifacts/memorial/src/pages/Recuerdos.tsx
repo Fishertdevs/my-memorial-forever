@@ -11,17 +11,21 @@ import CandleFlame from "@/components/CandleFlame";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 
+const ESPRESSO = "#1a0f07";
+const GOLD = "#c9943a";
+const CREAM = "#f5f0e8";
+const CARD_BG = "#faf7f2";
+const WARM_BORDER = "#ddd2bf";
 const NOMBRES_CORTOS = "Ana Soledad, Pablo Esteban y Carlos Alberto";
 
-const inputClass =
-  "w-full bg-white border-2 border-gray-100 focus:border-orange-400 rounded-xl px-4 py-3 text-black text-sm focus:outline-none transition-colors placeholder:text-black/25";
+const inputClass = "w-full border-2 focus:outline-none transition-colors text-sm px-4 py-3 rounded-xl";
 
 function Avatar({ name, size = 9 }: { name: string; size?: number }) {
   const initials = name.trim().split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase() ?? "").join("");
   return (
     <div
-      className="rounded-full flex-shrink-0 flex items-center justify-center font-semibold text-orange-600 bg-orange-100"
-      style={{ width: size * 4, height: size * 4, fontSize: size * 1.6 }}
+      className="rounded-full flex-shrink-0 flex items-center justify-center font-semibold"
+      style={{ width: size * 4, height: size * 4, fontSize: size * 1.6, background: `${GOLD}22`, color: GOLD }}
     >
       {initials || "?"}
     </div>
@@ -117,19 +121,17 @@ function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?:
 
   return (
     <div
-      className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:border-orange-200 hover:shadow-md hover:shadow-orange-50 transition-all duration-300"
-      style={{ opacity: deleting ? 0.4 : 1 }}
+      className="rounded-2xl overflow-hidden transition-all duration-300"
+      style={{ background: CARD_BG, border: `1px solid ${WARM_BORDER}`, opacity: deleting ? 0.4 : 1 }}
     >
-      {/* Header */}
       <div className="flex items-center gap-3 px-5 pt-5 pb-3">
         <Avatar name={recuerdo.nombreAutor} />
         <div className="min-w-0">
-          <p className="font-semibold text-sm text-black leading-tight truncate">{recuerdo.nombreAutor}</p>
-          <p className="text-xs text-black/35">{recuerdo.tiempoTranscurrido}</p>
+          <p className="font-semibold text-sm leading-tight truncate" style={{ color: ESPRESSO }}>{recuerdo.nombreAutor}</p>
+          <p className="text-xs" style={{ color: `${ESPRESSO}45` }}>{recuerdo.tiempoTranscurrido}</p>
         </div>
       </div>
 
-      {/* Photo with candle overlay */}
       {recuerdo.fotoUrl && (
         <div className="relative overflow-hidden">
           <img
@@ -139,12 +141,11 @@ function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?:
             style={{ maxHeight: 420 }}
           />
           <div className="absolute bottom-3 right-3">
-            <CandleFlame size="sm" />
+            <CandleFlame size="sm" outerColor={GOLD} innerColor="#e8c060" glowColor="rgba(201,148,58,0.35)" />
           </div>
         </div>
       )}
 
-      {/* Caption */}
       <div className={`px-5 py-4 ${!recuerdo.fotoUrl ? "flex items-start gap-3" : ""}`}>
         <div className="flex-1 min-w-0">
           {editing ? (
@@ -154,35 +155,34 @@ function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?:
               onChange={(e) => setEditMsg(e.target.value)}
               rows={4}
               maxLength={600}
-              className="w-full border-2 border-orange-300 rounded-xl px-3 py-2 text-sm text-black resize-none focus:outline-none focus:border-orange-500"
+              className="w-full rounded-xl px-3 py-2 text-sm resize-none focus:outline-none"
+              style={{ border: `2px solid ${GOLD}66`, background: CREAM, color: ESPRESSO }}
             />
           ) : (
-            <p className="text-black/70 text-sm leading-relaxed">
+            <p className="text-sm leading-relaxed" style={{ color: `${ESPRESSO}80` }}>
               {displayText}
               {isLong && (
-                <button onClick={() => setExpanded(!expanded)} className="ml-1 text-orange-500 font-semibold hover:underline text-xs">
+                <button onClick={() => setExpanded(!expanded)} className="ml-1 font-semibold hover:underline text-xs" style={{ color: GOLD }}>
                   {expanded ? "ver menos" : "ver más"}
                 </button>
               )}
             </p>
           )}
         </div>
-        {/* Candle beside text when no photo */}
         {!recuerdo.fotoUrl && (
           <div className="flex-shrink-0 self-center ml-2">
-            <CandleFlame size="sm" />
+            <CandleFlame size="sm" outerColor={GOLD} innerColor="#e8c060" glowColor="rgba(201,148,58,0.35)" />
           </div>
         )}
       </div>
 
-      {/* Actions */}
-      <div className="px-5 pb-4 flex items-center gap-4 border-t border-gray-50 pt-3">
+      <div className="px-5 pb-4 flex items-center gap-4 pt-3" style={{ borderTop: `1px solid ${ESPRESSO}08` }}>
         {editing ? (
           <>
-            <button onClick={handleSaveEdit} disabled={saving} className="text-xs font-semibold text-orange-500 hover:text-orange-600 disabled:opacity-40 transition-colors">
+            <button onClick={handleSaveEdit} disabled={saving} className="text-xs font-semibold transition-colors" style={{ color: GOLD }}>
               {saving ? "Guardando…" : "Guardar"}
             </button>
-            <button onClick={() => { setEditing(false); setEditMsg(currentMsg); }} className="text-xs text-black/35 hover:text-black/60 transition-colors">
+            <button onClick={() => { setEditing(false); setEditMsg(currentMsg); }} className="text-xs transition-colors" style={{ color: `${ESPRESSO}40` }}>
               Cancelar
             </button>
           </>
@@ -191,20 +191,20 @@ function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?:
             <button
               onClick={toggleLike}
               className="flex items-center gap-1.5 text-xs font-medium transition-colors"
-              style={{ color: liked ? "#e91e63" : "#9ca3af" }}
+              style={{ color: liked ? "#e91e63" : `${ESPRESSO}30` }}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill={liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
             </button>
-            <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 text-xs text-black/35 hover:text-orange-500 transition-colors">
+            <button onClick={() => setEditing(true)} className="flex items-center gap-1.5 text-xs transition-colors" style={{ color: `${ESPRESSO}40` }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
               </svg>
               Editar
             </button>
-            <button onClick={handleDelete} disabled={deleting} className="flex items-center gap-1.5 text-xs text-black/35 hover:text-red-500 transition-colors ml-auto disabled:opacity-40">
+            <button onClick={handleDelete} disabled={deleting} className="flex items-center gap-1.5 text-xs transition-colors ml-auto" style={{ color: `${ESPRESSO}30` }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4h6v2" />
               </svg>
@@ -232,16 +232,12 @@ function RecuerdosCarousel({ recuerdos, personaId }: { recuerdos: RecuerdoItem[]
     touchStartX.current = null;
   };
 
-  // Keep current in bounds when items change (e.g. after delete)
   const safeCurrent = Math.min(current, recuerdos.length - 1);
 
   return (
     <div className="relative">
       <div className="overflow-hidden rounded-2xl" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-        <div
-          className="flex transition-transform duration-300 ease-in-out"
-          style={{ transform: `translateX(-${safeCurrent * 100}%)` }}
-        >
+        <div className="flex transition-transform duration-300 ease-in-out" style={{ transform: `translateX(-${safeCurrent * 100}%)` }}>
           {recuerdos.map((r) => (
             <div key={r.id} className="flex-shrink-0 w-full">
               <PostCard recuerdo={r} personaId={personaId} />
@@ -255,7 +251,8 @@ function RecuerdosCarousel({ recuerdos, personaId }: { recuerdos: RecuerdoItem[]
           {safeCurrent > 0 && (
             <button
               onClick={prev}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-8 h-8 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all z-10"
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-8 h-8 rounded-full flex items-center justify-center transition-all z-10"
+              style={{ background: CARD_BG, border: `1px solid ${WARM_BORDER}`, boxShadow: "0 2px 8px rgba(26,15,7,0.12)", color: `${ESPRESSO}60` }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
             </button>
@@ -263,19 +260,19 @@ function RecuerdosCarousel({ recuerdos, personaId }: { recuerdos: RecuerdoItem[]
           {safeCurrent < recuerdos.length - 1 && (
             <button
               onClick={next}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-8 h-8 rounded-full bg-white border border-gray-200 shadow-md flex items-center justify-center text-black/50 hover:text-orange-500 hover:border-orange-300 transition-all z-10"
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-8 h-8 rounded-full flex items-center justify-center transition-all z-10"
+              style={{ background: CARD_BG, border: `1px solid ${WARM_BORDER}`, boxShadow: "0 2px 8px rgba(26,15,7,0.12)", color: `${ESPRESSO}60` }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
           )}
-
           <div className="flex justify-center gap-2 mt-4">
             {recuerdos.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrent(i)}
                 className="transition-all duration-300 rounded-full"
-                style={{ width: i === safeCurrent ? 22 : 7, height: 7, background: i === safeCurrent ? "#f97316" : "#e5e7eb" }}
+                style={{ width: i === safeCurrent ? 22 : 7, height: 7, background: i === safeCurrent ? GOLD : `${ESPRESSO}18` }}
               />
             ))}
           </div>
@@ -343,18 +340,19 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
       {!open ? (
         <button
           onClick={() => setOpen(true)}
-          className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl border-2 border-orange-200 text-orange-500 font-semibold text-sm hover:bg-orange-50 hover:border-orange-400 transition-all"
+          className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl font-semibold text-sm transition-all"
+          style={{ border: `2px solid ${GOLD}55`, color: GOLD, background: "transparent" }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
           COMPARTIR RECUERDO
         </button>
       ) : (
-        <div className="border-2 border-orange-200 rounded-2xl p-5 bg-orange-50/30">
+        <div className="rounded-2xl p-5" style={{ border: `2px solid ${GOLD}44`, background: `${GOLD}08` }}>
           <div className="flex items-center justify-between mb-4">
-            <p className="flex-1 text-center text-xs font-bold tracking-widest uppercase" style={{ color: "#f97316" }}>
+            <p className="flex-1 text-center text-xs font-bold tracking-widest uppercase" style={{ color: GOLD }}>
               Compartir un recuerdo
             </p>
-            <button onClick={() => setOpen(false)} className="text-black/30 hover:text-black/60 transition-colors">
+            <button onClick={() => setOpen(false)} style={{ color: `${ESPRESSO}40` }} className="hover:opacity-80 transition-opacity">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 1l12 12M13 1L1 13"/></svg>
             </button>
           </div>
@@ -364,13 +362,14 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
               value={nombreAutor}
               onChange={(e) => setNombreAutor(e.target.value)}
               className={inputClass}
+              style={{ background: CARD_BG, borderColor: WARM_BORDER, color: ESPRESSO }}
               placeholder="Tu nombre"
               maxLength={80}
             />
 
             <div
-              className="relative rounded-xl border-2 border-gray-200 hover:border-orange-300 transition-colors cursor-pointer overflow-hidden"
-              style={{ minHeight: fotoPreview ? undefined : 72 }}
+              className="relative rounded-xl overflow-hidden transition-colors cursor-pointer"
+              style={{ minHeight: fotoPreview ? undefined : 72, border: `2px solid ${WARM_BORDER}` }}
               onDrop={onDrop}
               onDragOver={(e) => e.preventDefault()}
               onClick={() => fileRef.current?.click()}
@@ -379,14 +378,15 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
                 <div className="relative">
                   <img src={fotoPreview} alt="preview" className="w-full object-cover rounded-xl" style={{ maxHeight: 260 }} />
                   <button type="button" onClick={(e) => { e.stopPropagation(); setFotoPreview(null); setFotoData(null); }}
-                    className="absolute top-2 right-2 w-7 h-7 bg-black/60 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors">
+                    className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center transition-colors"
+                    style={{ background: `${ESPRESSO}99` }}>
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" strokeWidth="2"><path d="M1 1l8 8M9 1L1 9"/></svg>
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center gap-1.5 py-4 text-black/30">
+                <div className="flex flex-col items-center justify-center gap-1.5 py-4" style={{ color: `${ESPRESSO}35` }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                  <span className="text-xs">Añadir una foto <span className="text-black/20">(opcional)</span></span>
+                  <span className="text-xs">Añadir una foto <span style={{ color: `${ESPRESSO}25` }}>(opcional)</span></span>
                 </div>
               )}
               <input ref={fileRef} type="file" accept="image/*" className="hidden"
@@ -398,17 +398,18 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
               onChange={(e) => setMensaje(e.target.value)}
               rows={3}
               className={inputClass + " resize-none"}
+              style={{ background: CARD_BG, borderColor: WARM_BORDER, color: ESPRESSO }}
               placeholder="Comparte un recuerdo especial…"
               maxLength={600}
             />
 
             <div className="flex items-center justify-between pt-1">
-              <span className="text-xs text-black/25">{mensaje.length}/600</span>
+              <span className="text-xs" style={{ color: `${ESPRESSO}30` }}>{mensaje.length}/600</span>
               <button
                 type="submit"
                 disabled={!canSubmit || loading}
                 className="px-7 py-2.5 rounded-xl font-semibold text-sm transition-all border-0 outline-none"
-                style={{ background: "#f97316", color: "white", opacity: (!canSubmit || loading) ? 0.4 : 1 }}
+                style={{ background: GOLD, color: CREAM, opacity: (!canSubmit || loading) ? 0.4 : 1 }}
               >
                 {loading ? "Publicando…" : "Publicar"}
               </button>
@@ -433,23 +434,23 @@ export default function Recuerdos() {
   const recuerdos = (recuerdosData?.data ?? []) as RecuerdoItem[];
 
   return (
-    <div className="min-h-screen bg-white text-black">
+    <div className="min-h-screen" style={{ background: CREAM, color: ESPRESSO }}>
       <Navbar />
 
       <div className="pt-24 pb-16 px-4">
         <div className="max-w-xl mx-auto">
 
           <div className="text-center mb-10">
-            <h1 className="font-serif text-4xl text-black mb-3">Un recuerdo es una alegría que aún perdura</h1>
-            <p className="text-black/45 max-w-sm mx-auto text-sm leading-relaxed">
+            <h1 className="font-serif text-4xl mb-3" style={{ color: ESPRESSO }}>Un recuerdo es una alegría que aún perdura</h1>
+            <p className="max-w-sm mx-auto text-sm leading-relaxed" style={{ color: `${ESPRESSO}55` }}>
               Comparte una foto, una historia o un instante especial. Cada recuerdo es una luz que nunca se apaga.
             </p>
           </div>
 
           {loadingPersonas ? (
-            <div className="border-2 border-gray-100 rounded-2xl p-5 mb-8">
-              <Skeleton className="h-10 w-full mb-3 bg-gray-100" />
-              <Skeleton className="h-20 w-full bg-gray-100" />
+            <div className="rounded-2xl p-5 mb-8" style={{ border: `2px solid ${WARM_BORDER}` }}>
+              <Skeleton className="h-10 w-full mb-3" style={{ background: `${ESPRESSO}10` }} />
+              <Skeleton className="h-20 w-full" style={{ background: `${ESPRESSO}10` }} />
             </div>
           ) : persona ? (
             <NewPostForm personaId={persona.id} personaNombre={personaNombre} onPosted={() => forceUpdate((n) => n + 1)} />
@@ -458,16 +459,16 @@ export default function Recuerdos() {
           {loadingRecuerdos ? (
             <div className="space-y-5">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="border border-gray-100 rounded-2xl p-5 space-y-3">
+                <div key={i} className="rounded-2xl p-5 space-y-3" style={{ border: `1px solid ${WARM_BORDER}` }}>
                   <div className="flex items-center gap-3">
-                    <Skeleton className="w-10 h-10 rounded-full bg-gray-100" />
+                    <Skeleton className="w-10 h-10 rounded-full" style={{ background: `${ESPRESSO}10` }} />
                     <div className="space-y-1.5 flex-1">
-                      <Skeleton className="h-3.5 w-32 bg-gray-100" />
-                      <Skeleton className="h-3 w-20 bg-gray-100" />
+                      <Skeleton className="h-3.5 w-32" style={{ background: `${ESPRESSO}10` }} />
+                      <Skeleton className="h-3 w-20" style={{ background: `${ESPRESSO}10` }} />
                     </div>
                   </div>
-                  <Skeleton className="h-48 w-full bg-gray-100 rounded-xl" />
-                  <Skeleton className="h-10 w-full bg-gray-100" />
+                  <Skeleton className="h-48 w-full rounded-xl" style={{ background: `${ESPRESSO}10` }} />
+                  <Skeleton className="h-10 w-full" style={{ background: `${ESPRESSO}10` }} />
                 </div>
               ))}
             </div>
@@ -475,16 +476,16 @@ export default function Recuerdos() {
             <RecuerdosCarousel recuerdos={recuerdos} personaId={persona?.id} />
           ) : (
             <div className="text-center py-20">
-              <CandleFlame size="md" className="mx-auto mb-5 opacity-40" />
-              <p className="text-black/35 text-sm">Sé el primero en compartir un recuerdo.</p>
+              <CandleFlame size="md" className="mx-auto mb-5 opacity-40" outerColor={GOLD} innerColor="#e8c060" glowColor="rgba(201,148,58,0.35)" />
+              <p className="text-sm" style={{ color: `${ESPRESSO}40` }}>Sé el primero en compartir un recuerdo.</p>
             </div>
           )}
         </div>
       </div>
 
-      <footer className="py-8 px-4 text-center" style={{ background: "#ffffff", borderTop: "3px solid #f97316" }}>
-        <p className="font-serif text-black/70 text-sm tracking-widest uppercase mb-1">En Tu Memoria</p>
-        <p className="text-black/35 text-xs font-light">Siempre estarás en nuestros corazones</p>
+      <footer className="py-8 px-4 text-center" style={{ background: ESPRESSO, borderTop: `2px solid ${GOLD}44` }}>
+        <p className="font-serif text-sm tracking-widest uppercase mb-1" style={{ color: `${CREAM}80` }}>En Tu Memoria</p>
+        <p className="text-xs font-light" style={{ color: `${CREAM}40` }}>Siempre estarás en nuestros corazones</p>
       </footer>
     </div>
   );

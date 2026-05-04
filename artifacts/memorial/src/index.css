@@ -57,43 +57,43 @@
 }
 
 :root {
-  /* === WHITE · BLACK · ORANGE — clean minimalist === */
-  --background: 0 0% 100%;         /* white       #ffffff */
-  --foreground: 0 0% 7%;           /* near-black  #111111 */
-  --border: 0 0% 90%;              /* light gray  #e6e6e6 */
-  --card: 0 0% 98%;                /* off-white   #fafafa */
-  --card-foreground: 0 0% 7%;
-  --card-border: 0 0% 88%;         /* #e0e0e0 */
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 7%;
-  --popover-border: 0 0% 88%;
-  --primary: 25 95% 53%;           /* orange  #F97316 */
-  --primary-foreground: 0 0% 100%; /* white on orange */
-  --secondary: 0 0% 95%;           /* near-white #f2f2f2 */
-  --secondary-foreground: 0 0% 10%;
-  --muted: 0 0% 96%;               /* very light gray */
-  --muted-foreground: 0 0% 45%;    /* mid gray */
-  --accent: 25 95% 53%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 72% 51%;
+  /* === ESPRESSO · GOLD · CREAM — warm memorial palette === */
+  --background: 36 28% 95%;            /* warm cream   #f5f0e8 */
+  --foreground: 24 72% 8%;             /* espresso     #1a0f07 */
+  --border: 33 28% 83%;                /* warm sand    #ddd2bf */
+  --card: 36 30% 97%;                  /* soft parchment #faf7f2 */
+  --card-foreground: 24 72% 8%;
+  --card-border: 33 24% 86%;           /* #e3dace */
+  --popover: 36 30% 97%;
+  --popover-foreground: 24 72% 8%;
+  --popover-border: 33 24% 86%;
+  --primary: 36 62% 51%;               /* gold  #c9943a */
+  --primary-foreground: 36 28% 97%;    /* cream on gold */
+  --secondary: 33 22% 91%;             /* pale parchment #ede7db */
+  --secondary-foreground: 24 60% 12%;
+  --muted: 33 18% 92%;                 /* very light warm */
+  --muted-foreground: 24 25% 45%;      /* warm gray */
+  --accent: 36 62% 51%;
+  --accent-foreground: 36 28% 97%;
+  --destructive: 0 65% 48%;
   --destructive-foreground: 0 0% 98%;
-  --input: 0 0% 93%;
-  --ring: 25 95% 53%;
+  --input: 33 22% 88%;
+  --ring: 36 62% 51%;
 
-  --chart-1: 25 95% 53%;
-  --chart-2: 0 0% 10%;
-  --chart-3: 0 0% 60%;
-  --chart-4: 15 80% 48%;
-  --chart-5: 0 0% 80%;
+  --chart-1: 36 62% 51%;
+  --chart-2: 24 72% 8%;
+  --chart-3: 24 25% 55%;
+  --chart-4: 30 55% 38%;
+  --chart-5: 33 28% 78%;
 
-  --sidebar: 0 0% 98%;
-  --sidebar-foreground: 0 0% 10%;
-  --sidebar-border: 0 0% 90%;
-  --sidebar-primary: 25 95% 53%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 0 0% 94%;
-  --sidebar-accent-foreground: 0 0% 10%;
-  --sidebar-ring: 25 95% 53%;
+  --sidebar: 36 26% 95%;
+  --sidebar-foreground: 24 72% 8%;
+  --sidebar-border: 33 24% 84%;
+  --sidebar-primary: 36 62% 51%;
+  --sidebar-primary-foreground: 36 28% 97%;
+  --sidebar-accent: 33 22% 90%;
+  --sidebar-accent-foreground: 24 60% 12%;
+  --sidebar-ring: 36 62% 51%;
 
   --app-font-sans: 'Lato', sans-serif;
   --app-font-serif: 'Playfair Display', Georgia, serif;
@@ -117,8 +117,8 @@
   70%  { transform: scaleX(0.92) scaleY(1.06) translateY(-1px) rotate(-1deg);   opacity: 0.90; }
 }
 @keyframes candle-glow {
-  0%,100% { filter: drop-shadow(0 0 8px rgba(249,115,22,0.30)); }
-  50%      { filter: drop-shadow(0 0 14px rgba(249,115,22,0.55)); }
+  0%,100% { filter: drop-shadow(0 0 8px rgba(201,148,58,0.30)); }
+  50%      { filter: drop-shadow(0 0 14px rgba(201,148,58,0.55)); }
 }
 @keyframes fade-in-up {
   from { opacity: 0; transform: translateY(20px); }

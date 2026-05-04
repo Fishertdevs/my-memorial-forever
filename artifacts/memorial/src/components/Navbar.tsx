@@ -1,6 +1,11 @@
 import { Link, useLocation } from "wouter";
 import { useState } from "react";
 
+const ESPRESSO = "#1a0f07";
+const GOLD = "#c9943a";
+const CREAM = "#f5f0e8";
+const WARM_BORDER = "#ddd2bf";
+
 const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/personas", label: "Memorial" },
@@ -12,7 +17,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+    <nav style={{ background: ESPRESSO, borderBottom: `1px solid rgba(201,148,58,0.2)` }} className="fixed top-0 left-0 right-0 z-50 shadow-md">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         <Link href="/" className="flex items-center gap-2.5 group">
           <img
@@ -20,7 +25,7 @@ export default function Navbar() {
             alt="En Tu Memoria"
             className="h-9 w-auto"
           />
-          <span className="font-serif text-lg font-bold text-black group-hover:text-orange-500 transition-colors">
+          <span className="font-serif text-lg font-bold transition-colors" style={{ color: CREAM }}>
             En Tu Memoria
           </span>
         </Link>
@@ -32,11 +37,11 @@ export default function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200 ${
-                  isActive
-                    ? "text-orange-500 bg-orange-50"
-                    : "text-black/70 hover:text-orange-500 hover:bg-orange-50/60"
-                }`}
+                className="px-4 py-2 text-sm font-semibold rounded-lg transition-all duration-200"
+                style={{
+                  color: isActive ? GOLD : "rgba(245,240,232,0.65)",
+                  background: isActive ? "rgba(201,148,58,0.12)" : "transparent",
+                }}
               >
                 {link.label}
               </Link>
@@ -45,7 +50,8 @@ export default function Navbar() {
         </div>
 
         <button
-          className="md:hidden text-black/60 hover:text-orange-500 p-2 transition-colors"
+          className="md:hidden p-2 transition-colors"
+          style={{ color: "rgba(245,240,232,0.6)" }}
           onClick={() => setOpen(!open)}
           aria-label="Menú"
         >
@@ -60,17 +66,17 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="md:hidden border-t border-gray-100 bg-white px-4 pb-4 pt-2 space-y-1">
+        <div style={{ background: ESPRESSO, borderTop: `1px solid rgba(201,148,58,0.15)` }} className="md:hidden px-4 pb-4 pt-2 space-y-1">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setOpen(false)}
-              className={`block px-4 py-2.5 text-sm font-semibold rounded-lg transition-colors ${
-                location === link.href
-                  ? "text-orange-500 bg-orange-50"
-                  : "text-black/70 hover:text-orange-500 hover:bg-orange-50/60"
-              }`}
+              className="block px-4 py-2.5 text-sm font-semibold rounded-lg transition-colors"
+              style={{
+                color: location === link.href ? GOLD : "rgba(245,240,232,0.65)",
+                background: location === link.href ? "rgba(201,148,58,0.12)" : "transparent",
+              }}
             >
               {link.label}
             </Link>
