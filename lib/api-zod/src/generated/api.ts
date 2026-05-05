@@ -84,6 +84,7 @@ export const ListVelasResponse = zod.object({
   "nombreRecordado": zod.string(),
   "nombreAutor": zod.string(),
   "mensaje": zod.string(),
+  "colorId": zod.string().nullish(),
   "createdAt": zod.string(),
   "tiempoTranscurrido": zod.string()
 })),
@@ -98,7 +99,8 @@ export const CreateVelaBody = zod.object({
   "personaId": zod.number().nullish(),
   "nombreRecordado": zod.string(),
   "nombreAutor": zod.string(),
-  "mensaje": zod.string()
+  "mensaje": zod.string(),
+  "colorId": zod.string().nullish()
 })
 
 

@@ -41,6 +41,7 @@ router.get("/velas", async (req, res) => {
       nombreRecordado: v.nombreRecordado,
       nombreAutor: v.nombreAutor,
       mensaje: v.mensaje,
+      colorId: v.colorId,
       createdAt: v.createdAt.toISOString(),
       tiempoTranscurrido: timeAgo(v.createdAt),
     })),
@@ -62,6 +63,7 @@ router.post("/velas", async (req, res) => {
       nombreRecordado: parsed.data.nombreRecordado,
       nombreAutor: parsed.data.nombreAutor,
       mensaje: parsed.data.mensaje,
+      colorId: parsed.data.colorId ?? null,
     })
     .returning();
 
@@ -71,6 +73,7 @@ router.post("/velas", async (req, res) => {
     nombreRecordado: created.nombreRecordado,
     nombreAutor: created.nombreAutor,
     mensaje: created.mensaje,
+    colorId: created.colorId,
     createdAt: created.createdAt.toISOString(),
     tiempoTranscurrido: timeAgo(created.createdAt),
   });

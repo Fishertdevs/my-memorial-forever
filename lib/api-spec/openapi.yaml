@@ -309,6 +309,9 @@ components:
           type: string
         mensaje:
           type: string
+        colorId:
+          type: string
+          nullable: true
         createdAt:
           type: string
         tiempoTranscurrido:
@@ -333,6 +336,9 @@ components:
           type: string
         mensaje:
           type: string
+        colorId:
+          type: string
+          nullable: true
       required:
         - nombreRecordado
         - nombreAutor

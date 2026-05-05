@@ -20,6 +20,28 @@ const NOMBRES_CORTOS = "Ana Soledad, Pablo Esteban y Carlos Alberto";
 
 const inputClass = "w-full border-2 focus:outline-none transition-colors text-sm px-4 py-3 rounded-xl";
 
+function ConfirmDialog({ message, onConfirm, onCancel }: { message: string; onConfirm: () => void; onCancel: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4" style={{ background: "rgba(0,0,0,0.65)" }}>
+      <div className="rounded-2xl p-6 w-full max-w-xs shadow-2xl" style={{ background: "#2a1a0e", border: `1px solid ${GOLD}44` }}>
+        <p className="text-sm text-center mb-6 leading-relaxed" style={{ color: CREAM }}>{message}</p>
+        <div className="flex gap-3 justify-center">
+          <button
+            onClick={onConfirm}
+            className="px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-opacity hover:opacity-80"
+            style={{ background: GOLD, color: ESPRESSO }}
+          >Aceptar</button>
+          <button
+            onClick={onCancel}
+            className="px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-opacity hover:opacity-80"
+            style={{ background: "transparent", border: `1px solid ${CREAM}30`, color: `${CREAM}70` }}
+          >Cancelar</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Avatar({ name, size = 9 }: { name: string; size?: number }) {
   const initials = name.trim().split(" ").slice(0, 2).map((w) => w[0]?.toUpperCase() ?? "").join("");
   return (
@@ -73,6 +95,7 @@ function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?:
   const [currentMsg, setCurrentMsg] = useState(recuerdo.mensaje);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -106,7 +129,6 @@ function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?:
   };
 
   const handleDelete = async () => {
-    if (!window.confirm("¿Eliminar este recuerdo?")) return;
     setDeleting(true);
     try {
       await fetch(`/api/recuerdos/${recuerdo.id}`, { method: "DELETE" });
@@ -204,7 +226,7 @@ function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?:
               </svg>
               Editar
             </button>
-            <button onClick={handleDelete} disabled={deleting} className="flex items-center gap-1.5 text-xs transition-colors ml-auto" style={{ color: `${ESPRESSO}30` }}>
+            <button onClick={() => setConfirmOpen(true)} disabled={deleting} className="flex items-center gap-1.5 text-xs transition-colors ml-auto" style={{ color: `${ESPRESSO}30` }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4h6v2" />
               </svg>
@@ -213,6 +235,13 @@ function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?:
           </>
         )}
       </div>
+      {confirmOpen && (
+        <ConfirmDialog
+          message="¿Eliminar este recuerdo?"
+          onConfirm={() => { setConfirmOpen(false); handleDelete(); }}
+          onCancel={() => setConfirmOpen(false)}
+        />
+      )}
     </div>
   );
 }

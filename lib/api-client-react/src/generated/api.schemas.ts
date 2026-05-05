@@ -35,6 +35,7 @@ export interface Vela {
   nombreRecordado: string;
   nombreAutor: string;
   mensaje: string;
+  colorId?: string | null;
   createdAt: string;
   tiempoTranscurrido: string;
 }
@@ -44,6 +45,7 @@ export interface CreateVelaBody {
   nombreRecordado: string;
   nombreAutor: string;
   mensaje: string;
+  colorId?: string | null;
 }
 
 export interface VelasResponse {

@@ -22,6 +22,7 @@ export const velasTable = pgTable("velas", {
   nombreRecordado: text("nombre_recordado").notNull(),
   nombreAutor: text("nombre_autor").notNull(),
   mensaje: text("mensaje").notNull(),
+  colorId: varchar("color_id", { length: 20 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

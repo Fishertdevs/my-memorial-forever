@@ -131,7 +131,7 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
     if (!canSubmit) return;
     try {
       await createVela.mutateAsync({
-        data: { personaId, nombreRecordado: personaNombre, nombreAutor: nombreAutor.trim(), mensaje: mensaje.trim() },
+        data: { personaId, nombreRecordado: personaNombre, nombreAutor: nombreAutor.trim(), mensaje: mensaje.trim(), colorId: flameColor.id },
       });
       queryClient.invalidateQueries({ queryKey: getListVelasQueryKey({ personaId, limit: 50 }) });
       handleReset();
@@ -221,13 +221,35 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
   );
 }
 
+/* ── ConfirmDialog ── */
+function ConfirmDialog({ message, onConfirm, onCancel }: { message: string; onConfirm: () => void; onCancel: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4" style={{ background: "rgba(0,0,0,0.65)" }}>
+      <div className="rounded-2xl p-6 w-full max-w-xs shadow-2xl" style={{ background: "#2a1a0e", border: `1px solid ${GOLD}44` }}>
+        <p className="text-sm text-center mb-6 leading-relaxed" style={{ color: CREAM }}>{message}</p>
+        <div className="flex gap-3 justify-center">
+          <button
+            onClick={onConfirm}
+            className="px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-opacity hover:opacity-80"
+            style={{ background: GOLD, color: ESPRESSO }}
+          >Aceptar</button>
+          <button
+            onClick={onCancel}
+            className="px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-opacity hover:opacity-80"
+            style={{ background: "transparent", border: `1px solid ${CREAM}30`, color: `${CREAM}70` }}
+          >Cancelar</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ── VelaCard ── */
-function VelaCard({ vela, colorIdx, personaId }: {
-  vela: { id: number; nombreAutor: string; mensaje: string; tiempoTranscurrido: string };
-  colorIdx: number;
+function VelaCard({ vela, personaId }: {
+  vela: { id: number; nombreAutor: string; mensaje: string; tiempoTranscurrido: string; colorId?: string | null };
   personaId: number;
 }) {
-  const color = FLAME_COLORS[colorIdx % FLAME_COLORS.length];
+  const color = FLAME_COLORS.find(c => c.id === vela.colorId) ?? FLAME_COLORS[0];
   const likeKey = `like_vela_${vela.id}`;
   const [liked, setLiked] = useState(() => localStorage.getItem(likeKey) === "1");
   const [editing, setEditing] = useState(false);
@@ -235,6 +257,7 @@ function VelaCard({ vela, colorIdx, personaId }: {
   const [currentMsg, setCurrentMsg] = useState(vela.mensaje);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -256,7 +279,6 @@ function VelaCard({ vela, colorIdx, personaId }: {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm("¿Eliminar esta velita?")) return;
     setDeleting(true);
     try {
       await fetch(`/api/velas/${vela.id}`, { method: "DELETE" });
@@ -298,7 +320,7 @@ function VelaCard({ vela, colorIdx, personaId }: {
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                   Editar
                 </button>
-                <button onClick={handleDelete} disabled={deleting} className="flex items-center gap-1 text-xs ml-auto" style={{ color: `${ESPRESSO}30` }}>
+                <button onClick={() => setConfirmOpen(true)} disabled={deleting} className="flex items-center gap-1 text-xs ml-auto" style={{ color: `${ESPRESSO}30` }}>
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
                   Eliminar
                 </button>
@@ -307,12 +329,19 @@ function VelaCard({ vela, colorIdx, personaId }: {
           </div>
         </div>
       </div>
+      {confirmOpen && (
+        <ConfirmDialog
+          message="¿Eliminar esta velita?"
+          onConfirm={() => { setConfirmOpen(false); handleDelete(); }}
+          onCancel={() => setConfirmOpen(false)}
+        />
+      )}
     </div>
   );
 }
 
 /* ── VelasCarousel ── */
-function VelasCarousel({ velas, personaId }: { velas: { id: number; nombreAutor: string; mensaje: string; tiempoTranscurrido: string }[]; personaId: number }) {
+function VelasCarousel({ velas, personaId }: { velas: { id: number; nombreAutor: string; mensaje: string; tiempoTranscurrido: string; colorId?: string | null }[]; personaId: number }) {
   const [current, setCurrent] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const prev = () => setCurrent((c) => Math.max(0, c - 1));
@@ -329,8 +358,8 @@ function VelasCarousel({ velas, personaId }: { velas: { id: number; nombreAutor:
     <div className="relative mt-4">
       <div className="overflow-hidden rounded-2xl" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
         <div className="flex transition-transform duration-300 ease-in-out" style={{ transform: `translateX(-${current * 100}%)` }}>
-          {velas.map((vela, idx) => (
-            <div key={vela.id} className="flex-shrink-0 w-full"><VelaCard vela={vela} colorIdx={idx} personaId={personaId} /></div>
+          {velas.map((vela) => (
+            <div key={vela.id} className="flex-shrink-0 w-full"><VelaCard vela={vela} personaId={personaId} /></div>
           ))}
         </div>
       </div>
@@ -370,7 +399,7 @@ function VelasSection({ personaId }: { personaId: number }) {
       <div className="flex flex-wrap justify-center gap-4 mb-6">
         {velasData.data.slice(0, 20).map((vela, idx) => (
           <div key={vela.id} className="group relative flex flex-col items-center gap-1.5">
-            <MiniCandle color={FLAME_COLORS[idx % FLAME_COLORS.length]} />
+            <MiniCandle color={FLAME_COLORS.find(c => c.id === (vela as { colorId?: string | null }).colorId) ?? FLAME_COLORS[idx % FLAME_COLORS.length]} />
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
               <div className="rounded-lg px-3 py-2 text-xs whitespace-nowrap shadow-xl max-w-[200px]" style={{ background: ESPRESSO, color: CREAM }}>
                 <p className="font-semibold truncate">{vela.nombreAutor}</p>
