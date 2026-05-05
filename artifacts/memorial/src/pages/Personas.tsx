@@ -413,42 +413,33 @@ function VelasSection({ personaId }: { personaId: number }) {
 
 /* ── Page ── */
 export default function Personas() {
-  const { data: personas, isLoading } = useListPersonas();
+  const { data: personas } = useListPersonas();
   const [, forceUpdate] = useState(0);
+  const personaId = personas?.[0]?.id ?? 1;
+  const personaNombre = personas?.[0]?.nombre ?? "En Tu Memoria";
 
   return (
-    <div className="min-h-screen" style={{ background: CREAM, color: ESPRESSO }}>
+    <div className="min-h-screen" style={{ background: ESPRESSO, color: CREAM }}>
       <Navbar />
       <div className="pt-24 pb-16 px-4">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <h1 className="font-serif text-4xl mb-3 leading-snug" style={{ color: ESPRESSO }}>Siempre estarán en nuestra memoria</h1>
-            <p className="max-w-md mx-auto leading-relaxed text-sm" style={{ color: `${ESPRESSO}60` }}>
+            <h1 className="font-serif text-4xl mb-3 leading-snug" style={{ color: CREAM }}>Siempre estarán en nuestra memoria</h1>
+            <p className="max-w-md mx-auto leading-relaxed text-sm" style={{ color: `${CREAM}70` }}>
               Con esta velita te recordaremos siempre. Que su luz siga brillando en cada corazón que los amó.
             </p>
           </div>
 
-          {isLoading ? (
-            <div className="max-w-xl mx-auto space-y-3">
-              <Skeleton className="h-14 w-full rounded-xl" style={{ background: `${ESPRESSO}10` }} />
-            </div>
-          ) : personas && personas.length > 0 ? (
-            <div className="max-w-xl mx-auto">
-              <LightCandleForm personaId={personas[0].id} personaNombre={personas[0].nombre} onLit={() => forceUpdate((n) => n + 1)} />
-              <VelasSection personaId={personas[0].id} />
-            </div>
-          ) : (
-            <div className="text-center py-24">
-              <CandleFlame size="lg" className="mx-auto mb-6 opacity-40" outerColor={GOLD} innerColor="#e8c060" glowColor="rgba(201,148,58,0.28)" />
-              <p className="text-lg" style={{ color: `${ESPRESSO}40` }}>Aún no hay perfiles en el memorial.</p>
-            </div>
-          )}
+          <div className="max-w-xl mx-auto">
+            <LightCandleForm personaId={personaId} personaNombre={personaNombre} onLit={() => forceUpdate((n) => n + 1)} />
+            <VelasSection personaId={personaId} />
+          </div>
         </div>
       </div>
 
-      <footer className="py-10 px-4 text-center bg-white" style={{ borderTop: `2px solid ${GOLD}33` }}>
-        <p className="font-serif text-sm tracking-widest uppercase mb-1 text-black">En Tu Memoria</p>
-        <p className="text-xs font-light" style={{ color: "rgba(0,0,0,0.45)" }}>Siempre estarás en nuestros corazones</p>
+      <footer className="py-10 px-4 text-center" style={{ borderTop: `2px solid ${GOLD}33`, background: "#0f0804" }}>
+        <p className="font-serif text-sm tracking-widest uppercase mb-1" style={{ color: CREAM }}>En Tu Memoria</p>
+        <p className="text-xs font-light" style={{ color: `${CREAM}45` }}>Siempre estarás en nuestros corazones</p>
       </footer>
     </div>
   );

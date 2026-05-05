@@ -422,70 +422,64 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
 }
 
 export default function Recuerdos() {
-  const { data: personas, isLoading: loadingPersonas } = useListPersonas();
+  const { data: personas } = useListPersonas();
   const persona = personas?.[0];
+  const personaId = persona?.id ?? 1;
   const personaNombre = persona?.nombre ?? NOMBRES_CORTOS;
 
   const { data: recuerdosData, isLoading: loadingRecuerdos } = useListRecuerdos(
-    { personaId: persona?.id, limit: 50 },
-    { query: { enabled: !!persona?.id, queryKey: getListRecuerdosQueryKey({ personaId: persona?.id, limit: 50 }) } }
+    { personaId, limit: 50 },
+    { query: { queryKey: getListRecuerdosQueryKey({ personaId, limit: 50 }) } }
   );
   const [, forceUpdate] = useState(0);
   const recuerdos = (recuerdosData?.data ?? []) as RecuerdoItem[];
 
   return (
-    <div className="min-h-screen" style={{ background: CREAM, color: ESPRESSO }}>
+    <div className="min-h-screen" style={{ background: ESPRESSO, color: CREAM }}>
       <Navbar />
 
       <div className="pt-24 pb-16 px-4">
         <div className="max-w-xl mx-auto">
 
           <div className="text-center mb-10">
-            <h1 className="font-serif text-4xl mb-3" style={{ color: ESPRESSO }}>Un recuerdo es una alegría que aún perdura</h1>
-            <p className="max-w-sm mx-auto text-sm leading-relaxed" style={{ color: `${ESPRESSO}55` }}>
+            <h1 className="font-serif text-4xl mb-3" style={{ color: CREAM }}>Un recuerdo es una alegría que aún perdura</h1>
+            <p className="max-w-sm mx-auto text-sm leading-relaxed" style={{ color: `${CREAM}70` }}>
               Comparte una foto, una historia o un instante especial. Cada recuerdo es una luz que nunca se apaga.
             </p>
           </div>
 
-          {loadingPersonas ? (
-            <div className="rounded-2xl p-5 mb-8" style={{ border: `2px solid ${WARM_BORDER}` }}>
-              <Skeleton className="h-10 w-full mb-3" style={{ background: `${ESPRESSO}10` }} />
-              <Skeleton className="h-20 w-full" style={{ background: `${ESPRESSO}10` }} />
-            </div>
-          ) : persona ? (
-            <NewPostForm personaId={persona.id} personaNombre={personaNombre} onPosted={() => forceUpdate((n) => n + 1)} />
-          ) : null}
+          <NewPostForm personaId={personaId} personaNombre={personaNombre} onPosted={() => forceUpdate((n) => n + 1)} />
 
           {loadingRecuerdos ? (
             <div className="space-y-5">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="rounded-2xl p-5 space-y-3" style={{ border: `1px solid ${WARM_BORDER}` }}>
+                <div key={i} className="rounded-2xl p-5 space-y-3" style={{ border: `1px solid ${GOLD}22` }}>
                   <div className="flex items-center gap-3">
-                    <Skeleton className="w-10 h-10 rounded-full" style={{ background: `${ESPRESSO}10` }} />
+                    <Skeleton className="w-10 h-10 rounded-full" style={{ background: `${CREAM}10` }} />
                     <div className="space-y-1.5 flex-1">
-                      <Skeleton className="h-3.5 w-32" style={{ background: `${ESPRESSO}10` }} />
-                      <Skeleton className="h-3 w-20" style={{ background: `${ESPRESSO}10` }} />
+                      <Skeleton className="h-3.5 w-32" style={{ background: `${CREAM}10` }} />
+                      <Skeleton className="h-3 w-20" style={{ background: `${CREAM}10` }} />
                     </div>
                   </div>
-                  <Skeleton className="h-48 w-full rounded-xl" style={{ background: `${ESPRESSO}10` }} />
-                  <Skeleton className="h-10 w-full" style={{ background: `${ESPRESSO}10` }} />
+                  <Skeleton className="h-48 w-full rounded-xl" style={{ background: `${CREAM}10` }} />
+                  <Skeleton className="h-10 w-full" style={{ background: `${CREAM}10` }} />
                 </div>
               ))}
             </div>
           ) : recuerdos.length > 0 ? (
-            <RecuerdosCarousel recuerdos={recuerdos} personaId={persona?.id} />
+            <RecuerdosCarousel recuerdos={recuerdos} personaId={personaId} />
           ) : (
             <div className="text-center py-20">
               <CandleFlame size="md" className="mx-auto mb-5 opacity-40" outerColor={GOLD} innerColor="#e8c060" glowColor="rgba(201,148,58,0.35)" />
-              <p className="text-sm" style={{ color: `${ESPRESSO}40` }}>Sé el primero en compartir un recuerdo.</p>
+              <p className="text-sm" style={{ color: `${CREAM}50` }}>Sé el primero en compartir un recuerdo.</p>
             </div>
           )}
         </div>
       </div>
 
-      <footer className="py-10 px-4 text-center bg-white" style={{ borderTop: `2px solid ${GOLD}33` }}>
-        <p className="font-serif text-sm tracking-widest uppercase mb-1 text-black">En Tu Memoria</p>
-        <p className="text-xs font-light" style={{ color: "rgba(0,0,0,0.45)" }}>Siempre estarás en nuestros corazones</p>
+      <footer className="py-10 px-4 text-center" style={{ borderTop: `2px solid ${GOLD}33`, background: "#0f0804" }}>
+        <p className="font-serif text-sm tracking-widest uppercase mb-1" style={{ color: CREAM }}>En Tu Memoria</p>
+        <p className="text-xs font-light" style={{ color: `${CREAM}45` }}>Siempre estarás en nuestros corazones</p>
       </footer>
     </div>
   );
