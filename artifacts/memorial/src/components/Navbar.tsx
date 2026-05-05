@@ -20,11 +20,15 @@ export default function Navbar() {
     <nav style={{ background: ESPRESSO, borderBottom: `1px solid rgba(201,148,58,0.2)` }} className="fixed top-0 left-0 right-0 z-50 shadow-md">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <img
-            src="/candle-logo.png"
-            alt="En Tu Memoria"
-            className="h-9 w-auto"
-          />
+          <div className="flex flex-col items-center" style={{ width: 22, flexShrink: 0 }}>
+            <div className="candle-flame relative" style={{ width: 14, height: 22 }}>
+              <div style={{ position: "absolute", bottom: 0, left: "50%", transform: "translateX(-50%)", width: 14, height: 22, background: `radial-gradient(ellipse at 50% 80%, ${GOLD} 0%, ${GOLD}66 50%, transparent 80%)`, borderRadius: "50% 50% 30% 30%", filter: "blur(1px)" }} />
+              <div style={{ position: "absolute", bottom: 2, left: "50%", transform: "translateX(-50%)", width: 7, height: 13, background: `radial-gradient(ellipse at 50% 70%, #e8c060 0%, ${GOLD}bb 65%, transparent 100%)`, borderRadius: "50% 50% 30% 30%" }} />
+              <div style={{ position: "absolute", bottom: 3, left: "50%", transform: "translateX(-50%)", width: 2.5, height: 6, background: "rgba(255,255,240,0.95)", borderRadius: "50%", filter: "blur(0.3px)" }} />
+            </div>
+            <div style={{ width: 1.5, height: 4, background: "#888", borderRadius: 1 }} />
+            <div style={{ width: 14, height: 30, background: `linear-gradient(160deg,#f5efd8 0%,#e8dcbc 55%,#cec0a0 100%)`, borderRadius: "3px 3px 2px 2px", border: `1px solid ${GOLD}55`, filter: `drop-shadow(0 0 6px rgba(201,148,58,0.5))` }} />
+          </div>
           <span className="font-serif text-lg font-bold transition-colors" style={{ color: CREAM }}>
             En Tu Memoria
           </span>
