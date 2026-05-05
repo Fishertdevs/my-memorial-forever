@@ -251,7 +251,7 @@ function RecuerdosCarousel({ recuerdos, personaId }: { recuerdos: RecuerdoItem[]
           {safeCurrent > 0 && (
             <button
               onClick={prev}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-8 h-8 rounded-full flex items-center justify-center transition-all z-10"
+              className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-8 h-8 rounded-full items-center justify-center transition-all z-10"
               style={{ background: CARD_BG, border: `1px solid ${WARM_BORDER}`, boxShadow: "0 2px 8px rgba(26,15,7,0.12)", color: `${ESPRESSO}60` }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
@@ -260,7 +260,7 @@ function RecuerdosCarousel({ recuerdos, personaId }: { recuerdos: RecuerdoItem[]
           {safeCurrent < recuerdos.length - 1 && (
             <button
               onClick={next}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-8 h-8 rounded-full flex items-center justify-center transition-all z-10"
+              className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-8 h-8 rounded-full items-center justify-center transition-all z-10"
               style={{ background: CARD_BG, border: `1px solid ${WARM_BORDER}`, boxShadow: "0 2px 8px rgba(26,15,7,0.12)", color: `${ESPRESSO}60` }}
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
@@ -348,7 +348,7 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
       ) : (
         <div className="space-y-3">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-xs font-bold tracking-widest uppercase" style={{ color: GOLD }}>
+            <p className="flex-1 text-center text-xs font-bold tracking-widest uppercase" style={{ color: GOLD }}>
               Compartir un recuerdo
             </p>
             <button onClick={() => setOpen(false)} style={{ color: `${CREAM}40` }} className="hover:opacity-80 transition-opacity">

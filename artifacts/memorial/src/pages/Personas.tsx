@@ -149,7 +149,7 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
         className="flex flex-col items-center py-10 cursor-pointer"
         style={{ minHeight: 260 }}
       >
-        <BigInteractiveCandle lit={candleLit} flameColor={flameColor} />
+        <BigInteractiveCandle key={flameColor.id} lit={candleLit} flameColor={flameColor} />
         {!candleLit && (
           <p className="mt-6 text-sm fade-in-up" style={{ color: `${CREAM}70`, letterSpacing: "0.04em" }}>
             Haz clic para encender la vela
@@ -337,12 +337,12 @@ function VelasCarousel({ velas, personaId }: { velas: { id: number; nombreAutor:
       {velas.length > 1 && (
         <>
           {current > 0 && (
-            <button onClick={prev} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-8 h-8 rounded-full flex items-center justify-center transition-all z-10" style={{ background: CARD_BG, border: `1px solid ${WARM_BORDER}`, boxShadow: "0 2px 8px rgba(26,15,7,0.12)", color: `${ESPRESSO}60` }}>
+            <button onClick={prev} className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-8 h-8 rounded-full items-center justify-center transition-all z-10" style={{ background: CARD_BG, border: `1px solid ${WARM_BORDER}`, boxShadow: "0 2px 8px rgba(26,15,7,0.12)", color: `${ESPRESSO}60` }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="15 18 9 12 15 6"/></svg>
             </button>
           )}
           {current < velas.length - 1 && (
-            <button onClick={next} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-8 h-8 rounded-full flex items-center justify-center transition-all z-10" style={{ background: CARD_BG, border: `1px solid ${WARM_BORDER}`, boxShadow: "0 2px 8px rgba(26,15,7,0.12)", color: `${ESPRESSO}60` }}>
+            <button onClick={next} className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-8 h-8 rounded-full items-center justify-center transition-all z-10" style={{ background: CARD_BG, border: `1px solid ${WARM_BORDER}`, boxShadow: "0 2px 8px rgba(26,15,7,0.12)", color: `${ESPRESSO}60` }}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="9 18 15 12 9 6"/></svg>
             </button>
           )}
