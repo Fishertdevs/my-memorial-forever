@@ -23,18 +23,19 @@ const inputClass = "w-full border-2 focus:outline-none transition-colors text-sm
 function ConfirmDialog({ message, onConfirm, onCancel }: { message: string; onConfirm: () => void; onCancel: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4" style={{ background: "rgba(0,0,0,0.65)" }}>
-      <div className="rounded-2xl p-6 w-full max-w-xs shadow-2xl" style={{ background: "#2a1a0e", border: `1px solid ${GOLD}44` }}>
-        <p className="text-sm text-center mb-6 leading-relaxed" style={{ color: CREAM }}>{message}</p>
-        <div className="flex gap-3 justify-center">
+      <div className="rounded-2xl px-8 py-7 w-full max-w-xs shadow-2xl" style={{ background: "#2a1a0e", border: `1px solid ${GOLD}33` }}>
+        <p className="font-serif text-base text-center mb-7 leading-relaxed" style={{ color: CREAM }}>{message}</p>
+        <div className="h-px mb-6" style={{ background: `${GOLD}22` }} />
+        <div className="flex items-center justify-center gap-8">
           <button
             onClick={onConfirm}
-            className="px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-opacity hover:opacity-80"
-            style={{ background: GOLD, color: ESPRESSO }}
-          >Aceptar</button>
+            className="text-xs font-bold uppercase tracking-[0.28em] transition-opacity hover:opacity-70 bg-transparent border-0 outline-none"
+            style={{ color: GOLD }}
+          >— Aceptar</button>
           <button
             onClick={onCancel}
-            className="px-6 py-2 rounded-xl text-xs font-bold uppercase tracking-widest transition-opacity hover:opacity-80"
-            style={{ background: "transparent", border: `1px solid ${CREAM}30`, color: `${CREAM}70` }}
+            className="text-xs uppercase tracking-[0.28em] transition-opacity hover:opacity-70 bg-transparent border-0 outline-none"
+            style={{ color: `${CREAM}50` }}
           >Cancelar</button>
         </div>
       </div>
