@@ -97,7 +97,6 @@ function BigInteractiveCandle({ lit, flameColor }: { lit: boolean; flameColor: F
 
 /* ── Light candle form with animated intro ── */
 function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: number; personaNombre: string; onLit: () => void }) {
-  const [open, setOpen] = useState(false);
   const [candleLit, setCandleLit] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [nombreAutor, setNombreAutor] = useState("");
@@ -119,8 +118,7 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
     }, 1000);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleReset = () => {
     setCandleLit(false);
     setShowForm(false);
     setNombreAutor("");
@@ -136,45 +134,22 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
         data: { personaId, nombreRecordado: personaNombre, nombreAutor: nombreAutor.trim(), mensaje: mensaje.trim() },
       });
       queryClient.invalidateQueries({ queryKey: getListVelasQueryKey({ personaId, limit: 50 }) });
-      handleClose();
+      handleReset();
       onLit();
     } catch {
       toast({ title: "No se pudo encender la velita", variant: "destructive" });
     }
   };
 
-  if (!open) {
-    return (
-      <div className="mt-6">
-        <button
-          onClick={() => setOpen(true)}
-          className="w-full flex items-center justify-center gap-2.5 py-4 rounded-xl font-semibold text-sm transition-all"
-          style={{ border: `2px solid ${GOLD}55`, color: GOLD, background: "transparent" }}
-        >
-          ENCIENDE TU VELITA
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="mt-6 rounded-2xl overflow-hidden" style={{ background: ESPRESSO, border: `1px solid ${GOLD}33` }}>
-      {/* Header */}
-      <div className="flex items-center justify-between px-5 pt-5 pb-2">
-        <span className="text-xs font-bold tracking-widest uppercase" style={{ color: GOLD }}>Encender una velita</span>
-        <button onClick={handleClose} style={{ color: `${CREAM}50` }} className="hover:opacity-80 transition-opacity">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 1l12 12M13 1L1 13" /></svg>
-        </button>
-      </div>
-
-      {/* Candle scene */}
+    <div className="mt-6">
+      {/* Candle always visible, no box/frame */}
       <div
         onClick={handleCandleClick}
-        className="flex flex-col items-center py-10 cursor-pointer relative"
+        className="flex flex-col items-center py-10 cursor-pointer"
         style={{ minHeight: 260 }}
       >
         <BigInteractiveCandle lit={candleLit} flameColor={flameColor} />
-
         {!candleLit && (
           <p className="mt-6 text-sm fade-in-up" style={{ color: `${CREAM}70`, letterSpacing: "0.04em" }}>
             Haz clic para encender la vela
@@ -184,14 +159,14 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
 
       {/* Form — slides in after flame appears */}
       {showForm && (
-        <div ref={formRef} className="px-5 pb-6 fade-in-up" style={{ borderTop: `1px solid ${GOLD}22`, paddingTop: "1.5rem" }}>
+        <div ref={formRef} className="fade-in-up" style={{ borderTop: `1px solid ${GOLD}22`, paddingTop: "1.5rem" }}>
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               autoFocus
               value={nombreAutor}
               onChange={(e) => setNombreAutor(e.target.value)}
               className="w-full rounded-xl px-4 py-3 text-sm focus:outline-none transition-colors"
-              style={{ background: "#2a1a0e", border: `2px solid ${GOLD}44`, color: CREAM, placeholder: CREAM }}
+              style={{ background: "#2a1a0e", border: `2px solid ${GOLD}44`, color: CREAM }}
               placeholder="Tu nombre"
               maxLength={80}
             />
@@ -233,10 +208,10 @@ function LightCandleForm({ personaId, personaNombre, onLit }: { personaId: numbe
               <button
                 type="submit"
                 disabled={!canSubmit || createVela.isPending}
-                className="px-7 py-2.5 rounded-xl font-semibold text-sm transition-all border-0 outline-none"
-                style={{ background: GOLD, color: ESPRESSO, opacity: (!canSubmit || createVela.isPending) ? 0.4 : 1, fontWeight: 700 }}
+                className="text-xs uppercase tracking-[0.28em] transition-opacity hover:opacity-70 border-0 outline-none bg-transparent"
+                style={{ color: GOLD, opacity: (!canSubmit || createVela.isPending) ? 0.3 : 1 }}
               >
-                {createVela.isPending ? "Encendiendo…" : "🕯 Encender"}
+                {createVela.isPending ? "Encendiendo…" : "— Encender"}
               </button>
             </div>
           </form>

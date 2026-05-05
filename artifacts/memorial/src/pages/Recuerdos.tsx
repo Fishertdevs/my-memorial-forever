@@ -340,19 +340,18 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
       {!open ? (
         <button
           onClick={() => setOpen(true)}
-          className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl font-semibold text-sm transition-all"
-          style={{ border: `2px solid ${GOLD}55`, color: GOLD, background: "transparent" }}
+          className="w-full flex items-center justify-center gap-2.5 py-4 text-xs uppercase tracking-[0.28em] transition-opacity hover:opacity-70 bg-transparent border-0 outline-none"
+          style={{ color: GOLD }}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-          COMPARTIR RECUERDO
+          — COMPARTIR RECUERDO
         </button>
       ) : (
-        <div className="rounded-2xl p-5" style={{ border: `2px solid ${GOLD}44`, background: `${GOLD}08` }}>
-          <div className="flex items-center justify-between mb-4">
-            <p className="flex-1 text-center text-xs font-bold tracking-widest uppercase" style={{ color: GOLD }}>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-bold tracking-widest uppercase" style={{ color: GOLD }}>
               Compartir un recuerdo
             </p>
-            <button onClick={() => setOpen(false)} style={{ color: `${ESPRESSO}40` }} className="hover:opacity-80 transition-opacity">
+            <button onClick={() => setOpen(false)} style={{ color: `${CREAM}40` }} className="hover:opacity-80 transition-opacity">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><path d="M1 1l12 12M13 1L1 13"/></svg>
             </button>
           </div>
@@ -362,14 +361,14 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
               value={nombreAutor}
               onChange={(e) => setNombreAutor(e.target.value)}
               className={inputClass}
-              style={{ background: CARD_BG, borderColor: WARM_BORDER, color: ESPRESSO }}
+              style={{ background: "#2a1a0e", borderColor: `${GOLD}44`, color: CREAM }}
               placeholder="Tu nombre"
               maxLength={80}
             />
 
             <div
               className="relative rounded-xl overflow-hidden transition-colors cursor-pointer"
-              style={{ minHeight: fotoPreview ? undefined : 72, border: `2px solid ${WARM_BORDER}` }}
+              style={{ minHeight: fotoPreview ? undefined : 72, border: `2px solid ${GOLD}33` }}
               onDrop={onDrop}
               onDragOver={(e) => e.preventDefault()}
               onClick={() => fileRef.current?.click()}
@@ -379,14 +378,14 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
                   <img src={fotoPreview} alt="preview" className="w-full object-cover rounded-xl" style={{ maxHeight: 260 }} />
                   <button type="button" onClick={(e) => { e.stopPropagation(); setFotoPreview(null); setFotoData(null); }}
                     className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center transition-colors"
-                    style={{ background: `${ESPRESSO}99` }}>
+                    style={{ background: `${ESPRESSO}cc` }}>
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" strokeWidth="2"><path d="M1 1l8 8M9 1L1 9"/></svg>
                   </button>
                 </div>
               ) : (
-                <div className="flex flex-col items-center justify-center gap-1.5 py-4" style={{ color: `${ESPRESSO}35` }}>
+                <div className="flex flex-col items-center justify-center gap-1.5 py-4" style={{ color: `${CREAM}35` }}>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                  <span className="text-xs">Añadir una foto <span style={{ color: `${ESPRESSO}25` }}>(opcional)</span></span>
+                  <span className="text-xs">Añadir una foto <span style={{ color: `${CREAM}25` }}>(opcional)</span></span>
                 </div>
               )}
               <input ref={fileRef} type="file" accept="image/*" className="hidden"
@@ -398,20 +397,20 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
               onChange={(e) => setMensaje(e.target.value)}
               rows={3}
               className={inputClass + " resize-none"}
-              style={{ background: CARD_BG, borderColor: WARM_BORDER, color: ESPRESSO }}
+              style={{ background: "#2a1a0e", borderColor: `${GOLD}44`, color: CREAM }}
               placeholder="Comparte un recuerdo especial…"
               maxLength={600}
             />
 
             <div className="flex items-center justify-between pt-1">
-              <span className="text-xs" style={{ color: `${ESPRESSO}30` }}>{mensaje.length}/600</span>
+              <span className="text-xs" style={{ color: `${CREAM}30` }}>{mensaje.length}/600</span>
               <button
                 type="submit"
                 disabled={!canSubmit || loading}
-                className="px-7 py-2.5 rounded-xl font-semibold text-sm transition-all border-0 outline-none"
-                style={{ background: GOLD, color: CREAM, opacity: (!canSubmit || loading) ? 0.4 : 1 }}
+                className="text-xs uppercase tracking-[0.28em] transition-opacity hover:opacity-70 bg-transparent border-0 outline-none"
+                style={{ color: GOLD, opacity: (!canSubmit || loading) ? 0.3 : 1 }}
               >
-                {loading ? "Publicando…" : "Publicar"}
+                {loading ? "Publicando…" : "— Publicar"}
               </button>
             </div>
           </form>
