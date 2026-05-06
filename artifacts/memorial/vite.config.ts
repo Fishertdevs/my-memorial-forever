@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
@@ -10,7 +10,11 @@ const port = Number(process.env.PORT) || 3000;
 // Default base path to "/" for local development
 const basePath = process.env.BASE_PATH || "/";
 
-export default defineConfig({
+export default defineConfig(async ({ mode }) => {
+  // Load env from project root (for Vercel/Supabase integration)
+  const env = loadEnv(mode, path.resolve(import.meta.dirname, "../.."), ["NEXT_PUBLIC_", "VITE_"]);
+  
+  return {
   base: basePath,
   plugins: [
     react(),
@@ -62,4 +66,9 @@ export default defineConfig({
     host: "0.0.0.0",
     allowedHosts: true,
   },
+  define: {
+    "import.meta.env.VITE_SUPABASE_URL": JSON.stringify(env.NEXT_PUBLIC_SUPABASE_URL || ""),
+    "import.meta.env.VITE_SUPABASE_ANON_KEY": JSON.stringify(env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""),
+  },
+};
 });
