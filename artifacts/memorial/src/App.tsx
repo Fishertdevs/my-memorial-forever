@@ -22,7 +22,7 @@ function Router() {
       <Route path="/personas" component={Personas} />
       <Route path="/personas/:id" component={PersonaDetail} />
       <Route path="/velas" component={Velas} />
-      <Route path="/recuerdos" component={Recuerdos} />
+      <Route path="/galeria" component={Recuerdos} />
       <Route component={NotFound} />
     </Switch>
   );

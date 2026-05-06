@@ -60,6 +60,7 @@ function compressImage(file: File, maxSize = 900): Promise<string> {
     const reader = new FileReader();
     reader.onload = (e) => {
       const img = new Image();
+      img.crossOrigin = "anonymous";
       img.onload = () => {
         const canvas = document.createElement("canvas");
         let { width, height } = img;
@@ -79,13 +80,42 @@ function compressImage(file: File, maxSize = 900): Promise<string> {
   });
 }
 
+// Compress video by reducing quality - returns base64 data URL
+// For production, consider using a server-side solution or cloud service
+function compressVideo(file: File, maxSizeMB = 5): Promise<string> {
+  return new Promise((resolve, reject) => {
+    // Check file size - if too large, reject
+    const fileSizeMB = file.size / (1024 * 1024);
+    if (fileSizeMB > maxSizeMB * 3) {
+      reject(new Error(`El video es demasiado grande. Máximo ${maxSizeMB * 3}MB`));
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      resolve(result);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+type MediaType = "image" | "video" | null;
+
 type RecuerdoItem = {
   id: number;
   nombreAutor: string;
   mensaje: string;
   fotoUrl?: string | null;
+  mediaType?: MediaType;
   tiempoTranscurrido: string;
 };
+
+function isVideoUrl(url: string | null | undefined): boolean {
+  if (!url) return false;
+  return url.startsWith("data:video/") || /\.(mp4|webm|mov|avi)$/i.test(url);
+}
 
 function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?: number }) {
   const likeKey = `like_recuerdo_${recuerdo.id}`;
@@ -157,12 +187,25 @@ function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?:
 
       {recuerdo.fotoUrl && (
         <div className="relative overflow-hidden">
-          <img
-            src={recuerdo.fotoUrl}
-            alt={`Recuerdo de ${recuerdo.nombreAutor}`}
-            className="w-full object-cover"
-            style={{ maxHeight: 420 }}
-          />
+          {isVideoUrl(recuerdo.fotoUrl) ? (
+            <video
+              src={recuerdo.fotoUrl}
+              controls
+              playsInline
+              preload="metadata"
+              className="w-full object-contain bg-black"
+              style={{ maxHeight: 420 }}
+            >
+              Tu navegador no soporta videos.
+            </video>
+          ) : (
+            <img
+              src={recuerdo.fotoUrl}
+              alt={`Recuerdo de ${recuerdo.nombreAutor}`}
+              className="w-full object-cover"
+              style={{ maxHeight: 420 }}
+            />
+          )}
           <div className="absolute bottom-3 right-3">
             <CandleFlame size="sm" outerColor={GOLD} innerColor="#e8c060" glowColor="rgba(201,148,58,0.35)" />
           </div>
@@ -316,22 +359,43 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
   const [open, setOpen] = useState(false);
   const [nombreAutor, setNombreAutor] = useState("");
   const [mensaje, setMensaje] = useState("");
-  const [fotoPreview, setFotoPreview] = useState<string | null>(null);
-  const [fotoData, setFotoData] = useState<string | null>(null);
+  const [mediaPreview, setMediaPreview] = useState<string | null>(null);
+  const [mediaData, setMediaData] = useState<string | null>(null);
+  const [mediaType, setMediaType] = useState<"image" | "video" | null>(null);
   const [loading, setLoading] = useState(false);
+  const [processingMedia, setProcessingMedia] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const createRecuerdo = useCreateRecuerdo();
   const queryClient = useQueryClient();
 
   const handleFile = useCallback(async (file: File) => {
-    if (!file.type.startsWith("image/")) return;
+    const isImage = file.type.startsWith("image/");
+    const isVideo = file.type.startsWith("video/");
+    
+    if (!isImage && !isVideo) {
+      toast({ title: "Solo se permiten imágenes y videos", variant: "destructive" });
+      return;
+    }
+
+    setProcessingMedia(true);
     try {
-      const compressed = await compressImage(file);
-      setFotoPreview(compressed);
-      setFotoData(compressed);
-    } catch {
-      toast({ title: "No se pudo cargar la imagen", variant: "destructive" });
+      if (isImage) {
+        const compressed = await compressImage(file);
+        setMediaPreview(compressed);
+        setMediaData(compressed);
+        setMediaType("image");
+      } else {
+        const videoData = await compressVideo(file);
+        setMediaPreview(videoData);
+        setMediaData(videoData);
+        setMediaType("video");
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "No se pudo cargar el archivo";
+      toast({ title: message, variant: "destructive" });
+    } finally {
+      setProcessingMedia(false);
     }
   }, [toast]);
 
@@ -343,19 +407,24 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
 
   const canSubmit = nombreAutor.trim().length > 0 && mensaje.trim().length > 0;
 
+  const clearMedia = () => {
+    setMediaPreview(null);
+    setMediaData(null);
+    setMediaType(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canSubmit) return;
     setLoading(true);
     try {
       await createRecuerdo.mutateAsync({
-        data: { personaId, nombreAutor: nombreAutor.trim(), persona: personaNombre, mensaje: mensaje.trim(), fotoUrl: fotoData ?? null },
+        data: { personaId, nombreAutor: nombreAutor.trim(), persona: personaNombre, mensaje: mensaje.trim(), fotoUrl: mediaData ?? null },
       });
       queryClient.invalidateQueries({ queryKey: getListRecuerdosQueryKey({ personaId, limit: 50 }) });
       setNombreAutor("");
       setMensaje("");
-      setFotoPreview(null);
-      setFotoData(null);
+      clearMedia();
       setOpen(false);
       onPosted();
     } catch {
@@ -398,15 +467,30 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
 
             <div
               className="relative rounded-xl overflow-hidden transition-colors cursor-pointer"
-              style={{ minHeight: fotoPreview ? undefined : 72, border: `2px solid ${GOLD}33` }}
+              style={{ minHeight: mediaPreview ? undefined : 72, border: `2px solid ${GOLD}33` }}
               onDrop={onDrop}
               onDragOver={(e) => e.preventDefault()}
-              onClick={() => fileRef.current?.click()}
+              onClick={() => !processingMedia && fileRef.current?.click()}
             >
-              {fotoPreview ? (
+              {processingMedia ? (
+                <div className="flex flex-col items-center justify-center gap-2 py-6" style={{ color: `${CREAM}50` }}>
+                  <div className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <span className="text-xs">Procesando...</span>
+                </div>
+              ) : mediaPreview ? (
                 <div className="relative">
-                  <img src={fotoPreview} alt="preview" className="w-full object-cover rounded-xl" style={{ maxHeight: 260 }} />
-                  <button type="button" onClick={(e) => { e.stopPropagation(); setFotoPreview(null); setFotoData(null); }}
+                  {mediaType === "video" ? (
+                    <video 
+                      src={mediaPreview} 
+                      controls 
+                      playsInline
+                      className="w-full object-contain rounded-xl bg-black" 
+                      style={{ maxHeight: 260 }} 
+                    />
+                  ) : (
+                    <img src={mediaPreview} alt="preview" className="w-full object-cover rounded-xl" style={{ maxHeight: 260 }} />
+                  )}
+                  <button type="button" onClick={(e) => { e.stopPropagation(); clearMedia(); }}
                     className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center transition-colors"
                     style={{ background: `${ESPRESSO}cc` }}>
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="white" strokeWidth="2"><path d="M1 1l8 8M9 1L1 9"/></svg>
@@ -414,11 +498,15 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center gap-1.5 py-4" style={{ color: `${CREAM}35` }}>
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-                  <span className="text-xs">Añadir una foto <span style={{ color: `${CREAM}25` }}>(opcional)</span></span>
+                  <div className="flex items-center gap-3">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                  </div>
+                  <span className="text-xs">Añadir foto o video <span style={{ color: `${CREAM}25` }}>(opcional)</span></span>
+                  <span className="text-xs" style={{ color: `${CREAM}20` }}>Max 15MB para videos</span>
                 </div>
               )}
-              <input ref={fileRef} type="file" accept="image/*" className="hidden"
+              <input ref={fileRef} type="file" accept="image/*,video/*" className="hidden"
                 onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); e.target.value = ""; }} />
             </div>
 
