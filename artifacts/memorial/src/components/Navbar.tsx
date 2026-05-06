@@ -9,7 +9,7 @@ const WARM_BORDER = "#ddd2bf";
 const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/personas", label: "Memorial" },
-  { href: "/recuerdos", label: "Recuerdos" },
+  { href: "/galeria", label: "Galería" },
 ];
 
 export default function Navbar() {
