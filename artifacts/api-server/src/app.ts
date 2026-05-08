@@ -7,6 +7,7 @@ import { logger } from "./lib/logger.js";
 const app: Express = express();
 
 app.use(
+  // @ts-expect-error pino-http types issue
   pinoHttp({
     logger,
     serializers: {
