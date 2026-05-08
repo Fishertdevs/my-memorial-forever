@@ -4,7 +4,8 @@ import {
   useListRecuerdos,
   useCreateRecuerdo,
   getListRecuerdosQueryKey,
-} from "@workspace/api-client-react";
+} from "@/hooks/use-supabase-data";
+import { getSupabase } from "@/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
@@ -144,11 +145,10 @@ function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?:
     if (!editMsg.trim() || editMsg.trim() === currentMsg) { setEditing(false); return; }
     setSaving(true);
     try {
-      await fetch(`/api/recuerdos/${recuerdo.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mensaje: editMsg.trim() }),
-      });
+      const supabase = getSupabase();
+      if (!supabase) throw new Error("Supabase not configured");
+      const { error } = await supabase.from("recuerdos").update({ mensaje: editMsg.trim() }).eq("id", recuerdo.id);
+      if (error) throw error;
       setCurrentMsg(editMsg.trim());
       setEditing(false);
       if (personaId !== undefined) {
@@ -162,7 +162,10 @@ function PostCard({ recuerdo, personaId }: { recuerdo: RecuerdoItem; personaId?:
   const handleDelete = async () => {
     setDeleting(true);
     try {
-      await fetch(`/api/recuerdos/${recuerdo.id}`, { method: "DELETE" });
+      const supabase = getSupabase();
+      if (!supabase) throw new Error("Supabase not configured");
+      const { error } = await supabase.from("recuerdos").delete().eq("id", recuerdo.id);
+      if (error) throw error;
       if (personaId !== undefined) {
         queryClient.invalidateQueries({ queryKey: getListRecuerdosQueryKey({ personaId, limit: 50 }) });
       }
@@ -419,7 +422,7 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
     setLoading(true);
     try {
       await createRecuerdo.mutateAsync({
-        data: { personaId, nombreAutor: nombreAutor.trim(), persona: personaNombre, mensaje: mensaje.trim(), fotoUrl: mediaData ?? null },
+        data: { personaId, nombreAutor: nombreAutor.trim(), persona: personaNombre, mensaje: mensaje.trim(), fotoUrl: mediaData ?? undefined },
       });
       queryClient.invalidateQueries({ queryKey: getListRecuerdosQueryKey({ personaId, limit: 50 }) });
       setNombreAutor("");
@@ -544,10 +547,7 @@ export default function Recuerdos() {
   const personaId = persona?.id ?? 1;
   const personaNombre = persona?.nombre ?? NOMBRES_CORTOS;
 
-  const { data: recuerdosData, isLoading: loadingRecuerdos } = useListRecuerdos(
-    { personaId, limit: 50 },
-    { query: { queryKey: getListRecuerdosQueryKey({ personaId, limit: 50 }) } }
-  );
+  const { data: recuerdosData, isLoading: loadingRecuerdos } = useListRecuerdos({ personaId, limit: 50 });
   const [, forceUpdate] = useState(0);
   const recuerdos = (recuerdosData?.data ?? []) as RecuerdoItem[];
 
