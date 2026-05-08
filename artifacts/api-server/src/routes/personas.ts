@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
 import { personasTable, velasTable, recuerdosTable } from "@workspace/db";
-import { eq, sql, desc } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { CreatePersonaBody, GetPersonaParams } from "@workspace/api-zod";
 
 const router = Router();
@@ -25,7 +25,7 @@ function timeAgo(date: Date): string {
 }
 
 router.get("/personas", async (req, res) => {
-  const personas = await db.select().from(personasTable).orderBy(desc(personasTable.createdAt));
+  const personas = await db.select().from(personasTable).orderBy(personasTable.createdAt);
 
   const result = await Promise.all(
     personas.map(async (p) => {
