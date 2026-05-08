@@ -2,8 +2,9 @@ import { useState, useRef } from "react";
 import {
   useListPersonas, useListVelas, useCreateVela,
   getListVelasQueryKey,
-} from "@workspace/api-client-react";
+} from "@/hooks/use-supabase-data";
 import { useQueryClient } from "@tanstack/react-query";
+import { getSupabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -272,7 +273,10 @@ function VelaCard({ vela, personaId }: {
     if (!editMsg.trim() || editMsg.trim() === currentMsg) { setEditing(false); return; }
     setSaving(true);
     try {
-      await fetch(`/api/velas/${vela.id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ mensaje: editMsg.trim() }) });
+      const supabase = getSupabase();
+      if (!supabase) throw new Error("Supabase not configured");
+      const { error } = await supabase.from("velas").update({ mensaje: editMsg.trim() }).eq("id", vela.id);
+      if (error) throw error;
       setCurrentMsg(editMsg.trim()); setEditing(false);
       queryClient.invalidateQueries({ queryKey: getListVelasQueryKey({ personaId, limit: 50 }) });
     } catch { toast({ title: "No se pudo editar", variant: "destructive" }); }
@@ -282,7 +286,10 @@ function VelaCard({ vela, personaId }: {
   const handleDelete = async () => {
     setDeleting(true);
     try {
-      await fetch(`/api/velas/${vela.id}`, { method: "DELETE" });
+      const supabase = getSupabase();
+      if (!supabase) throw new Error("Supabase not configured");
+      const { error } = await supabase.from("velas").delete().eq("id", vela.id);
+      if (error) throw error;
       queryClient.invalidateQueries({ queryKey: getListVelasQueryKey({ personaId, limit: 50 }) });
     } catch { toast({ title: "No se pudo eliminar", variant: "destructive" }); setDeleting(false); }
   };
@@ -389,10 +396,7 @@ function VelasCarousel({ velas, personaId }: { velas: { id: number; nombreAutor:
 
 /* ── VelasSection ── */
 function VelasSection({ personaId }: { personaId: number }) {
-  const { data: velasData, isLoading } = useListVelas(
-    { personaId, limit: 50 },
-    { query: { queryKey: getListVelasQueryKey({ personaId, limit: 50 }) } }
-  );
+const { data: velasData, isLoading } = useListVelas({ personaId, limit: 50 });
   if (isLoading || !velasData || !Array.isArray(velasData.data) || velasData.data.length === 0) return null;
 
   return (

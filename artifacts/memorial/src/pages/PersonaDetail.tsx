@@ -13,7 +13,7 @@ import {
   useGetPersona, useListVelas, useListRecuerdos,
   getGetPersonaQueryKey, getListVelasQueryKey, getListRecuerdosQueryKey,
   useCreateVela, useCreateRecuerdo,
-} from "@workspace/api-client-react";
+} from "@/hooks/use-supabase-data";
 import { useQueryClient } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
@@ -36,17 +36,9 @@ export default function PersonaDetail() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: persona, isLoading } = useGetPersona(id, {
-    query: { enabled: !!id, queryKey: getGetPersonaQueryKey(id) },
-  });
-  const { data: velasData } = useListVelas(
-    { personaId: id, limit: 20 },
-    { query: { queryKey: getListVelasQueryKey({ personaId: id, limit: 20 }) } }
-  );
-  const { data: recuerdosData } = useListRecuerdos(
-    { personaId: id, limit: 20 },
-    { query: { queryKey: getListRecuerdosQueryKey({ personaId: id, limit: 20 }) } }
-  );
+  const { data: persona, isLoading } = useGetPersona(id);
+  const { data: velasData } = useListVelas({ personaId: id, limit: 20 });
+  const { data: recuerdosData } = useListRecuerdos({ personaId: id, limit: 20 });
 
   const createVela = useCreateVela();
   const createRecuerdo = useCreateRecuerdo();
@@ -93,8 +85,8 @@ export default function PersonaDetail() {
     );
   }
 
-  const velaCount = velasData?.total ?? persona?.totalVelas ?? 0;
-  const recuerdoCount = recuerdosData?.total ?? persona?.totalRecuerdos ?? 0;
+  const velaCount = velasData?.total ?? 0;
+  const recuerdoCount = recuerdosData?.total ?? 0;
   const recuerdos = recuerdosData?.data ?? [];
 
   useEffect(() => {

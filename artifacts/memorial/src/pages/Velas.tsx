@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useListVelas, useCreateVela, getListVelasQueryKey, useListPersonas } from "@workspace/api-client-react";
+import { useListVelas, useCreateVela, getListVelasQueryKey, useListPersonas } from "@/hooks/use-supabase-data";
 import { useQueryClient } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import { useToast } from "@/hooks/use-toast";
@@ -52,7 +52,7 @@ export default function Velas() {
 
   const handleSubmit = async () => {
     await createVela.mutateAsync(
-      { data: { personaId: form.personaId ?? null, nombreRecordado: form.nombreRecordado, nombreAutor: form.nombreAutor, mensaje: form.mensaje } },
+      { data: { personaId: form.personaId ?? undefined, nombreRecordado: form.nombreRecordado, nombreAutor: form.nombreAutor, mensaje: form.mensaje } },
       {
         onSuccess: () => { setSubmitted(true); queryClient.invalidateQueries({ queryKey: getListVelasQueryKey({ limit: 20 }) }); },
         onError: () => toast({ title: "Error", description: "No se pudo encender la velita.", variant: "destructive" }),

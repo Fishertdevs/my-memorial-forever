@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useListTestimonios, useCreateTestimonio, getListTestimoniosQueryKey } from "@workspace/api-client-react";
+import { useListTestimonios, useCreateTestimonio, getListTestimoniosQueryKey } from "@/hooks/use-supabase-data";
 import { useQueryClient } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import CandleFlame from "@/components/CandleFlame";
