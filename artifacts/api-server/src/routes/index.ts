@@ -1,10 +1,10 @@
 import { Router, type IRouter } from "express";
-import healthRouter from "./health";
-import personasRouter from "./personas";
-import velasRouter from "./velas";
-import recuerdosRouter from "./recuerdos";
-import testimoniosRouter from "./testimonios";
-import statsRouter from "./stats";
+import healthRouter from "./health.js";
+import personasRouter from "./personas.js";
+import velasRouter from "./velas.js";
+import recuerdosRouter from "./recuerdos.js";
+import testimoniosRouter from "./testimonios.js";
+import statsRouter from "./stats.js";
 
 const router: IRouter = Router();
 

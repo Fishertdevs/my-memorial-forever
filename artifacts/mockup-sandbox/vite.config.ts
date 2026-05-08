@@ -27,7 +27,7 @@ if (!basePath) {
   );
 }
 
-export default defineConfig({
+export default defineConfig(async () => {
   base: basePath,
   plugins: [
     mockupPreviewPlugin(),
@@ -68,4 +68,5 @@ export default defineConfig({
     host: "0.0.0.0",
     allowedHosts: true,
   },
+});
 });

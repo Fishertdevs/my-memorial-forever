@@ -3,7 +3,7 @@ import { db } from "@workspace/db";
 import { testimoniosTable } from "@workspace/db";
 import { desc } from "drizzle-orm";
 import { CreateTestimonioBody, ListTestimoniosQueryParams } from "@workspace/api-zod";
-import { timeAgo } from "./personas";
+import { timeAgo } from "./personas.js";
 
 const router = Router();
 

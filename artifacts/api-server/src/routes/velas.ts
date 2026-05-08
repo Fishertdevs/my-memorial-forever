@@ -3,7 +3,7 @@ import { db } from "@workspace/db";
 import { velasTable } from "@workspace/db";
 import { eq, desc, sql } from "drizzle-orm";
 import { CreateVelaBody, ListVelasQueryParams } from "@workspace/api-zod";
-import { timeAgo } from "./personas";
+import { timeAgo } from "./personas.js";
 
 const router = Router();
 

@@ -3,7 +3,7 @@ import { db } from "@workspace/db";
 import { recuerdosTable } from "@workspace/db";
 import { eq, desc, sql } from "drizzle-orm";
 import { CreateRecuerdoBody, ListRecuerdosQueryParams } from "@workspace/api-zod";
-import { timeAgo } from "./personas";
+import { timeAgo } from "./personas.js";
 
 const router = Router();
 

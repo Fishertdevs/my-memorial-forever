@@ -2,7 +2,7 @@ import { Router } from "express";
 import { db } from "@workspace/db";
 import { personasTable, velasTable, recuerdosTable, testimoniosTable } from "@workspace/db";
 import { desc, sql, gte } from "drizzle-orm";
-import { timeAgo } from "./personas";
+import { timeAgo } from "./personas.js";
 
 const router = Router();
 
