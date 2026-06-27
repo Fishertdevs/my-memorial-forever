@@ -418,9 +418,9 @@ function VelasSection({ personaId }: { personaId: number }) {
 
 /* ── Page ── */
 export default function Personas() {
-  const { data: personas } = useListPersonas();
+  const { data: personas, isLoading: loadingPersonas } = useListPersonas();
   const [, forceUpdate] = useState(0);
-  const personaId = personas?.[0]?.id ?? 1;
+  const personaId = personas?.[0]?.id;
   const personaNombre = personas?.[0]?.nombre ?? "En Tu Memoria";
 
   return (
@@ -436,8 +436,16 @@ export default function Personas() {
           </div>
 
           <div className="max-w-xl mx-auto">
-            <LightCandleForm personaId={personaId} personaNombre={personaNombre} onLit={() => forceUpdate((n) => n + 1)} />
-            <VelasSection personaId={personaId} />
+            {loadingPersonas ? (
+              <div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-current border-t-transparent rounded-full animate-spin opacity-50" /></div>
+            ) : personaId !== undefined ? (
+              <>
+                <LightCandleForm personaId={personaId} personaNombre={personaNombre} onLit={() => forceUpdate((n) => n + 1)} />
+                <VelasSection personaId={personaId} />
+              </>
+            ) : (
+              <p className="text-center py-20 opacity-50">No hay personas en el memorial aún.</p>
+            )}
           </div>
         </div>
       </div>

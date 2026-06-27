@@ -539,14 +539,14 @@ function NewPostForm({ personaId, personaNombre, onPosted }: { personaId: number
 }
 
 export default function Recuerdos() {
-  const { data: personas } = useListPersonas();
+  const { data: personas, isLoading: loadingPersonas } = useListPersonas();
   const persona = personas?.[0];
-  const personaId = persona?.id ?? 1;
+  const personaId = persona?.id;
   const personaNombre = persona?.nombre ?? NOMBRES_CORTOS;
 
   const { data: recuerdosData, isLoading: loadingRecuerdos } = useListRecuerdos(
-    { personaId, limit: 50 },
-    { query: { queryKey: getListRecuerdosQueryKey({ personaId, limit: 50 }) } }
+    { personaId: personaId ?? 0, limit: 50 },
+    { query: { enabled: personaId !== undefined, queryKey: getListRecuerdosQueryKey({ personaId: personaId ?? 0, limit: 50 }) } }
   );
   const [, forceUpdate] = useState(0);
   const recuerdos = (recuerdosData?.data ?? []) as RecuerdoItem[];
@@ -565,7 +565,9 @@ export default function Recuerdos() {
             </p>
           </div>
 
-          <NewPostForm personaId={personaId} personaNombre={personaNombre} onPosted={() => forceUpdate((n) => n + 1)} />
+          {personaId !== undefined && (
+            <NewPostForm personaId={personaId} personaNombre={personaNombre} onPosted={() => forceUpdate((n) => n + 1)} />
+          )}
 
           {loadingRecuerdos ? (
             <div className="space-y-5">
