@@ -53,6 +53,22 @@ export default function PersonaDetail() {
   const velaForm = useForm<VelaForm>({ defaultValues: { nombreAutor: "", mensaje: "" } });
   const recuerdoForm = useForm<RecuerdoForm>({ defaultValues: { nombreAutor: "", mensaje: "" } });
 
+  const velaCount = velasData?.total ?? persona?.totalVelas ?? 0;
+  const recuerdoCount = recuerdosData?.total ?? persona?.totalRecuerdos ?? 0;
+  const recuerdos = recuerdosData?.data ?? [];
+
+  useEffect(() => {
+    if (activeTab !== "recuerdos" || recuerdos.length <= 1) return;
+    const timer = window.setInterval(() => {
+      setRecuerdoIndex((current) => (current + 1) % recuerdos.length);
+    }, 4500);
+    return () => window.clearInterval(timer);
+  }, [activeTab, recuerdos.length]);
+
+  useEffect(() => {
+    if (recuerdoIndex >= recuerdos.length) setRecuerdoIndex(0);
+  }, [recuerdos.length, recuerdoIndex]);
+
   const onSubmitVela = async (data: VelaForm) => {
     await createVela.mutateAsync(
       { data: { personaId: id, nombreRecordado: persona?.nombre ?? "", nombreAutor: data.nombreAutor, mensaje: data.mensaje } },
@@ -92,22 +108,6 @@ export default function PersonaDetail() {
       </div>
     );
   }
-
-  const velaCount = velasData?.total ?? persona?.totalVelas ?? 0;
-  const recuerdoCount = recuerdosData?.total ?? persona?.totalRecuerdos ?? 0;
-  const recuerdos = recuerdosData?.data ?? [];
-
-  useEffect(() => {
-    if (activeTab !== "recuerdos" || recuerdos.length <= 1) return;
-    const timer = window.setInterval(() => {
-      setRecuerdoIndex((current) => (current + 1) % recuerdos.length);
-    }, 4500);
-    return () => window.clearInterval(timer);
-  }, [activeTab, recuerdos.length]);
-
-  useEffect(() => {
-    if (recuerdoIndex >= recuerdos.length) setRecuerdoIndex(0);
-  }, [recuerdos.length, recuerdoIndex]);
 
   if (!persona) {
     return (
@@ -236,17 +236,23 @@ export default function PersonaDetail() {
 
           {/* Tabs */}
           <div className="flex border-b-2 border-gray-100 mb-8">
-            <div className={`px-6 py-3 text-sm font-semibold border-b-2 -mb-0.5 flex items-center gap-2 ${activeTab === "recuerdos" ? "border-orange-500 text-orange-500" : "border-transparent text-black/40"}`}>
+            <button
+              onClick={() => setActiveTab("recuerdos")}
+              className={`px-6 py-3 text-sm font-semibold border-b-2 -mb-0.5 flex items-center gap-2 transition-colors ${activeTab === "recuerdos" ? "border-orange-500 text-orange-500" : "border-transparent text-black/40 hover:text-black/60"}`}
+            >
               Recuerdos
               {recuerdoCount > 0 && (
                 <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-bold ${activeTab === "recuerdos" ? "bg-orange-100 text-orange-500" : "bg-gray-100 text-black/35"}`}>
                   {recuerdoCount}
                 </span>
               )}
-            </div>
-            <div className={`px-6 py-3 text-sm font-semibold border-b-2 -mb-0.5 flex items-center gap-2 ${activeTab === "velas" ? "border-orange-500 text-orange-500" : "border-transparent text-black/40"}`}>
+            </button>
+            <button
+              onClick={() => setActiveTab("velas")}
+              className={`px-6 py-3 text-sm font-semibold border-b-2 -mb-0.5 flex items-center gap-2 transition-colors ${activeTab === "velas" ? "border-orange-500 text-orange-500" : "border-transparent text-black/40 hover:text-black/60"}`}
+            >
               Velitas encendidas
-            </div>
+            </button>
           </div>
 
           {activeTab === "velas" && (

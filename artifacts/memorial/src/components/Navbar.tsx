@@ -10,6 +10,7 @@ const navLinks = [
   { href: "/", label: "Inicio" },
   { href: "/personas", label: "Memorial" },
   { href: "/galeria", label: "Galería" },
+  { href: "/testimonios", label: "Testimonios" },
 ];
 
 export default function Navbar() {

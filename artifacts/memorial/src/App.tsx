@@ -8,6 +8,7 @@ import Personas from "@/pages/Personas";
 import PersonaDetail from "@/pages/PersonaDetail";
 import Velas from "@/pages/Velas";
 import Recuerdos from "@/pages/Recuerdos";
+import Testimonios from "@/pages/Testimonios";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,6 +24,7 @@ function Router() {
       <Route path="/personas/:id" component={PersonaDetail} />
       <Route path="/velas" component={Velas} />
       <Route path="/galeria" component={Recuerdos} />
+      <Route path="/testimonios" component={Testimonios} />
       <Route component={NotFound} />
     </Switch>
   );
