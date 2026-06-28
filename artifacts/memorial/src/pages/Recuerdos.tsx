@@ -565,9 +565,7 @@ export default function Recuerdos() {
             </p>
           </div>
 
-          {personaId !== undefined && (
-            <NewPostForm personaId={personaId} personaNombre={personaNombre} onPosted={() => forceUpdate((n) => n + 1)} />
-          )}
+          <NewPostForm personaId={personaId ?? 0} personaNombre={personaNombre} onPosted={() => forceUpdate((n) => n + 1)} />
 
           {loadingRecuerdos ? (
             <div className="space-y-5">

@@ -436,16 +436,8 @@ export default function Personas() {
           </div>
 
           <div className="max-w-xl mx-auto">
-            {loadingPersonas ? (
-              <div className="flex justify-center py-20"><div className="w-8 h-8 border-2 border-current border-t-transparent rounded-full animate-spin opacity-50" /></div>
-            ) : personaId !== undefined ? (
-              <>
-                <LightCandleForm personaId={personaId} personaNombre={personaNombre} onLit={() => forceUpdate((n) => n + 1)} />
-                <VelasSection personaId={personaId} />
-              </>
-            ) : (
-              <p className="text-center py-20 opacity-50">No hay personas en el memorial aún.</p>
-            )}
+            <LightCandleForm personaId={personaId ?? 0} personaNombre={personaNombre} onLit={() => forceUpdate((n) => n + 1)} />
+            <VelasSection personaId={personaId ?? 0} />
           </div>
         </div>
       </div>
